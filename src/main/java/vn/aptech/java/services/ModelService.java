@@ -29,4 +29,7 @@ public class ModelService {
     public Optional<Model> findModelById(long id) {
         return modelRepository.findById(id);
     }
+    public List<Model> findModelsByName(String name) {
+        return modelRepository.findByNameContainingIgnoreCase(name);
+    }
 }
