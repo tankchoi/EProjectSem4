@@ -12,24 +12,5 @@ import java.util.Optional;
 public class ModelService {
     @Autowired
     private ModelRepository modelRepository;
-    public List<Model> getAllModels() {
-        return modelRepository.findAll();
-    }
-    public void addModel(Model model) {
-        modelRepository.save(model);
-    }
-    public void updateModel(Model model) {
-        Optional<Model> oldModel = modelRepository.findById(model.getId());
-        model.setCreatedAt(oldModel.get().getCreatedAt());
-        modelRepository.save(model);
-    }
-    public void deleteModel(long id) {
-        modelRepository.deleteById(id);
-    }
-    public Optional<Model> findModelById(long id) {
-        return modelRepository.findById(id);
-    }
-    public List<Model> findModelsByName(String name) {
-        return modelRepository.findByNameContainingIgnoreCase(name);
-    }
+
 }

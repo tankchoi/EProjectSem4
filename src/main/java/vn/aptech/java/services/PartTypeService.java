@@ -12,24 +12,5 @@ import java.util.Optional;
 public class PartTypeService {
     @Autowired
     private PartTypeRepository partTypeRepository;
-    public List<PartType> getAllPartTypes() {
-        return partTypeRepository.findAll();
-    }
-    public void addPartType(PartType partType) {
-        partTypeRepository.save(partType);
-    }
-    public void updatePartType(PartType partType) {
-        Optional<PartType> oldPartType = partTypeRepository.findById(partType.getId());
-        partType.setCreatedAt(oldPartType.get().getCreatedAt());
-        partTypeRepository.save(partType);
-    }
-    public void deletePartType(Long id) {
-        partTypeRepository.deleteById(id);
-    }
-    public Optional<PartType> getPartTypeById(Long id) {
-        return partTypeRepository.findById(id);
-    }
-    public List<PartType> getPartTypeByName(String name) {
-        return partTypeRepository.findByNameContainingIgnoreCase(name);
-    }
+
 }
