@@ -23,10 +23,11 @@ public class CustomUserDetailService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Vui lòng nhập đúng thông tin");
         }
+        if (user.getStatus() != User.Status.ACTIVE) {
+            throw new UsernameNotFoundException("User account is not active");
+        }
         Collection<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));
-
-
+        grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
         return new CustomUserDetails(user, grantedAuthorities);
     }
 }

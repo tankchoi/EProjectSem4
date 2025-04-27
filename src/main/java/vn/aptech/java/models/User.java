@@ -22,11 +22,22 @@ public class User {
     private String fullname;
     private String email;
     private String phone;
-
+    public enum Role {
+        ADMIN,
+        STAFF,
+        CUSTOMER
+    }
     @Column(nullable = false)
-    private String role; // ADMIN, TECHNICIAN, CUSTOMER
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    private String status; // Active, Inactive
+    public enum Status {
+        ACTIVE,
+        BANNED
+    }
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @CreationTimestamp
     private Timestamp createdAt;
@@ -37,7 +48,7 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, String fullname, String email, String phone, String role, String status, Timestamp createdAt, Timestamp updatedAt) {
+    public User(Long id, String username, String password, String fullname, String email, String phone, Role role, Status status, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -74,11 +85,11 @@ public class User {
         return phone;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -114,11 +125,11 @@ public class User {
         this.phone = phone;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
