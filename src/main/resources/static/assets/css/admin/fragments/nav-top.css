@@ -1,0 +1,95 @@
+/*top-side*/
+.nav-top-side{
+    width: 100vw;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 15rem;
+    background-color: rgba(255,255,255,1);
+    border: 0.2px solid #d1d5db;
+}
+.menu-toggle{
+    display: none;
+    cursor: pointer;
+}
+.menu-toggle span{
+    color: #000000;
+    padding: 0.8rem 1rem;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+.search-contain{
+    padding:  0 1rem;
+}
+.search-contain input{
+    width: 20rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    outline: 1px solid #d1d5db; /* Màu xám nhạt */
+    padding: 0.8rem 1rem;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    border-right: 1px solid #d1d5db; /* Viền cạnh phải */
+    border-left: 1px solid #d1d5db;  /* Viền cạnh trái */
+
+}
+
+.dropdown-toggle {
+    color: #000000;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.dropdown-text{
+    margin: 0 0.5rem;
+    font-weight: 600;
+}
+.dropdown-menu {
+    display: none;
+    /* Ẩn mặc định */
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    min-width: 160px;
+    border-radius: 4px;
+    z-index: 100;
+}
+
+.dropdown-menu li a {
+    display: block;
+    padding: 1rem;
+    margin-right: 0.5rem;
+    text-decoration: none;
+    color: #333;
+
+}
+
+.dropdown-menu li a:hover {
+    background-color: #f1f1f1;
+}
+
+.logout-link{
+    color: #000000;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+    html{
+        font-size: 8px;
+    }
+    .menu-toggle{
+        display: block;
+    }
+}

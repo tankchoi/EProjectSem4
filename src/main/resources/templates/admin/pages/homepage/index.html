@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+    <link rel="stylesheet" th:href="@{/assets/css/pages/homepage/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/fragments/nav-top.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+<div class="main-container">
+    <div th:replace="fragments/nav-side :: nav-side"></div>
+    <div th:replace="fragments/nav-top :: nav-top"></div>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="header-content">
+                <h1>Admin /</h1><h1>Trang chủ</h1>
+            </div>
+        </div>
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h1>Dashboard</h1>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="dashboard">
+                <div class="dashboard-item">
+                    <div>
+                        <h2>Tổng số laptop</h2>
+                        <p>150</p>
+                    </div>
+                    <div class="icon">
+                        <span class="material-symbols-outlined md-36">laptop</span>
+                    </div>
+                </div>
+                <div class="dashboard-item">
+                    <div>
+                        <h2>Tổng số linh kiện</h2>
+                        <p>300</p>
+                    </div>
+                    <div class="icon">
+                        <span class="material-symbols-outlined md-36">memory</span>
+                    </div>
+                </div>
+                <div class="dashboard-item">
+                    <div>
+                        <h2>Tổng số yêu cầu sửa chữa</h2>
+                        <p>25</p>
+                    </div>
+                    <div class="icon">
+                        <span class="material-symbols-outlined md-36">build</span>
+                    </div>
+                </div>
+            </div>
+            <canvas id="myChart"></canvas>
+        </div>
+
+    </div>
+</div>
+<script th:src="@{/assets/js/script.js}"></script>
+</body>
+</html>
