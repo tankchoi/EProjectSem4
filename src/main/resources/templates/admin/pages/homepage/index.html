@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Trang chủ</title>
-    <link rel="stylesheet" th:href="@{/assets/css/pages/homepage/index.css}">
-    <link rel="stylesheet" th:href="@{/assets/css/fragments/nav-side.css}">
-    <link rel="stylesheet" th:href="@{/assets/css/fragments/nav-top.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/homepage/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,8 +13,8 @@
 </head>
 <body>
 <div class="main-container">
-    <div th:replace="fragments/nav-side :: nav-side"></div>
-    <div th:replace="fragments/nav-top :: nav-top"></div>
+    <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+    <div th:replace="admin/fragments/nav-top :: nav-top"></div>
     <div class="page-container">
         <div class="page-header">
             <div class="header-content">
@@ -61,6 +61,6 @@
 
     </div>
 </div>
-<script th:src="@{/assets/js/script.js}"></script>
+<script th:src="@{/assets/js/admin/script.js}"></script>
 </body>
 </html>

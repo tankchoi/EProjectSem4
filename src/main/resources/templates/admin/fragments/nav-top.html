@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="nav-top-side" th:fragment="nav-top">
+    <div class="flex justify-between align-center">
+        <div class="menu-toggle"><span class="material-symbols-outlined">menu</span></div>
+        <div class="search-contain">
+            <input type="text" name="" id="" placeholder="search anything">
+        </div>
+    </div>
+    <div class="flex">
+        <div class="dropdown">
+            <div class="dropdown-toggle">
+                <span class="material-symbols-outlined">account_circle</span>
+                <span class="dropdown-text">Phạm Nhật Anh</span>
+                <span class="material-symbols-outlined">arrow_drop_down</span>
+            </div>
+            <ul class="dropdown-menu">
+                <li><a href="#"><span class="material-symbols-outlined">person</span>Thông tin tài khoản</a></li>
+                <li><a href="#"><span class="material-symbols-outlined">settings</span>Cài đặt</a></li>
+                <li><a href="#"><span class="material-symbols-outlined">notifications</span>Thông báo</a></li>
+            </ul>
+        </div>
+        <div class="logout-contain">
+            <a href="#" class="logout-link">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="logout-text">Đăng xuất</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
