@@ -1,0 +1,80 @@
+*{
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+.schedule-container {
+    max-width: 1000px;
+    margin: 100px auto 40px;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-header h2 {
+    text-align: center;
+    color: #000;
+    margin-top: 0px;
+    font-size: 28px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #444;
+}
+
+.form-group [type="text"],
+.form-group input[type="email"],
+.form-group input[type="date"],
+.form-group textarea{
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.form-group textarea {
+    resize: none;
+	height: 220px;
+	display: block;
+}
+
+form button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.form-group button:hover {
+    background-color: #767676;
+}
+
+@media (max-width: 600px) {
+    .schedule-container {
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}

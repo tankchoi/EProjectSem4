@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/assets/css/user/history.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/footer.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/header.css}">
+    <link rel="stylesheet" type="text/css"
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+
+<body>
+    <div th:replace="user/fragments/header :: header"></div>
+    <div class="history-container">
+        <div class="history-header">
+            <h2>Laptop Warranty History</h2>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Product Name</th>
+                    <th>Serial Number</th>
+                    <th>Issue</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-label="Date">2025-03-01</td>
+                    <td data-label="Product Name">Dell Inspiron 15</td>
+                    <td data-label="Serial Number">D123456789</td>
+                    <td data-label="Issue">Won’t power on</td>
+                    <td data-label="Status">Resolved</td>
+                    <td data-label="Notes">Mainboard replaced</td>
+                </tr>
+                <tr>
+                    <td data-label="Date">2025-04-10</td>
+                    <td data-label="Product Name">HP Pavilion</td>
+                    <td data-label="Serial Number">HP987654321</td>
+                    <td data-label="Issue">Screen issue</td>
+                    <td data-label="Status">In Progress</td>
+                    <td data-label="Notes">Waiting for parts</td>
+                </tr>
+                <tr>
+                    <td data-label="Date">2025-05-05</td>
+                    <td data-label="Product Name">Asus VivoBook</td>
+                    <td data-label="Serial Number">ASU1234567</td>
+                    <td data-label="Issue">Battery problem</td>
+                    <td data-label="Status">Resolved</td>
+                    <td data-label="Notes">Battery replaced</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="user/fragments/footer :: footer"></div>
+</body>
+
+</html>
