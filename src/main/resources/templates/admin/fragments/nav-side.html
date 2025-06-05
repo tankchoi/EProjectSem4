@@ -14,79 +14,61 @@
     </div>
     <div class="menu">
         <h4 class="heading-menu">CHUNG</h4>
-        <div class="menu-item" th:classappend="${activePage == 'home'} ? 'active'">
-            <a href="">
+        <div class="menu-item" th:classappend="${activePage == 'homepage'} ? 'active'">
+            <a th:href="@{/admin/homepage}">
                 <span class="material-symbols-outlined">grid_view</span>
                 <span class="menu-item-icon">Trang chủ</span>
             </a>
         </div>
         <h4 class="heading-menu">Quản lý</h4>
-        <div class="menu-item">
-            <a href="">
+        <div class="menu-item" th:classappend="${activePage == 'model'} ? 'active'">
+            <a th:href="@{/admin/model}">
                 <span class="material-symbols-outlined">view_in_ar</span>
                 <span class="menu-item-icon">Model laptop</span>
             </a>
         </div>
         <div class="menu-item">
-            <a href="">
+            <a th:href="@{/admin/laptop}" th:classappend="${activePage == 'laptop'} ? 'active'">
                 <span class="material-symbols-outlined">computer</span>
                 <span class="menu-item-icon">Laptop</span>
             </a>
         </div>
-        <div class="menu-item">
-            <a href="">
+        <div class="menu-item" th:classappend="${activePage == 'part-type'} ? 'active'">
+            <a th:href="@{/admin/part-type}">
                 <span class="material-symbols-outlined">manufacturing</span>
                 <span class="menu-item-icon">Kiểu linh kiện</span>
             </a>
         </div>
-        <div class="menu-item">
-            <a href="">
+        <div class="menu-item" th:classappend="${activePage == 'part'} ? 'active'">
+            <a th:href="@{/admin/part}">
                 <span class="material-symbols-outlined">construction</span>
                 <span class="menu-item-icon">Linh kiện</span>
             </a>
         </div>
-        <div class="menu-item">
-            <a href="">
-                        <span class="material-symbols-outlined">
-assignment_add
-</span>
+        <div class="menu-item" th:classappend="${activePage == 'request'} ? 'active'">
+            <a th:href="@{/admin/request}">
+                <span class="material-symbols-outlined">assignment_add</span>
                 <span class="menu-item-icon">Yêu cầu sửa chữa</span>
             </a>
         </div>
-        <div class="menu-item">
-            <a href="">
-                        <span class="material-symbols-outlined">
-credit_card
-</span>
+        <div class="menu-item" th:classappend="${activePage == 'receipt'} ? 'active'">
+            <a th:href="@{/admin/receipt}">
+                <span class="material-symbols-outlined">credit_card</span>
                 <span class="menu-item-icon">Hóa đơn</span>
             </a>
         </div>
-        <div class="menu-item">
-            <a href="">
-                       <span class="material-symbols-outlined">
-group
-</span>
+        <div class="menu-item" th:classappend="${activePage == 'customer'} ? 'active'">
+            <a th:href="@{/admin/customer}">
+                <span class="material-symbols-outlined">group</span>
                 <span class="menu-item-icon">Khách hàng</span>
             </a>
         </div>
-        <div class="menu-item">
-            <a href="">
-                        <span class="material-symbols-outlined">
-badge
-</span>
+        <div class="menu-item" th:classappend="${activePage == 'staff'} ? 'active'">
+            <a th:href="@{/admin/staff}">
+                <span class="material-symbols-outlined">badge</span>
                 <span class="menu-item-icon">Nhân viên</span>
             </a>
         </div>
-        <div class="menu-item">
-            <a href="">
-                        <span class="material-symbols-outlined">
-mail
-</span>
-                <span class="menu-item-icon">Hoạt động</span>
-            </a>
-        </div>
-
-
     </div>
 </div>
 </body>

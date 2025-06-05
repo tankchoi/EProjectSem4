@@ -1,0 +1,151 @@
+/* trong moi giao dien */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.main-container{
+    background-color: rgba(243, 244, 246, 1);
+    width: 100vw;
+    min-height: 100vh;
+}
+.page-container{
+    padding-left: 15rem;
+    padding-top: 5rem;
+    padding-bottom: 1rem;
+}
+
+.page-header{
+    background-color: rgba(243, 244, 246, 1);
+}
+.header-content{
+    display: flex;
+}
+.page-header h1{
+    font-size: 2rem;
+    font-weight: 600;
+    color: rgba(31, 41, 55, 1);
+    padding: 1.5rem 1rem;
+}
+.dashboard-header{
+    background-color: rgba(255,255,255,1);
+    margin-bottom: 2rem;
+}
+.dashboard-title{
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: rgba(31, 41, 55, 1);
+    padding: 1.5rem 1rem;
+}
+/* chu y css o duoi */
+
+
+.page-content{
+    background-color: rgba(255, 255, 255, 1);
+    margin: 2rem;
+}
+
+.form-header{
+    font-weight: 600;
+    color: rgba(31, 41, 55, 1);
+    border-bottom: 0.2px solid #e5e5e5;
+    display: flex;
+    padding: 1rem;
+}
+
+
+.dropzone{
+    border: none !important;
+    padding: 1rem !important;
+}
+
+.input-content{
+    padding: 1rem;
+}
+.input-content label{
+    font-weight: 600;
+
+}
+
+.input-content input{
+    width: 100%;
+    border-radius: 0.5rem;
+    border: none;
+    margin-left: 1rem;
+}
+.input-content select{
+    width: 100%;
+    border-radius: 0.5rem;
+    border: none;
+    margin-left: 1rem;
+}
+
+.confirm-btn{
+    margin-right: 1.25rem;
+    margin-top: 1.25rem;
+    padding: 0.5rem 1.25rem;
+    background: forestgreen;
+    border-radius: 0.5rem;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.confirm-btn:hover{
+    background: #145313;
+    color: #ffffff;
+    transition: 0.7ms ease;
+}
+
+.cancel-btn{
+    background: #ffffff;
+    border: 2px solid red;
+    color: red;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    margin-right: 1.25rem;
+    margin-top: 1.25rem;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.cancel-btn:hover{
+    transition: 0.7ms ease;
+    color: #ffffff;
+    background: #ff0000;
+}
+
+.back-btn{
+    background: #ffffff;
+    border: 2px solid rgba(0, 0, 0, 0.81);
+    color: rgba(0, 0, 0, 0.81);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    margin-right: 1.25rem;
+    margin-top: 1.25rem;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.back-btn:hover{
+    transition: 0.7ms ease;
+    color: rgb(255, 255, 255);
+    background: rgba(0, 0, 0, 0.81);
+}
+
+.form-content{
+    padding: 1.5rem;
+}
+
+.table-container{
+    background-color: rgba(255,255,255,1);
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 0.5rem;
+}
+
+.table-content img{
+    width: 10rem;
+    height: 10rem;
+    object-fit: cover;
+}

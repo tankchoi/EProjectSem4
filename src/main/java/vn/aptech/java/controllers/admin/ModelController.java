@@ -14,7 +14,13 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/admin")
 public class ModelController {
-    @Autowired
-    private ModelService modelService;
+//    @Autowired
+//    private ModelService modelService;
+    @RequestMapping("/model")
+    public String index(Model model) {
+        model.addAttribute("activePage", "model");
+        return "admin/pages/model/index";
+    }
+
 
 }

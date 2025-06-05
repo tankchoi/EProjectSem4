@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý Model</title>
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/model/index.css}">
+    <title>Quản lý laptop</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/laptop/index.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -17,15 +17,15 @@
     <div class="page-container">
         <div class="page-header">
             <div class="header-content">
-                <h1>Admin /</h1><h1>Quản lý Model</h1>
+                <h1>Admin /</h1><h1>Quản lý laptop</h1>
             </div>
         </div>
         <div class="dashboard-header">
             <div class="dashboard-title">
-                <h1>Danh sách Model</h1>
+                <h1>Danh sách laptop</h1>
             </div>
             <div class="add-btn">
-                <a href="model/create">Thêm Model</a>
+                <a href="laptop/create">Thêm laptop</a>
             </div>
         </div>
 
@@ -34,7 +34,10 @@
                 <thead>
                 <tr>
                     <th>Mã</th>
-                    <th>Tên model</th>
+                    <th>Ảnh</th>
+                    <th>Tên</th>
+                    <th>Mã model</th>
+                    <th>Thời hạn bảo hành</th>
                     <th>Ngày tạo</th>
                     <th></th>
                 </tr>
@@ -42,19 +45,26 @@
                 <tbody>
                 <tr>
                     <td>1</td>
+                    <td><img th:src="@{/assets/images/vehicle-img/0d474d0b-da0b-40cc-b074-120e01469500_vision2.jpg}"></td>
                     <td>Dell</td>
+                    <td>12e3</td>
+                    <td>3 năm</td>
                     <td>12/01/2025</td>
                     <td class="px-2 py-1">
                         <div class="flex gap-2">
-                            <a href="model/update" class="edit-btn flex items-center gap-1 px-2 py-1" title="Bấm vào để xem chi tiết">
+                            <a href="vehicle/edit" class="edit-btn flex items-center gap-1 px-2 py-1" title="Bấm vào để xem chi tiết">
                                 Chi tiết
-                                <span class="material-symbols-outlined">edit</span>
+                                <span class="material-symbols-outlined">
+edit
+</span>
                             </a>
-                            <!--                            <form action="" class="delete-btn flex items-center justify-center px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">-->
-                            <!--                                <button class="flex item-center justify-center">-->
-                            <!--                                    Xóa <span class="material-symbols-outlined"></span>-->
-                            <!--                                </button>-->
-                            <!--                            </form>-->
+                            <form action="" class="delete-btn flex items-center justify-center px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                                <button class="flex item-center justify-center">
+                                    Xóa <span class="material-symbols-outlined">
+delete
+</span>
+                                </button>
+                            </form>
                         </div>
                     </td>
 
