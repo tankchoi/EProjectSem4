@@ -1,9 +1,9 @@
 package vn.aptech.java.models;
+
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.sql.Timestamp;
+
 @Entity
 @Table(name = "AuditLogs")
 public class AuditLog {
@@ -27,7 +27,8 @@ public class AuditLog {
     public AuditLog() {
     }
 
-    public AuditLog(Long id, User user, String tableName, Long recordId, String actionType, String oldValue, String newValue, Timestamp createdAt) {
+    public AuditLog(Long id, User user, String tableName, Long recordId, String actionType, String oldValue,
+            String newValue, Timestamp createdAt) {
         this.id = id;
         this.user = user;
         this.tableName = tableName;

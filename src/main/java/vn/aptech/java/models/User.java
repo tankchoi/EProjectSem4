@@ -22,11 +22,14 @@ public class User {
     private String fullname;
     private String email;
     private String phone;
+    private String img_link;
+
     public enum Role {
         ADMIN,
         STAFF,
         CUSTOMER
     }
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -35,6 +38,7 @@ public class User {
         ACTIVE,
         BANNED
     }
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -48,13 +52,15 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, String fullname, String email, String phone, Role role, Status status, Timestamp createdAt, Timestamp updatedAt) {
+    public User(Long id, String username, String password, String fullname, String email, String phone, String img_link,
+            Role role, Status status, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.fullname = fullname;
         this.email = email;
         this.phone = phone;
+        this.img_link = img_link;
         this.role = role;
         this.status = status;
         this.createdAt = createdAt;
@@ -123,6 +129,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getImg_link() {
+        return img_link;
+    }
+
+    public void setImg_link(String img_link) {
+        this.img_link = img_link;
     }
 
     public void setRole(Role role) {

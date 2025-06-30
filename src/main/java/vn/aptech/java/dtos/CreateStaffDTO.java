@@ -31,7 +31,8 @@ public class CreateStaffDTO {
     public CreateStaffDTO() {
     }
 
-    public CreateStaffDTO(String username, String password, String fullname, String email, String phone, User.Role role, User.Status status) {
+    public CreateStaffDTO(String username, String password, String fullname, String email, String phone, User.Role role,
+            User.Status status) {
         this.username = username;
         this.password = password;
         this.fullname = fullname;
@@ -85,7 +86,15 @@ public class CreateStaffDTO {
         return role;
     }
 
+    public void setRole(User.Role role) {
+        this.role = role;
+    }
+
     public User.Status getStatus() {
         return status;
+    }
+
+    public void setStatus(User.Status status) {
+        this.status = status;
     }
 }

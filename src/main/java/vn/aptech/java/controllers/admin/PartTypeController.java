@@ -13,10 +13,10 @@ public class PartTypeController {
         return "admin/pages/part_type/index";
     }
 
-//    @RequestMapping("/create")
-//    public String create() {
-//        return "admin/pages/part_type/create";
-//    }
+    @RequestMapping("part_type/create")
+    public String create() {
+        return "admin/pages/part_type/create";
+    }
 //
 //    @RequestMapping("/update")
 //    public String update() {

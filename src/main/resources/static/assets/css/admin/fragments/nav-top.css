@@ -1,12 +1,14 @@
 /*top-side*/
 .nav-top-side{
     width: 100vw;
+    height: 5rem;
     align-items: center;
     display: flex;
     justify-content: space-between;
     padding-left: 15rem;
     background-color: rgba(255,255,255,1);
     border: 0.2px solid #d1d5db;
+    position: fixed;
 }
 .menu-toggle{
     display: none;

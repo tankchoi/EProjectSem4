@@ -1,9 +1,11 @@
 package vn.aptech.java.models;
+
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+
 @Entity
 @Table(name = "Parts")
 public class Part {
@@ -16,7 +18,7 @@ public class Part {
     private PartType partType;
 
     @ManyToOne
-    @JoinColumn(name = "laptopId", nullable = false)
+    @JoinColumn(name = "laptopId", nullable = true)
     private Laptop laptop;
 
     private String name;
@@ -34,7 +36,8 @@ public class Part {
     public Part() {
     }
 
-    public Part(Long id, PartType partType, Laptop laptop, String name, Double price, Integer quantity, Integer warrantyPeriod, String imgUrl, Timestamp createdAt, Timestamp updatedAt) {
+    public Part(Long id, PartType partType, Laptop laptop, String name, Double price, Integer quantity,
+            Integer warrantyPeriod, String imgUrl, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.partType = partType;
         this.laptop = laptop;

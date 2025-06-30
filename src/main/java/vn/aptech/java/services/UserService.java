@@ -3,7 +3,6 @@ package vn.aptech.java.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.aptech.java.dtos.CreateStaffDTO;
@@ -16,14 +15,21 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getName() == null
+                || authentication.getName().equals("anonymousUser")) {
+            return null; // Trả về null khi chưa có user đăng nhập
+        }
         String userName = authentication.getName();
         return userRepository.findByUsername(userName);
     }
+
     public void createStaff(CreateStaffDTO createStaffDTO) {
         if (userRepository.existsByUsername(createStaffDTO.getUsername())) {
             throw new IllegalArgumentException("Tên đăng nhập đã tồn tại");

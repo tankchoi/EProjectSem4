@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Quản lý Model</title>
@@ -9,93 +10,141 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <style>
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+
+        .alert-error {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+        .search-container {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .btn-edit {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+        }
+    </style>
 </head>
+
 <body>
-<div class="main-container">
-    <div th:replace="admin/fragments/nav-side :: nav-side"></div>
-    <div th:replace="admin/fragments/nav-top :: nav-top"></div>
-    <div class="page-container">
-        <div class="page-header">
-            <div class="header-content">
-                <h1>Admin /</h1><h1>Quản lý Model</h1>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Quản lý Model</h1>
+                </div>
+            </div>
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Danh sách Model</h1>
+                </div>
+                <div class="add-btn">
+                    <a href="/admin/model/create">Thêm Model</a>
+                </div>
+            </div>
+
+            <!-- Thông báo -->
+            <div th:if="${success}" class="alert alert-success">
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-error">
+                <span th:text="${error}"></span>
+            </div>
+
+            <!-- Form tìm kiếm -->
+            <div class="search-container" style="margin-bottom: 20px;">
+                <form action="/admin/model/search" method="get" style="display: flex; gap: 10px;">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm model..."
+                        style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; flex: 1;">
+                    <button type="submit"
+                        style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px;">
+                        Tìm kiếm
+                    </button>
+                    <a href="/admin/model"
+                        style="padding: 8px 16px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px;">
+                        Hiện tất cả
+                    </a>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <table id="myTable" class="table-content">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên Model</th>
+                            <th>Số lượng Laptop</th>
+                            <th>Ngày tạo</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="model : ${models}">
+                            <td th:text="${model.id}">1</td>
+                            <td th:text="${model.name}">HP ProBook 450</td>
+                            <td th:text="${model.laptops != null ? model.laptops.size() : 0}">0</td>
+                            <td th:text="${#dates.format(model.createdAt, 'dd/MM/yyyy')}">12/01/2025</td>
+                            <td>
+                                <a th:href="@{/admin/model/edit/{id}(id=${model.id})}" class="btn-edit">Sửa</a>
+                                <form th:action="@{/admin/model/delete/{id}(id=${model.id})}" method="post"
+                                    style="display: inline;"
+                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa model này?')">
+                                    <button type="submit" class="btn-delete">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="dashboard-header">
-            <div class="dashboard-title">
-                <h1>Danh sách Model</h1>
-            </div>
-            <div class="add-btn">
-                <a href="model/create">Thêm Model</a>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <table id="myTable" class="table-content">
-                <thead>
-                <tr>
-                    <th>Mã</th>
-                    <th>Tên model</th>
-                    <th>Ngày tạo</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Dell</td>
-                    <td>12/01/2025</td>
-                    <td class="px-2 py-1">
-                        <div class="flex gap-2">
-                            <a href="model/update" class="edit-btn flex items-center gap-1 px-2 py-1" title="Bấm vào để xem chi tiết">
-                                Chi tiết
-                                <span class="material-symbols-outlined">edit</span>
-                            </a>
-                            <!--                            <form action="" class="delete-btn flex items-center justify-center px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">-->
-                            <!--                                <button class="flex item-center justify-center">-->
-                            <!--                                    Xóa <span class="material-symbols-outlined"></span>-->
-                            <!--                                </button>-->
-                            <!--                            </form>-->
-                        </div>
-                    </td>
-
-                </tr>
-
-                </tbody>
-            </table>
-
-
-        </div>
-
-
     </div>
-</div>
 
-
-
-<script th:src="@{/assets/js/admin/script.js}"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        new DataTable("#myTable", {
-            paging: true,        // Bật phân trang
-            searching: true,     // Bật tìm kiếm
-            ordering: true,      // Cho phép sắp xếp
-            info: true,          // Hiển thị số dòng đang xem
-            lengthMenu: [10, 20, 30, 40], // Tùy chọn số dòng hiển thị
-            language: {
-                search: "Tìm kiếm:",
-                lengthMenu: "Hiển thị _MENU_ dòng",
-                info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
-                paginate: {
-                    first: "Đầu",
-                    last: "Cuối",
-                    next: "Tiếp",
-                    previous: "Trước"
-                }
-            }
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json"
+                },
+                "pageLength": 10
+            });
         });
-    });
-</script>
+    </script>
 </body>
+
 </html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-                                                <div class=" row mb-3"
+        th:if="${request.updatedAt}">
+    <div class="col-sm-4"><strong>Cập nhật lần cuối:</strong></div>
+    <div class="col-sm-8" th:text="${#temporals.format(request.updatedAt, 'dd/MM/yyyy HH:mm')}"></div>
+    </div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết yêu cầu bảo hành</title>
+    <!-- Include admin CSS -->
+    <link rel="stylesheet" th:href="@{/assets/css/admin/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/admin.css}">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navigation Side -->
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Navigation Top -->
+            <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+
+            <!-- Page Content -->
+            <div class="container-fluid mt-4">
+                <!-- Page Header -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h4 class="card-title mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Chi tiết yêu cầu bảo hành #<span th:text="${request.id}"></span>
+                                </h4>
+                                <div>
+                                    <a th:href="@{/admin/request}" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left me-1"></i>Quay lại
+                                    </a>
+                                    <a th:href="@{/admin/request/edit/{id}(id=${request.id})}"
+                                        class="btn btn-warning ms-2">
+                                        <i class="fas fa-edit me-1"></i>Chỉnh sửa
+                                    </a>
+                                    <button type="button" class="btn btn-info ms-2" onclick="window.print()">
+                                        <i class="fas fa-print me-1"></i>In
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <!-- Alert Messages -->
+                                <div th:if="${message}" class="alert alert-success alert-dismissible fade show"
+                                    role="alert">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <span th:text="${message}"></span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+
+                                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show"
+                                    role="alert">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    <span th:text="${error}"></span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+
+                                <!-- Request Information -->
+                                <div class="row">
+                                    <!-- Basic Info -->
+                                    <div class="col-md-6">
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h5 class="card-title mb-0">
+                                                    <i class="fas fa-clipboard-list me-2"></i>
+                                                    Thông tin cơ bản
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-4"><strong>Mã yêu cầu:</strong></div>
+                                                    <div class="col-sm-8" th:text="${request.id}"></div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-4"><strong>Loại yêu cầu:</strong></div>
+                                                    <div class="col-sm-8">Yêu cầu bảo hành</div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-4"><strong>Trạng thái:</strong></div>
+                                                    <div class="col-sm-8">
+                                                        <span class="badge"
+                                                            th:classappend="${request.status == 'PENDING' ? 'bg-warning' : 
+                                                                              request.status == 'IN_PROGRESS' ? 'bg-info' : 
+                                                                              request.status == 'COMPLETED' ? 'bg-success' : 
+                                                                              request.status == 'CANCELLED' ? 'bg-danger' : 'bg-secondary'}"
+                                                            th:text="${request.status == 'PENDING' ? 'Chờ xử lý' : 
+                                                                        request.status == 'IN_PROGRESS' ? 'Đang xử lý' : 
+                                                                        request.status == 'COMPLETED' ? 'Hoàn thành' : 
+                                                                        request.status == 'CANCELLED' ? 'Đã hủy' : request.status}">
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-4"><strong>Mô tả vấn đề:</strong></div>
+                                                    <div class="col-sm-8" th:text="${request.description}"></div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-4"><strong>Ngày tạo:</strong></div>
+                                                    <div class="col-sm-8"
+                                                        th:text="${#temporals.format(request.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3" th:if="${request.updatedAt}">
+                                                    <div class="col-sm-4"><strong>Cập nhật lần cuối:</strong></div>
+                                                    <div class="col-sm-8"
+                                                        th:text="${#temporals.format(request.updatedAt, 'dd/MM/yyyy HH:mm')}">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3" th:if="${request.bookingDate}">
+                                                    <div class="col-sm-4"><strong>Ngày hẹn:</strong></div>
+                                                    <div class="col-sm-8"
+                                                        th:text="${#dates.format(request.bookingDate, 'dd/MM/yyyy')}">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3" th:if="${request.completedDate}">
+                                                    <div class="col-sm-4"><strong>Ngày hoàn thành:</strong></div>
+                                                    <div class="col-sm-8"
+                                                        th:text="${#temporals.format(request.completedDate, 'dd/MM/yyyy')}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Customer & Laptop Info -->
+                                    <div class="col-md-6">
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h5 class="card-title mb-0">
+                                                    <i class="fas fa-user me-2"></i>
+                                                    Thông tin khách hàng & laptop
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <h6 class="text-primary mb-3">Khách hàng:</h6>
+                                                <div class="row mb-2"
+                                                    th:if="${request.customerLaptop?.customer?.fullName}">
+                                                    <div class="col-sm-4"><strong>Họ tên:</strong></div>
+                                                    <div class="col-sm-8"
+                                                        th:text="${request.customerLaptop.customer.fullName}"></div>
+                                                </div>
+                                                <div class="row mb-2"
+                                                    th:if="${request.customerLaptop?.customer?.email}">
+                                                    <div class="col-sm-4"><strong>Email:</strong></div>
+                                                    <div class="col-sm-8"
+                                                        th:text="${request.customerLaptop.customer.email}"></div>
+                                                </div>
+                                                <div class="row mb-2"
+                                                    th:if="${request.customerLaptop?.customer?.phone}">
+                                                    <div class="col-sm-4"><strong>Điện thoại:</strong></div>
+                                                    <div class="col-sm-8"
+                                                        th:text="${request.customerLaptop.customer.phone}"></div>
+                                                </div>
+
+                                                <h6 class="text-primary mb-3 mt-4">Laptop:</h6>
+                                                <div class="row mb-2"
+                                                    th:if="${request.customerLaptop?.laptop?.model?.name}">
+                                                    <div class="col-sm-4"><strong>Model:</strong></div>
+                                                    <div class="col-sm-8"
+                                                        th:text="${request.customerLaptop.laptop.model.name}"></div>
+                                                </div>
+                                                <div class="row mb-2" th:if="${request.customerLaptop?.serialNumber}">
+                                                    <div class="col-sm-4"><strong>Serial Number:</strong></div>
+                                                    <div class="col-sm-8"
+                                                        th:text="${request.customerLaptop.serialNumber}"></div>
+                                                </div>
+                                                <div class="row mb-2" th:if="${request.customerLaptop?.purchaseDate}">
+                                                    <div class="col-sm-4"><strong>Ngày mua:</strong></div>
+                                                    <div class="col-sm-8"
+                                                        th:text="${#temporals.format(request.customerLaptop.purchaseDate, 'dd/MM/yyyy')}">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-2"
+                                                    th:if="${request.customerLaptop?.warrantyExpiredDate}">
+                                                    <div class="col-sm-4"><strong>Hết hạn bảo hành:</strong></div>
+                                                    <div class="col-sm-8">
+                                                        <span
+                                                            th:text="${#temporals.format(request.customerLaptop.warrantyExpiredDate, 'dd/MM/yyyy')}"></span>
+                                                        <span class="badge ms-2"
+                                                            th:classappend="${#temporals.createDate(request.customerLaptop.warrantyExpiredDate.year, request.customerLaptop.warrantyExpiredDate.monthValue, request.customerLaptop.warrantyExpiredDate.dayOfMonth).before(#dates.createNow()) ? 'bg-danger' : 'bg-success'}"
+                                                            th:text="${#temporals.createDate(request.customerLaptop.warrantyExpiredDate.year, request.customerLaptop.warrantyExpiredDate.monthValue, request.customerLaptop.warrantyExpiredDate.dayOfMonth).before(#dates.createNow()) ? 'Hết hạn' : 'Còn hạn'}">
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Technician Info -->
+                                <div class="row" th:if="${request.technician}">
+                                    <div class="col-md-6">
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h5 class="card-title mb-0">
+                                                    <i class="fas fa-user-cog me-2"></i>
+                                                    Kỹ thuật viên phụ trách
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-4"><strong>Họ tên:</strong></div>
+                                                    <div class="col-sm-8" th:text="${request.technician.fullName}">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-sm-4"><strong>Email:</strong></div>
+                                                    <div class="col-sm-8" th:text="${request.technician.email}"></div>
+                                                </div>
+                                                <div class="row mb-3" th:if="${request.technician.phone}">
+                                                    <div class="col-sm-4"><strong>Điện thoại:</strong></div>
+                                                    <div class="col-sm-8" th:text="${request.technician.phone}"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Status Update Form -->
+                                    <div class="col-md-6">
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h5 class="card-title mb-0">
+                                                    <i class="fas fa-tasks me-2"></i>
+                                                    Cập nhật trạng thái
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <form th:action="@{/admin/request/{id}/update-status(id=${request.id})}"
+                                                    method="post">
+                                                    <div class="mb-3">
+                                                        <label for="status" class="form-label">Trạng thái mới:</label>
+                                                        <select class="form-select" id="status" name="status" required>
+                                                            <option value="PENDING"
+                                                                th:selected="${request.status == 'PENDING'}">Chờ xử lý
+                                                            </option>
+                                                            <option value="IN_PROGRESS"
+                                                                th:selected="${request.status == 'IN_PROGRESS'}">Đang xử
+                                                                lý</option>
+                                                            <option value="COMPLETED"
+                                                                th:selected="${request.status == 'COMPLETED'}">Hoàn
+                                                                thành</option>
+                                                            <option value="CANCELLED"
+                                                                th:selected="${request.status == 'CANCELLED'}">Hủy bỏ
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fas fa-save me-1"></i>Cập nhật
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Assign Technician -->
+                                <div class="row" th:if="${!request.technician}">
+                                    <div class="col-md-6">
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h5 class="card-title mb-0">
+                                                    <i class="fas fa-user-plus me-2"></i>
+                                                    Phân công kỹ thuật viên
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <form
+                                                    th:action="@{/admin/request/{id}/assign-technician(id=${request.id})}"
+                                                    method="post">
+                                                    <div class="mb-3">
+                                                        <label for="technicianId" class="form-label">Chọn kỹ thuật
+                                                            viên:</label>
+                                                        <select class="form-select" id="technicianId"
+                                                            name="technicianId" required>
+                                                            <option value="">-- Chọn kỹ thuật viên --</option>
+                                                            <option th:each="tech : ${technicians}"
+                                                                th:value="${tech.id}"
+                                                                th:text="${tech.fullName + ' (' + tech.email + ')'}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-success">
+                                                        <i class="fas fa-user-check me-1"></i>Phân công
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="card-title mb-0">
+                                                    <i class="fas fa-cogs me-2"></i>
+                                                    Thao tác
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex gap-2 flex-wrap">
+                                                    <a th:href="@{/admin/request}" class="btn btn-secondary">
+                                                        <i class="fas fa-list me-1"></i>Danh sách yêu cầu
+                                                    </a>
+                                                    <a th:href="@{/admin/request/edit/{id}(id=${request.id})}"
+                                                        class="btn btn-warning">
+                                                        <i class="fas fa-edit me-1"></i>Chỉnh sửa
+                                                    </a>
+                                                    <a th:href="@{/admin/request/create}" class="btn btn-success">
+                                                        <i class="fas fa-plus me-1"></i>Tạo yêu cầu mới
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteModal">
+                                                        <i class="fas fa-trash me-1"></i>Xóa
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa yêu cầu bảo hành này không?</p>
+                    <p class="text-danger"><strong>Lưu ý:</strong> Thao tác này không thể hoàn tác!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form th:action="@{/admin/request/delete/{id}(id=${request.id})}" method="post"
+                        style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include admin JS -->
+    <script th:src="@{/assets/js/admin/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/assets/js/admin/admin.js}"></script>
+
+    <style>
+        @media print {
+
+            .btn,
+            .modal,
+            .card-header .btn,
+            .no-print {
+                display: none !important;
+            }
+
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

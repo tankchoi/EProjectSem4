@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm yêu cầu bảo hành</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/assets/css/admin/pages/customer/customer.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Navigation -->
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+
+        <!-- Page Content -->
+        <div id="content">
+            <!-- Top Navigation -->
+            <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+
+            <!-- Main Content -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h1 class="h3 mb-0 text-gray-800">
+                                    <i class="fas fa-plus me-2"></i>Thêm yêu cầu bảo hành
+                                </h1>
+                                <p class="text-muted mb-0">Tạo yêu cầu bảo hành mới cho khách hàng</p>
+                            </div>
+                            <div>
+                                <a href="/admin/request" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Error Alert -->
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show"
+                            role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <!-- Form Card -->
+                        <div class="card shadow">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">
+                                    <i class="fas fa-edit me-2"></i>Thông tin yêu cầu bảo hành
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <form th:action="@{/admin/request}" th:object="${request}" method="post"
+                                    class="needs-validation" novalidate>
+                                    <div class="row">
+                                        <!-- Customer Laptop -->
+                                        <div class="col-md-12 mb-3">
+                                            <label for="customerLaptopId" class="form-label">
+                                                <i class="fas fa-laptop me-1"></i>Laptop khách hàng
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <select class="form-select" id="customerLaptopId"
+                                                th:field="*{customerLaptopId}" required>
+                                                <option value="">Chọn laptop khách hàng</option>
+                                                <option th:each="customerLaptop : ${customerLaptops}"
+                                                    th:value="${customerLaptop.id}"
+                                                    th:text="${customerLaptop.customer.fullname + ' - ' + customerLaptop.laptop.name + ' (SN: ' + customerLaptop.serialNumber + ')'}">
+                                                    Nguyễn Văn A - HP ProBook 450 (SN: ABC123)
+                                                </option>
+                                            </select>
+                                            <div class="invalid-feedback"
+                                                th:if="${#fields.hasErrors('customerLaptopId')}"
+                                                th:errors="*{customerLaptopId}">
+                                                Vui lòng chọn laptop khách hàng.
+                                            </div>
+                                        </div>
+
+                                        <!-- Full Name -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fullname" class="form-label">
+                                                <i class="fas fa-user me-1"></i>Họ và tên
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="fullname" th:field="*{fullname}"
+                                                placeholder="Nhập họ và tên" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('fullname')}"
+                                                th:errors="*{fullname}">
+                                                Vui lòng nhập họ và tên.
+                                            </div>
+                                        </div>
+
+                                        <!-- Email -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">
+                                                <i class="fas fa-envelope me-1"></i>Email
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="email" class="form-control" id="email" th:field="*{email}"
+                                                placeholder="Nhập địa chỉ email" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}"
+                                                th:errors="*{email}">
+                                                Vui lòng nhập email hợp lệ.
+                                            </div>
+                                        </div>
+
+                                        <!-- Phone -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="phone" class="form-label">
+                                                <i class="fas fa-phone me-1"></i>Số điện thoại
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="tel" class="form-control" id="phone" th:field="*{phone}"
+                                                placeholder="Nhập số điện thoại (10-11 chữ số)" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}"
+                                                th:errors="*{phone}">
+                                                Vui lòng nhập số điện thoại hợp lệ.
+                                            </div>
+                                        </div>
+
+                                        <!-- Address -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="address" class="form-label">
+                                                <i class="fas fa-map-marker-alt me-1"></i>Địa chỉ
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="address" th:field="*{address}"
+                                                placeholder="Nhập địa chỉ" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('address')}"
+                                                th:errors="*{address}">
+                                                Vui lòng nhập địa chỉ.
+                                            </div>
+                                        </div>
+
+                                        <!-- Booking Date -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="bookingDate" class="form-label">
+                                                <i class="fas fa-calendar me-1"></i>Ngày đặt lịch
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="date" class="form-control" id="bookingDate"
+                                                th:field="*{bookingDate}" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('bookingDate')}"
+                                                th:errors="*{bookingDate}">
+                                                Vui lòng chọn ngày đặt lịch.
+                                            </div>
+                                        </div>
+
+                                        <!-- Status -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="status" class="form-label">
+                                                <i class="fas fa-flag me-1"></i>Trạng thái
+                                            </label>
+                                            <select class="form-select" id="status" th:field="*{status}">
+                                                <option value="PENDING">Chờ xử lý</option>
+                                                <option value="APPROVED">Đã duyệt</option>
+                                                <option value="REJECTED">Từ chối</option>
+                                                <option value="IN_PROGRESS">Đang thực hiện</option>
+                                                <option value="COMPLETED">Hoàn thành</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Technician -->
+                                        <div class="col-md-12 mb-3">
+                                            <label for="technicianId" class="form-label">
+                                                <i class="fas fa-user-cog me-1"></i>Kỹ thuật viên
+                                            </label>
+                                            <select class="form-select" id="technicianId" th:field="*{technicianId}">
+                                                <option value="">Chưa gán kỹ thuật viên</option>
+                                                <option th:each="technician : ${technicians}"
+                                                    th:value="${technician.id}"
+                                                    th:text="${technician.fullname + ' (' + technician.username + ')'}">
+                                                    Nguyễn Văn B (staff1)
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Description -->
+                                        <div class="col-md-12 mb-3">
+                                            <label for="description" class="form-label">
+                                                <i class="fas fa-comment me-1"></i>Mô tả vấn đề
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <textarea class="form-control" id="description" th:field="*{description}"
+                                                rows="4" placeholder="Mô tả chi tiết vấn đề cần bảo hành"
+                                                required></textarea>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
+                                                th:errors="*{description}">
+                                                Vui lòng nhập mô tả vấn đề.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Submit Buttons -->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                <a href="/admin/request" class="btn btn-secondary me-2">
+                                                    <i class="fas fa-times me-1"></i>Hủy
+                                                </a>
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fas fa-save me-1"></i>Lưu yêu cầu
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Bootstrap form validation
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+        // Set minimum date to today
+        document.getElementById('bookingDate').min = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+
+</html>

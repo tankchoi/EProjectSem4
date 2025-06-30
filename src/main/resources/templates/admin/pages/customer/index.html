@@ -1,10 +1,425 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý khách hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="/assets/css/admin/pages/customer/customer.css" rel="stylesheet">
 </head>
+
 <body>
+    <div class="wrapper">
+        <!-- Navigation -->
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+
+        <!-- Page Content -->
+        <div id="content">
+            <!-- Top Navigation -->
+            <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+
+            <!-- Main Content -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h1 class="h3 mb-0 text-gray-800">
+                                    <i class="fas fa-users me-2"></i>Quản lý khách hàng
+                                </h1>
+                                <p class="text-muted mb-0">Quản lý thông tin khách hàng của hệ thống</p>
+                            </div>
+                            <div>
+                                <a href="/admin/customer/create" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Thêm khách hàng
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Alerts -->
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show"
+                            role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span th:text="${successMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show"
+                            role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <!-- Search and Filter Card -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <form th:action="@{/admin/customer}" method="get" class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="search" class="form-label">Tìm kiếm</label>
+                                        <input type="text" class="form-control" id="search" name="search"
+                                            th:value="${search}" placeholder="Tìm theo tên, email, phone...">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="status" class="form-label">Trạng thái</label>
+                                        <select class="form-select" id="status" name="status">
+                                            <option value="">Tất cả</option>
+                                            <option value="ACTIVE" th:selected="${status == 'ACTIVE'}">Hoạt động
+                                            </option>
+                                            <option value="BANNED" th:selected="${status == 'BANNED'}">Đã khóa</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="size" class="form-label">Hiển thị</label>
+                                        <select class="form-select" id="size" name="size">
+                                            <option value="5" th:selected="${size == 5}">5</option>
+                                            <option value="10" th:selected="${size == 10}">10</option>
+                                            <option value="25" th:selected="${size == 25}">25</option>
+                                            <option value="50" th:selected="${size == 50}">50</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">&nbsp;</label>
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-search me-1"></i>Tìm kiếm
+                                            </button>
+                                            <a href="/admin/customer" class="btn btn-outline-secondary">
+                                                <i class="fas fa-undo me-1"></i>Làm mới
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Customer Table Card -->
+                        <div class="card shadow">
+                            <div class="card-header py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="m-0 font-weight-bold text-primary">
+                                        <i class="fas fa-table me-2"></i>Danh sách khách hàng
+                                        <span class="badge bg-info ms-2" th:text="${totalElements}">0</span>
+                                    </h6>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown">
+                                            <i class="fas fa-download me-1"></i>Xuất dữ liệu
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#" onclick="exportTable('excel')">
+                                                    <i class="fas fa-file-excel me-2"></i>Excel
+                                                </a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">
+                                                    <i class="fas fa-file-pdf me-2"></i>PDF
+                                                </a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="window.print()">
+                                                    <i class="fas fa-print me-2"></i>In
+                                                </a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover" id="customerTable">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Tên đăng nhập</th>
+                                                <th>Họ tên</th>
+                                                <th>Email</th>
+                                                <th>Số điện thoại</th>
+                                                <th>Trạng thái</th>
+                                                <th>Ngày tạo</th>
+                                                <th class="text-center">Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:if="${customers.empty}">
+                                                <td colspan="8" class="text-center text-muted py-4">
+                                                    <i class="fas fa-users fa-3x mb-3 text-muted"></i>
+                                                    <div>Không có khách hàng nào</div>
+                                                </td>
+                                            </tr>
+                                            <tr th:each="customer : ${customers.content}">
+                                                <td th:text="${customer.id}">1</td>
+                                                <td th:text="${customer.username}">john_doe</td>
+                                                <td th:text="${customer.fullname}">John Doe</td>
+                                                <td th:text="${customer.email}">john@email.com</td>
+                                                <td th:text="${customer.phone}">0123456789</td>
+                                                <td>
+                                                    <span th:switch="${customer.status}" class="badge">
+                                                        <span th:case="'ACTIVE'" class="badge bg-success">
+                                                            <i class="fas fa-check me-1"></i>Hoạt động
+                                                        </span>
+                                                        <span th:case="'BANNED'" class="badge bg-danger">
+                                                            <i class="fas fa-ban me-1"></i>Đã khóa
+                                                        </span>
+                                                    </span>
+                                                </td>
+                                                <td
+                                                    th:text="${#temporals.format(customer.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                                    01/01/2024 10:00</td>
+                                                <td class="text-center">
+                                                    <div class="btn-group" role="group">
+                                                        <a th:href="@{/admin/customer/{id}(id=${customer.id})}"
+                                                            class="btn btn-sm btn-outline-info" title="Xem chi tiết">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a th:href="@{/admin/customer/{id}/edit(id=${customer.id})}"
+                                                            class="btn btn-sm btn-outline-warning" title="Chỉnh sửa">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <button th:if="${customer.status.name() == 'ACTIVE'}"
+                                                            type="button" class="btn btn-sm btn-outline-danger"
+                                                            title="Khóa khách hàng"
+                                                            th:onclick="'confirmDelete(' + ${customer.id} + ', \'' + ${customer.username} + '\')'">
+                                                            <i class="fas fa-ban"></i>
+                                                        </button>
+                                                        <button th:if="${customer.status.name() == 'BANNED'}"
+                                                            type="button" class="btn btn-sm btn-outline-success"
+                                                            title="Mở khóa khách hàng"
+                                                            th:onclick="'confirmRestore(' + ${customer.id} + ', \'' + ${customer.username} + '\')'">
+                                                            <i class="fas fa-undo"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination -->
+                                <div th:if="${customers.totalPages > 1}"
+                                    class="d-flex justify-content-between align-items-center mt-4">
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-muted">
+                                            Hiển thị <span th:text="${customers.size}">10</span>
+                                            trong tổng số <span th:text="${customers.totalElements}">100</span> khách
+                                            hàng
+                                        </span>
+                                    </div>
+                                    <nav>
+                                        <ul class="pagination pagination-sm">
+                                            <!-- Previous Page -->
+                                            <li class="page-item" th:classappend="${customers.first} ? 'disabled'">
+                                                <a class="page-link"
+                                                    th:href="@{/admin/customer(page=${currentPage - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}">
+                                                    <i class="fas fa-chevron-left"></i>
+                                                </a>
+                                            </li>
+
+                                            <!-- Page Numbers -->
+                                            <li th:each="page : ${#numbers.sequence(0, customers.totalPages - 1)}"
+                                                class="page-item" th:classappend="${page == currentPage} ? 'active'">
+                                                <a class="page-link"
+                                                    th:href="@{/admin/customer(page=${page}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
+                                                    th:text="${page + 1}">1</a>
+                                            </li>
+
+                                            <!-- Next Page -->
+                                            <li class="page-item" th:classappend="${customers.last} ? 'disabled'">
+                                                <a class="page-link"
+                                                    th:href="@{/admin/customer(page=${currentPage + 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}">
+                                                    <i class="fas fa-chevron-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-ban me-2 text-danger"></i>Xác nhận khóa khách hàng
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn khóa khách hàng <strong id="deleteCustomerName"></strong>?</p>
+                    <p class="text-muted small">Khách hàng sẽ không thể đăng nhập vào hệ thống.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form id="deleteForm" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-ban me-1"></i>Khóa khách hàng
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Restore Confirmation Modal -->
+    <div class="modal fade" id="restoreModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-undo me-2 text-success"></i>Xác nhận mở khóa khách hàng
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn mở khóa khách hàng <strong id="restoreCustomerName"></strong>?</p>
+                    <p class="text-muted small">Khách hàng sẽ có thể đăng nhập lại vào hệ thống.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form id="restoreForm" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-undo me-1"></i>Mở khóa
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            $('#customerTable').DataTable({
+                "paging": false,
+                "searching": false,
+                "info": false,
+                "ordering": false,
+                "columnDefs": [
+                    { "orderable": false, "targets": [7] }
+                ],
+                "language": {
+                    "emptyTable": "Không có dữ liệu"
+                }
+            });
+
+            // Auto hide alerts after 5 seconds
+            setTimeout(function () {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+        });
+
+        function confirmDelete(customerId, customerName) {
+            document.getElementById('deleteCustomerName').textContent = customerName;
+            document.getElementById('deleteForm').action = '/admin/customer/' + customerId + '/delete';
+            var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+
+        function confirmRestore(customerId, customerName) {
+            document.getElementById('restoreCustomerName').textContent = customerName;
+            document.getElementById('restoreForm').action = '/admin/customer/' + customerId + '/restore';
+            var modal = new bootstrap.Modal(document.getElementById('restoreModal'));
+            modal.show();
+        }
+
+        function exportTable(format) {
+            const table = document.getElementById('customerTable');
+            const data = [];
+
+            // Get headers
+            const headers = [];
+            table.querySelectorAll('thead th').forEach((th, index) => {
+                if (index < 7) { // Exclude action column
+                    headers.push(th.textContent.trim());
+                }
+            });
+            data.push(headers);
+
+            // Get data rows
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach((td, index) => {
+                    if (index < 7) { // Exclude action column
+                        row.push(td.textContent.trim());
+                    }
+                });
+                if (row.length > 0) {
+                    data.push(row);
+                }
+            });
+
+            if (format === 'excel') {
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Khách hàng");
+                XLSX.writeFile(wb, "danh-sach-khach-hang.xlsx");
+            } else if (format === 'pdf') {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(16);
+                doc.text("DANH SÁCH KHÁCH HÀNG", 20, 20);
+
+                let y = 40;
+                data.forEach((row, index) => {
+                    if (index === 0) {
+                        doc.setFont("helvetica", "bold");
+                        doc.setFontSize(10);
+                    } else {
+                        doc.setFont("helvetica", "normal");
+                        doc.setFontSize(8);
+                    }
+
+                    doc.text(row.join(" | "), 20, y);
+                    y += 8;
+
+                    if (y > 280) {
+                        doc.addPage();
+                        y = 20;
+                    }
+                });
+
+                doc.save("danh-sach-khach-hang.pdf");
+            }
+        }
+    </script>
+
+    <style>
+        @media print {
+
+            .btn,
+            .pagination,
+            .alert,
+            .dropdown {
+                display: none !important;
+            }
+
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+        }
+    </style>
 
 </body>
+
 </html>

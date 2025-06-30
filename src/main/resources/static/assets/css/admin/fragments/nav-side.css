@@ -22,7 +22,8 @@
     display: flex;
     align-items: center;
     background-color: rgba(17,24,39,1);
-    padding: 1rem 1rem;
+    padding: 1rem;
+    height: 5rem;
 }
 
 .profile-content p {

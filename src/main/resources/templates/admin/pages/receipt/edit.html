@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh sửa Hóa đơn</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/laptop/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/receipt/receipt.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Quản lý Hóa đơn</h1>
+                </div>
+            </div>
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Chỉnh sửa Hóa đơn #<span th:text="${invoice.id}"></span></h1>
+                    <a th:href="@{/admin/receipt}"
+                        class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                        Quay lại
+                    </a>
+                </div>
+            </div>
+
+            <!-- Alert messages -->
+            <div th:if="${success}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <form th:action="@{/admin/receipt/update/{id}(id=${invoice.id})}" th:object="${invoice}" method="post">
+                    <input type="hidden" th:field="*{id}">
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">
+                            Thông tin yêu cầu bảo hành
+                        </label>
+                        <div class="bg-gray-100 p-4 rounded">
+                            <p><strong>Mã yêu cầu:</strong> #<span th:text="${invoice.request.id}"></span></p>
+                            <p><strong>Khách hàng:</strong> <span th:text="${invoice.request.fullname}"></span></p>
+                            <p><strong>Thiết bị:</strong> <span
+                                    th:text="${invoice.request.customerLaptop.laptop.name}"></span></p>
+                            <p><strong>Kỹ thuật viên:</strong> <span
+                                    th:text="${invoice.request.technician != null ? invoice.request.technician.fullname : 'Chưa phân công'}"></span>
+                            </p>
+                        </div>
+                        <input type="hidden" th:field="*{request}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="totalPrice">
+                            Tổng tiền (VNĐ) *
+                        </label>
+                        <input th:field="*{totalPrice}" type="number" step="1000" min="0" id="totalPrice"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="status">
+                            Trạng thái thanh toán *
+                        </label>
+                        <select th:field="*{status}" id="status"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                            <option value="UNPAID">Chưa thanh toán</option>
+                            <option value="PAID">Đã thanh toán</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">
+                            Thông tin khác
+                        </label>
+                        <div class="bg-gray-100 p-4 rounded">
+                            <p><strong>Ngày tạo:</strong> <span
+                                    th:text="${#dates.format(invoice.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+                            <p><strong>Cập nhật lần cuối:</strong> <span
+                                    th:text="${#dates.format(invoice.updatedAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Cập nhật Hóa đơn
+                        </button>
+                        <a th:href="@{/admin/receipt}"
+                            class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                            Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/assets/js/admin/script.js}"></script>
+</body>
+
+</html>

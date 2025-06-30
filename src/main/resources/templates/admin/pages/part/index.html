@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Quản lý linh kiện</title>
@@ -9,98 +10,170 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <style>
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+
+        .alert-error {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+        .search-container {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+    </style>
 </head>
+
 <body>
-<div class="main-container">
-    <div th:replace="admin/fragments/nav-side :: nav-side"></div>
-    <div th:replace="admin/fragments/nav-top :: nav-top"></div>
-    <div class="page-container">
-        <div class="page-header">
-            <div class="header-content">
-                <h1>Admin /</h1><h1>Quản lý linh kiện</h1>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Quản lý linh kiện</h1>
+                </div>
             </div>
-        </div>
-        <div class="dashboard-header">
-            <div class="dashboard-title">
-                <h1>Danh sách linh kiện</h1>
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Danh sách linh kiện</h1>
+                </div>
+                <div class="add-btn">
+                    <a href="/admin/part/create">Thêm linh kiện</a>
+                </div>
             </div>
-            <div class="add-btn">
-                <a href="accessory/create">Thêm linh kiện</a>
+
+            <!-- Thông báo -->
+            <div th:if="${success}" class="alert alert-success">
+                <span th:text="${success}"></span>
             </div>
+            <div th:if="${error}" class="alert alert-error">
+                <span th:text="${error}"></span>
+            </div>
+
+            <!-- Form tìm kiếm -->
+            <div class="search-container" style="margin-bottom: 20px;">
+                <form action="/admin/part/search" method="get" style="display: flex; gap: 10px;">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm linh kiện..."
+                        style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; flex: 1;">
+                    <button type="submit"
+                        style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px;">
+                        Tìm kiếm
+                    </button>
+                    <a href="/admin/part"
+                        style="padding: 8px 16px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px;">
+                        Hiện tất cả
+                    </a>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <table id="myTable" class="table-content">
+                    <thead>
+                        <tr>
+                            <th>Mã</th>
+                            <th>Ảnh</th>
+                            <th>Tên linh kiện</th>
+                            <th>Mã loại</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Thời hạn bảo hành</th>
+                            <th>Ngày tạo</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="part : ${parts}">
+                            <td th:text="${part.id}">1</td>
+                            <td>
+                                <img th:src="${part.imgUrl != null ? part.imgUrl : '/assets/images/default-part.jpg'}"
+                                    style="width: 60px; height: 60px; object-fit: cover;" alt="Part image">
+                            </td>
+                            <td th:text="${part.name}">RAM DDR4</td>
+                            <td th:text="${part.partType != null ? part.partType.name : 'N/A'}">Bộ nhớ</td>
+                            <td th:text="${#numbers.formatCurrency(part.price)}">150,000 ₫</td>
+                            <td th:text="${part.quantity}">100</td>
+                            <td th:text="${part.warrantyPeriod + ' năm'}">3 năm</td>
+                            <td th:text="${#dates.format(part.createdAt, 'dd/MM/yyyy')}">12/01/2025</td>
+                            <td class="px-2 py-1">
+                                <div class="flex gap-2">
+                                    <a th:href="@{'/admin/part/edit/' + ${part.id}}"
+                                        class="edit-btn flex items-center gap-1 px-2 py-1" title="Bấm vào để chỉnh sửa"
+                                        style="background: #007bff; color: white; text-decoration: none; border-radius: 4px;">
+                                        Sửa
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </a>
+                                    <form th:action="@{'/admin/part/delete/' + ${part.id}}" method="post"
+                                        style="display: inline;"
+                                        onsubmit="return confirm('Bạn có chắc chắn muốn xóa linh kiện này?')">
+                                        <button type="submit" class="flex items-center gap-1 px-2 py-1"
+                                            style="background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                            Xóa <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(parts)}">
+                            <td colspan="9" style="text-align: center; padding: 20px;">
+                                <span th:if="${keyword}">Không tìm thấy linh kiện nào với từ khóa "<span
+                                        th:text="${keyword}"></span>"</span>
+                                <span th:unless="${keyword}">Chưa có linh kiện nào trong hệ thống</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+
+
         </div>
-
-        <div class="table-container">
-            <table id="myTable" class="table-content">
-                <thead>
-                <tr>
-                    <th>Mã</th>
-                    <th>Ảnh</th>
-                    <th>Tên linh kiện</th>
-                    <th>Mã loại</th>
-                    <th>Giá</th>
-                    <th>Số lượng</th>
-                    <th>Thời hạn bảo hành</th>
-                    <th>Ngày tạo</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><img th:src="@{/assets/images/vehicle-img/0d474d0b-da0b-40cc-b074-120e01469500_vision2.jpg}"></td>
-                    <td>Dell</td>
-                    <td>12e3</td>
-                    <td>150000</td>
-                    <td>100</td>
-                    <td>3 năm</td>
-                    <td>12/01/2025</td>
-                    <td class="px-2 py-1">
-                        <div class="flex gap-2">
-                            <a href="accessory/update" class="edit-btn flex items-center gap-1 px-2 py-1" title="Bấm vào để xem chi tiết">
-                                Chi tiết
-                                <span class="material-symbols-outlined">edit</span>
-                            </a>
-                        </div>
-                    </td>
-
-                </tr>
-
-                </tbody>
-            </table>
-
-
-        </div>
-
-
     </div>
-</div>
 
 
 
-<script th:src="@{/assets/js/admin/script.js}"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        new DataTable("#myTable", {
-            paging: true,        // Bật phân trang
-            searching: true,     // Bật tìm kiếm
-            ordering: true,      // Cho phép sắp xếp
-            info: true,          // Hiển thị số dòng đang xem
-            lengthMenu: [10, 20, 30, 40], // Tùy chọn số dòng hiển thị
-            language: {
-                search: "Tìm kiếm:",
-                lengthMenu: "Hiển thị _MENU_ dòng",
-                info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
-                paginate: {
-                    first: "Đầu",
-                    last: "Cuối",
-                    next: "Tiếp",
-                    previous: "Trước"
+    <script th:src="@{/assets/js/admin/script.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new DataTable("#myTable", {
+                paging: true,        // Bật phân trang
+                searching: true,     // Bật tìm kiếm
+                ordering: true,      // Cho phép sắp xếp
+                info: true,          // Hiển thị số dòng đang xem
+                lengthMenu: [10, 20, 30, 40], // Tùy chọn số dòng hiển thị
+                language: {
+                    search: "Tìm kiếm:",
+                    lengthMenu: "Hiển thị _MENU_ dòng",
+                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
+                    paginate: {
+                        first: "Đầu",
+                        last: "Cuối",
+                        next: "Tiếp",
+                        previous: "Trước"
+                    }
                 }
-            }
+            });
         });
-    });
-</script>
+    </script>
 </body>
+
 </html>

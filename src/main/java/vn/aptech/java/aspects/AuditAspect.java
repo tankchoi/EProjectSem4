@@ -7,6 +7,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import vn.aptech.java.models.User;
 import vn.aptech.java.services.AuditLogService;
 import vn.aptech.java.services.UserService;
 
@@ -30,23 +31,33 @@ public class AuditAspect {
 
     @AfterReturning(pointcut = "execution(* vn.aptech.java.services..*.create*(..))", returning = "result")
     public void afterCreate(JoinPoint joinPoint, Object result) throws Exception {
+        // Kiểm tra nếu không có user đăng nhập thì bỏ qua audit
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            return; // Bỏ qua audit khi chưa có user đăng nhập
+        }
+
         Object entity = result;
         Long id = getEntityId(entity);
 
         String newJson = objectMapper.writeValueAsString(entity);
 
         auditLogService.log(
-                userService.getCurrentUser(),
+                currentUser,
                 entity.getClass().getSimpleName(),
                 id,
                 "CREATE",
                 null,
-                newJson
-        );
+                newJson);
     }
 
     @Around("execution(* vn.aptech.java.services..*.update*(..))")
     public Object aroundUpdate(ProceedingJoinPoint joinPoint) throws Throwable {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            return joinPoint.proceed(); // Bỏ qua audit khi chưa có user đăng nhập
+        }
+
         Object[] args = joinPoint.getArgs();
         if (args.length == 0 || args[0] == null) {
             return joinPoint.proceed();
@@ -63,31 +74,34 @@ public class AuditAspect {
         String newJson = objectMapper.writeValueAsString(newEntity);
 
         auditLogService.log(
-                userService.getCurrentUser(),
+                currentUser,
                 newEntity.getClass().getSimpleName(),
                 id,
                 "UPDATE",
                 oldJson,
-                newJson
-        );
+                newJson);
 
         return result;
     }
 
     @Before("execution(* vn.aptech.java.services..*.delete*(..))")
     public void beforeDelete(JoinPoint joinPoint) throws Exception {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            return; // Bỏ qua audit khi chưa có user đăng nhập
+        }
+
         Object entity = joinPoint.getArgs()[0];
         Long id = getEntityId(entity);
         String oldJson = objectMapper.writeValueAsString(entity);
 
         auditLogService.log(
-                userService.getCurrentUser(),
+                currentUser,
                 entity.getClass().getSimpleName(),
                 id,
                 "DELETE",
                 oldJson,
-                null
-        );
+                null);
     }
 
     private Long getEntityId(Object entity) throws Exception {

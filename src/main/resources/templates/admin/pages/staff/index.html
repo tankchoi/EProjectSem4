@@ -1,101 +1,238 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/laptop/index.css}">
+    <title>Quản lý Nhân viên</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/staff/staff.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <style>
+        .alert {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-banned {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
 </head>
+
 <body>
-<div class="main-container">
-    <div th:replace="admin/fragments/nav-side :: nav-side"></div>
-    <div th:replace="admin/fragments/nav-top :: nav-top"></div>
-    <div class="page-container">
-        <div class="page-header">
-            <div class="header-content">
-                <h1>Admin /</h1><h1>Quản lý Nhân viên</h1>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Quản lý Nhân viên</h1>
+                </div>
+            </div>
+
+            <!-- Flash Messages -->
+            <div th:if="${success}" class="alert alert-success">
+                <span>✓</span>
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-error">
+                <span>⚠</span>
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Danh sách nhân viên</h1>
+                    <p th:if="${totalElements != null}" class="text-sm text-gray-600">
+                        Tổng số: <span th:text="${totalElements}">0</span> nhân viên
+                    </p>
+                </div>
+                <div class="add-btn">
+                    <a th:href="@{/admin/staff/create}">Thêm nhân viên mới</a>
+                </div>
+            </div>
+
+            <!-- Search Form -->
+            <div class="mb-4">
+                <form method="get" th:action="@{/admin/staff}" class="flex gap-2">
+                    <input type="text" name="search" th:value="${search}"
+                        placeholder="Tìm kiếm theo tên, email, số điện thoại..."
+                        class="flex-1 border border-gray-300 rounded-md p-2">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                        Tìm kiếm
+                    </button>
+                    <a th:href="@{/admin/staff}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                        Xóa bộ lọc
+                    </a>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <table id="myTable" class="display">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên đăng nhập</th>
+                            <th>Họ và tên</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="staff : ${staffList}">
+                            <td th:text="${staff.id}">1</td>
+                            <td th:text="${staff.username}">username</td>
+                            <td th:text="${staff.fullname}">Họ và tên</td>
+                            <td th:text="${staff.email}">email@example.com</td>
+                            <td th:text="${staff.phone}">0123456789</td>
+                            <td>
+                                <span
+                                    th:class="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE} ? 'status-badge status-active' : 'status-badge status-banned'"
+                                    th:text="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE} ? 'Hoạt động' : 'Đã khóa'">
+                                    Trạng thái
+                                </span>
+                            </td>
+                            <td th:text="${#temporals.format(staff.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2024 00:00
+                            </td>
+                            <td class="px-2 py-1">
+                                <div class="flex gap-2">
+                                    <a th:href="@{/admin/staff/{id}(id=${staff.id})}"
+                                        class="edit-btn flex items-center gap-1 px-2 py-1" title="Xem chi tiết">
+                                        Chi tiết
+                                        <img th:src="@{/assets/images/icons8-edit-16.png}" alt=""
+                                            class="w-4 h-4 inline-block" />
+                                    </a>
+                                    <a th:href="@{/admin/staff/{id}/edit(id=${staff.id})}"
+                                        class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                                        title="Chỉnh sửa">
+                                        Sửa
+                                    </a>
+                                    <form th:if="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE}"
+                                        th:action="@{/admin/staff/{id}/delete(id=${staff.id})}" method="post"
+                                        class="delete-btn flex items-center justify-center px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                                        onsubmit="return confirm('Bạn có chắc chắn muốn khóa tài khoản này?')">
+                                        <button type="submit" class="flex item-center justify-center">
+                                            Khóa <img th:src="@{/assets/images/icons8-trash-16.png}" alt="">
+                                        </button>
+                                    </form>
+                                    <form th:if="${staff.status == T(vn.aptech.java.models.User.Status).BANNED}"
+                                        th:action="@{/admin/staff/{id}/restore(id=${staff.id})}" method="post"
+                                        class="restore-btn flex items-center justify-center px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                                        onsubmit="return confirm('Bạn có chắc chắn muốn khôi phục tài khoản này?')">
+                                        <button type="submit" class="flex item-center justify-center">
+                                            Khôi phục
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(staffList)}">
+                            <td colspan="8" class="text-center py-4 text-gray-500">
+                                Không có nhân viên nào
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div th:if="${totalPages > 1}" class="flex justify-center mt-4 gap-2">
+                <a th:if="${currentPage > 0}"
+                    th:href="@{/admin/staff(page=${currentPage - 1}, size=${size}, search=${search})}"
+                    class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                    « Trước
+                </a>
+
+                <span th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:if="${pageNum >= currentPage - 2 && pageNum <= currentPage + 2}">
+                    <a th:if="${pageNum != currentPage}"
+                        th:href="@{/admin/staff(page=${pageNum}, size=${size}, search=${search})}"
+                        th:text="${pageNum + 1}" class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                    </a>
+                    <span th:if="${pageNum == currentPage}" th:text="${pageNum + 1}"
+                        class="px-3 py-2 bg-blue-500 text-white rounded">
+                    </span>
+                </span>
+
+                <a th:if="${currentPage < totalPages - 1}"
+                    th:href="@{/admin/staff(page=${currentPage + 1}, size=${size}, search=${search})}"
+                    class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                    Sau »
+                </a>
             </div>
         </div>
-        <div class="dashboard-header">
-            <div class="dashboard-title">
-                <h1>Danh sách nhân viên</h1>
-            </div>
-            <div class="add-btn">
-                <a href="laptop/create">Thêm nhân viên mới</a>
-            </div>
-        </div>
-        <div class="table-container">
-            <table id="myTable" class="display">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Họ và tên</th>
-                    <th>Email</th>
-                    <th>Số điện thoại</th>
-                    <th>Vai trò</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>nva@gmail.com</td>
-                    <td>01234567</td>
-                    <td>Nhân viên</td>
-                    <td class="px-2 py-1">
-                        <div class="flex gap-2">
-                            <a href="vehicle/edit" class="edit-btn flex items-center gap-1 px-2 py-1" title="Bấm vào để xem chi tiết">
-                                Chi tiết
-                                <img th:src="@{/assets/images/icons8-edit-16.png}" alt="" class="w-4 h-4 inline-block" />
-                            </a>
-                            <form action="" class="delete-btn flex items-center justify-center px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">
-                                <button class="flex item-center justify-center">
-                                    Khóa <img th:src="@{/assets/images/icons8-trash-16.png}" alt="">
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-
-                </tr>
-
-                </tbody>
-            </table>
-
-
-        </div>
-
-
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        new DataTable("#myTable", {
-            paging: true,        // Bật phân trang
-            searching: true,     // Bật tìm kiếm
-            ordering: true,      // Cho phép sắp xếp
-            info: true,          // Hiển thị số dòng đang xem
-            lengthMenu: [10, 20, 30, 40], // Tùy chọn số dòng hiển thị
-            language: {
-                search: "Tìm kiếm:",
-                lengthMenu: "Hiển thị _MENU_ dòng",
-                info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
-                paginate: {
-                    first: "Đầu",
-                    last: "Cuối",
-                    next: "Tiếp",
-                    previous: "Trước"
-                }
-            }
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Disable DataTable for server-side pagination
+            // new DataTable("#myTable", {
+            //     paging: false,
+            //     searching: false,
+            //     ordering: true,
+            //     info: false,
+            //     language: {
+            //         search: "Tìm kiếm:",
+            //         lengthMenu: "Hiển thị _MENU_ dòng",
+            //         info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
+            //         paginate: {
+            //             first: "Đầu",
+            //             last: "Cuối",
+            //             next: "Tiếp",
+            //             previous: "Trước"
+            //         }
+            //     }
+            // });
+
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function () {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.style.transition = 'opacity 0.5s';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500);
+                });
+            }, 5000);
         });
-    });
-</script>
+    </script>
 </body>
+
 </html>
