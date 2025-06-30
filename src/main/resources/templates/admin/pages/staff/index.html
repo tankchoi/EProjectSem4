@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý Nhân viên</title>
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/staff/staff.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/staff/index.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -128,7 +128,7 @@
                                     Trạng thái
                                 </span>
                             </td>
-                            <td th:text="${#temporals.format(staff.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2024 00:00
+                            <td th:text="${#dates.format(staff.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2024 00:00
                             </td>
                             <td class="px-2 py-1">
                                 <div class="flex gap-2">
@@ -233,6 +233,8 @@
             }, 5000);
         });
     </script>
+
+    <script th:src="@{/assets/js/admin/script.js}"></script>
 </body>
 
 </html>

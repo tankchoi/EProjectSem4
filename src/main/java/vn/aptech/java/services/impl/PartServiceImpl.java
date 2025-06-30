@@ -3,7 +3,11 @@ package vn.aptech.java.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.aptech.java.models.Part;
+import vn.aptech.java.models.PartType;
+import vn.aptech.java.models.Laptop;
 import vn.aptech.java.repositories.PartRepository;
+import vn.aptech.java.repositories.PartTypeRepository;
+import vn.aptech.java.repositories.LaptopRepository;
 import vn.aptech.java.services.PartService;
 
 import java.util.List;
@@ -14,6 +18,12 @@ public class PartServiceImpl implements PartService {
 
     @Autowired
     private PartRepository partRepository;
+
+    @Autowired
+    private PartTypeRepository partTypeRepository;
+
+    @Autowired
+    private LaptopRepository laptopRepository;
 
     @Override
     public List<Part> getAllParts() {
@@ -31,10 +41,76 @@ public class PartServiceImpl implements PartService {
     }
 
     @Override
+    public Part createPart(String name, Double price, Integer quantity, Long partTypeId, Integer warrantyPeriod,
+            Long laptopId, String imgUrl) {
+        Part part = new Part();
+        part.setName(name);
+        part.setPrice(price);
+        part.setQuantity(quantity);
+        part.setWarrantyPeriod(warrantyPeriod);
+        part.setImgUrl(imgUrl);
+
+        // Set PartType
+        if (partTypeId != null) {
+            Optional<PartType> partTypeOpt = partTypeRepository.findById(partTypeId);
+            if (partTypeOpt.isPresent()) {
+                part.setPartType(partTypeOpt.get());
+            }
+        }
+
+        // Set Laptop (optional)
+        if (laptopId != null) {
+            Optional<Laptop> laptopOpt = laptopRepository.findById(laptopId);
+            if (laptopOpt.isPresent()) {
+                part.setLaptop(laptopOpt.get());
+            }
+        }
+
+        return partRepository.save(part);
+    }
+
+    @Override
     public Part updatePart(Long id, Part part) {
         if (partRepository.existsById(id)) {
             part.setId(id);
             return partRepository.save(part);
+        }
+        return null;
+    }
+
+    @Override
+    public Part updatePart(Long id, String name, Double price, Integer quantity, Long partTypeId,
+            Integer warrantyPeriod, Long laptopId, String imgUrl) {
+        Optional<Part> existingPartOpt = partRepository.findById(id);
+        if (existingPartOpt.isPresent()) {
+            Part existingPart = existingPartOpt.get();
+
+            // Update basic fields
+            existingPart.setName(name);
+            existingPart.setPrice(price);
+            existingPart.setQuantity(quantity);
+            existingPart.setWarrantyPeriod(warrantyPeriod);
+            existingPart.setImgUrl(imgUrl);
+
+            // Update PartType
+            if (partTypeId != null) {
+                Optional<PartType> partTypeOpt = partTypeRepository.findById(partTypeId);
+                if (partTypeOpt.isPresent()) {
+                    existingPart.setPartType(partTypeOpt.get());
+                }
+            }
+
+            // Update Laptop (optional)
+            if (laptopId != null) {
+                Optional<Laptop> laptopOpt = laptopRepository.findById(laptopId);
+                if (laptopOpt.isPresent()) {
+                    existingPart.setLaptop(laptopOpt.get());
+                }
+            } else {
+                existingPart.setLaptop(null);
+            }
+
+            return partRepository.save(existingPart);
         }
         return null;
     }

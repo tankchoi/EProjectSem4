@@ -27,7 +27,8 @@ public class User {
     public enum Role {
         ADMIN,
         STAFF,
-        CUSTOMER
+        CUSTOMER,
+        TECHNICIAN
     }
 
     @Column(nullable = false)

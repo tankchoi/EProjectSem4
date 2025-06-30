@@ -51,6 +51,7 @@ public class CustomerController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("search", search);
         model.addAttribute("status", status);
+        model.addAttribute("activePage", "customer");
 
         return "admin/pages/customer/index";
     }
@@ -58,6 +59,7 @@ public class CustomerController {
     @GetMapping("/customer/create")
     public String create(Model model) {
         model.addAttribute("customer", new CreateCustomerDTO());
+        model.addAttribute("activePage", "customer");
         return "admin/pages/customer/create";
     }
 
@@ -67,6 +69,7 @@ public class CustomerController {
             RedirectAttributes redirectAttributes,
             Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("activePage", "customer");
             return "admin/pages/customer/create";
         }
 
@@ -77,6 +80,7 @@ public class CustomerController {
             return "redirect:/admin/customer";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Lỗi khi tạo khách hàng: " + e.getMessage());
+            model.addAttribute("activePage", "customer");
             return "admin/pages/customer/create";
         }
     }
@@ -86,6 +90,7 @@ public class CustomerController {
         try {
             User customer = customerService.getCustomerById(id);
             model.addAttribute("customer", customer);
+            model.addAttribute("activePage", "customer");
             return "admin/pages/customer/view";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy khách hàng!");
@@ -105,6 +110,7 @@ public class CustomerController {
 
             model.addAttribute("customer", customerDTO);
             model.addAttribute("customerId", id);
+            model.addAttribute("activePage", "customer");
             return "admin/pages/customer/edit";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy khách hàng!");
@@ -120,6 +126,7 @@ public class CustomerController {
             Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("customerId", id);
+            model.addAttribute("activePage", "customer");
             return "admin/pages/customer/edit";
         }
 
@@ -131,6 +138,7 @@ public class CustomerController {
         } catch (Exception e) {
             model.addAttribute("customerId", id);
             model.addAttribute("errorMessage", "Lỗi khi cập nhật khách hàng: " + e.getMessage());
+            model.addAttribute("activePage", "customer");
             return "admin/pages/customer/edit";
         }
     }

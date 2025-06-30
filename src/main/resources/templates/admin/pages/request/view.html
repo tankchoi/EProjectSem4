@@ -5,26 +5,29 @@
     <meta charset="UTF-                                                <div class=" row mb-3"
         th:if="${request.updatedAt}">
     <div class="col-sm-4"><strong>Cập nhật lần cuối:</strong></div>
-    <div class="col-sm-8" th:text="${#temporals.format(request.updatedAt, 'dd/MM/yyyy HH:mm')}"></div>
+    <div class="col-sm-8" th:text="${#dates.format(request.updatedAt, 'dd/MM/yyyy HH:mm')}"></div>
     </div>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết yêu cầu bảo hành</title>
     <!-- Include admin CSS -->
     <link rel="stylesheet" th:href="@{/assets/css/admin/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/admin.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
 <body>
-    <div class="wrapper">
-        <!-- Navigation Side -->
+    <div class="main-container">
         <div th:replace="admin/fragments/nav-side :: nav-side"></div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Navigation Top -->
-            <div th:replace="admin/fragments/nav-top :: nav-top"></div>
-
-            <!-- Page Content -->
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Chi tiết yêu cầu bảo hành</h1>
+                </div>
+            </div>
             <div class="container-fluid mt-4">
                 <!-- Page Header -->
                 <div class="row">
@@ -107,13 +110,13 @@
                                                 <div class="row mb-3">
                                                     <div class="col-sm-4"><strong>Ngày tạo:</strong></div>
                                                     <div class="col-sm-8"
-                                                        th:text="${#temporals.format(request.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                                        th:text="${#dates.format(request.createdAt, 'dd/MM/yyyy HH:mm')}">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3" th:if="${request.updatedAt}">
                                                     <div class="col-sm-4"><strong>Cập nhật lần cuối:</strong></div>
                                                     <div class="col-sm-8"
-                                                        th:text="${#temporals.format(request.updatedAt, 'dd/MM/yyyy HH:mm')}">
+                                                        th:text="${#dates.format(request.updatedAt, 'dd/MM/yyyy HH:mm')}">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3" th:if="${request.bookingDate}">
@@ -125,7 +128,7 @@
                                                 <div class="row mb-3" th:if="${request.completedDate}">
                                                     <div class="col-sm-4"><strong>Ngày hoàn thành:</strong></div>
                                                     <div class="col-sm-8"
-                                                        th:text="${#temporals.format(request.completedDate, 'dd/MM/yyyy')}">
+                                                        th:text="${#dates.format(request.completedDate, 'dd/MM/yyyy')}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -177,7 +180,7 @@
                                                 <div class="row mb-2" th:if="${request.customerLaptop?.purchaseDate}">
                                                     <div class="col-sm-4"><strong>Ngày mua:</strong></div>
                                                     <div class="col-sm-8"
-                                                        th:text="${#temporals.format(request.customerLaptop.purchaseDate, 'dd/MM/yyyy')}">
+                                                        th:text="${#dates.format(request.customerLaptop.purchaseDate, 'dd/MM/yyyy')}">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-2"
@@ -185,7 +188,7 @@
                                                     <div class="col-sm-4"><strong>Hết hạn bảo hành:</strong></div>
                                                     <div class="col-sm-8">
                                                         <span
-                                                            th:text="${#temporals.format(request.customerLaptop.warrantyExpiredDate, 'dd/MM/yyyy')}"></span>
+                                                            th:text="${#dates.format(request.customerLaptop.warrantyExpiredDate, 'dd/MM/yyyy')}"></span>
                                                         <span class="badge ms-2"
                                                             th:classappend="${#temporals.createDate(request.customerLaptop.warrantyExpiredDate.year, request.customerLaptop.warrantyExpiredDate.monthValue, request.customerLaptop.warrantyExpiredDate.dayOfMonth).before(#dates.createNow()) ? 'bg-danger' : 'bg-success'}"
                                                             th:text="${#temporals.createDate(request.customerLaptop.warrantyExpiredDate.year, request.customerLaptop.warrantyExpiredDate.monthValue, request.customerLaptop.warrantyExpiredDate.dayOfMonth).before(#dates.createNow()) ? 'Hết hạn' : 'Còn hạn'}">
@@ -358,6 +361,9 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    </div>
     </div>
 
     <!-- Include admin JS -->

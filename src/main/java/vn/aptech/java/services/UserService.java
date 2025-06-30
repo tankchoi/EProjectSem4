@@ -53,4 +53,8 @@ public class UserService {
         // Lưu vào cơ sở dữ liệu
         userRepository.save(newStaff);
     }
+
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
 }

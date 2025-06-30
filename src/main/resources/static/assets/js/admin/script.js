@@ -1,47 +1,69 @@
 const toggleButton = document.querySelector('.dropdown-toggle');
 const menu = document.querySelector('.dropdown-menu');
 const menuToggle = document.querySelector('.menu-toggle');
-const navSide = document.querySelector('.nav-side');
+const navSide = document.querySelector('.nav-aside');
 
 // --- Điều khiển Side Navigation ---
-menuToggle.addEventListener('click', () => {
-    // Kiểm tra giá trị hiện tại của thuộc tính 'left'
-    // Hoặc tốt hơn là kiểm tra một lớp CSS để biết trạng thái
-    if (navSide.style.left === '-15rem') {
-        navSide.style.left = '0'; // Hiển thị menu bên
-    } else {
-        navSide.style.left = '-15rem'; // Ẩn menu bên
-    }
-
-    // *** CÁCH TỐT HƠN: Sử dụng class CSS ***
-    // navSide.classList.toggle('is-open');
-    // Với CSS:
-    // .nav-side { left: -15rem; transition: left 0.3s ease; }
-    // .nav-side.is-open { left: 0; }
-});
+if (menuToggle && navSide) {
+    menuToggle.addEventListener('click', () => {
+        navSide.classList.toggle('is-collapsed');
+    });
+}
 
 // --- Điều khiển Dropdown Menu ---
-toggleButton.addEventListener('click', (e) => {
-    e.stopPropagation(); // Ngăn chặn sự kiện click lan truyền ra ngoài document
-    // để tránh đóng dropdown ngay lập tức bởi document.addEventListener
+if (toggleButton && menu) {
+    toggleButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
 
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    // --- Đóng Dropdown khi click ra ngoài ---
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.dropdown')) {
+            menu.style.display = 'none';
+        }
+    });
+}
 
-    // *** CÁCH TỐT HƠN: Sử dụng class CSS ***
-    // menu.classList.toggle('is-visible');
-    // Với CSS:
-    // .dropdown-menu { display: none; opacity: 0; transition: opacity 0.3s ease; }
-    // .dropdown-menu.is-visible { display: block; opacity: 1; }
-    // (Lưu ý: display: none/block sẽ tắt transition, có thể dùng visibility/opacity thay thế)
+// --- Xử lý Search ---
+const searchInput = document.querySelector('.search-contain input');
+if (searchInput) {
+    searchInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            const searchTerm = this.value.trim();
+            if (searchTerm) {
+                // Có thể thêm logic tìm kiếm ở đây
+                console.log('Tìm kiếm:', searchTerm);
+                // Ví dụ: window.location.href = '/admin/search?q=' + encodeURIComponent(searchTerm);
+            }
+        }
+    });
+}
+
+// --- Xử lý active menu ---
+function setActiveMenuItem() {
+    const currentPath = window.location.pathname;
+    const menuItems = document.querySelectorAll('.menu-item a');
+
+    menuItems.forEach(item => {
+        const href = item.getAttribute('href');
+        if (href && currentPath === href) {
+            item.closest('.menu-item').classList.add('active');
+        }
+    });
+}
+
+// --- Xác nhận đăng xuất ---
+const logoutLinks = document.querySelectorAll('a[href*="/logout"]');
+logoutLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+        if (!confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+            e.preventDefault();
+        }
+    });
 });
 
-// --- Đóng Dropdown khi click ra ngoài ---
-document.addEventListener('click', (e) => {
-    // Kiểm tra xem click có nằm ngoài vùng .dropdown hay không
-    // e.target.closest('.dropdown') sẽ trả về phần tử .dropdown gần nhất nếu click bên trong
-    // hoặc null nếu click bên ngoài
-    if (!e.target.closest('.dropdown')) {
-        menu.style.display = 'none'; // Đóng dropdown
-        // Hoặc: menu.classList.remove('is-visible');
-    }
+// --- Khởi tạo khi trang load ---
+document.addEventListener('DOMContentLoaded', function () {
+    setActiveMenuItem();
 });

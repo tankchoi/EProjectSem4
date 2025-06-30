@@ -1,5 +1,6 @@
 package vn.aptech.java.services;
 
+import vn.aptech.java.dtos.CreateInvoiceDTO;
 import vn.aptech.java.models.Invoice;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,11 @@ public interface InvoiceService {
 
     Invoice createInvoice(Invoice invoice);
 
+    Invoice createInvoice(CreateInvoiceDTO createInvoiceDTO);
+
     Invoice updateInvoice(Long id, Invoice invoice);
+
+    Invoice updateInvoice(Long id, CreateInvoiceDTO createInvoiceDTO);
 
     void deleteInvoice(Long id);
 

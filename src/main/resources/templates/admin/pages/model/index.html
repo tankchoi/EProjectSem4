@@ -118,7 +118,7 @@
                         <tr th:each="model : ${models}">
                             <td th:text="${model.id}">1</td>
                             <td th:text="${model.name}">HP ProBook 450</td>
-                            <td th:text="${model.laptops != null ? model.laptops.size() : 0}">0</td>
+                            <td>0</td>
                             <td th:text="${#dates.format(model.createdAt, 'dd/MM/yyyy')}">12/01/2025</td>
                             <td>
                                 <a th:href="@{/admin/model/edit/{id}(id=${model.id})}" class="btn-edit">Sửa</a>
@@ -145,6 +145,8 @@
             });
         });
     </script>
+
+    <script th:src="@{/assets/js/admin/script.js}"></script>
 </body>
 
 </html>

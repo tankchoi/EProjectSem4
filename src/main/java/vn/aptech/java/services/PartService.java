@@ -12,7 +12,13 @@ public interface PartService {
 
     Part createPart(Part part);
 
+    Part createPart(String name, Double price, Integer quantity, Long partTypeId, Integer warrantyPeriod, Long laptopId,
+            String imgUrl);
+
     Part updatePart(Long id, Part part);
+
+    Part updatePart(Long id, String name, Double price, Integer quantity, Long partTypeId, Integer warrantyPeriod,
+            Long laptopId, String imgUrl);
 
     void deletePart(Long id);
 

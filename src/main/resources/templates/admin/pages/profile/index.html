@@ -1,10 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Thông tin tài khoản</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/homepage/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
 
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Thông tin tài khoản</h1>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Thông tin cá nhân</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="form-group mb-3">
+                                            <label for="username">Tên đăng nhập:</label>
+                                            <input type="text" class="form-control" id="username" th:value="${username}"
+                                                readonly>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="email">Email:</label>
+                                            <input type="email" class="form-control" id="email"
+                                                value="admin@example.com">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="fullname">Họ và tên:</label>
+                                            <input type="text" class="form-control" id="fullname" value="Phạm Nhật Anh">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="phone">Số điện thoại:</label>
+                                            <input type="text" class="form-control" id="phone" value="0123456789">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Đổi mật khẩu</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="form-group mb-3">
+                                            <label for="current-password">Mật khẩu hiện tại:</label>
+                                            <input type="password" class="form-control" id="current-password">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="new-password">Mật khẩu mới:</label>
+                                            <input type="password" class="form-control" id="new-password">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="confirm-password">Xác nhận mật khẩu:</label>
+                                            <input type="password" class="form-control" id="confirm-password">
+                                        </div>
+                                        <button type="submit" class="btn btn-warning">Đổi mật khẩu</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/assets/js/admin/script.js}"></script>
 </body>
+
 </html>

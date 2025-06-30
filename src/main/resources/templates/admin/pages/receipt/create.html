@@ -44,40 +44,51 @@
             <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <form th:action="@{/admin/receipt/create}" th:object="${invoice}" method="post">
                     <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="request">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="requestId">
                             Yêu cầu bảo hành *
                         </label>
-                        <select th:field="*{request}" id="request"
+                        <select name="requestId" id="requestId"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             required>
                             <option value="">-- Chọn yêu cầu bảo hành --</option>
                             <option th:each="request : ${requests}" th:value="${request.id}"
-                                th:text="${'#' + request.id + ' - ' + request.fullname + ' (' + request.customerLaptop.laptop.name + ')'}">
+                                th:text="${'#' + request.id + ' - ' + request.fullname + ' (' + request.customerLaptop.laptop.name + ')'}"
+                                th:selected="${request.id == invoice.requestId}">
                                 Yêu cầu bảo hành
                             </option>
                         </select>
+                        <div th:if="${#fields.hasErrors('requestId')}" class="text-red-500 text-xs italic">
+                            <span th:errors="*{requestId}"></span>
+                        </div>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="totalPrice">
                             Tổng tiền (VNĐ) *
                         </label>
-                        <input th:field="*{totalPrice}" type="number" step="1000" min="0" id="totalPrice"
+                        <input name="totalPrice" th:value="${invoice.totalPrice}" type="number" step="1000" min="0"
+                            id="totalPrice"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             placeholder="Nhập tổng tiền" required>
+                        <div th:if="${#fields.hasErrors('totalPrice')}" class="text-red-500 text-xs italic">
+                            <span th:errors="*{totalPrice}"></span>
+                        </div>
                     </div>
 
                     <div class="mb-6">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="status">
                             Trạng thái thanh toán *
                         </label>
-                        <select th:field="*{status}" id="status"
+                        <select name="status" id="status"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             required>
                             <option value="">-- Chọn trạng thái --</option>
-                            <option value="UNPAID">Chưa thanh toán</option>
-                            <option value="PAID">Đã thanh toán</option>
+                            <option value="UNPAID" th:selected="${invoice.status == 'UNPAID'}">Chưa thanh toán</option>
+                            <option value="PAID" th:selected="${invoice.status == 'PAID'}">Đã thanh toán</option>
                         </select>
+                        <div th:if="${#fields.hasErrors('status')}" class="text-red-500 text-xs italic">
+                            <span th:errors="*{status}"></span>
+                        </div>
                     </div>
 
                     <div class="flex items-center justify-between">

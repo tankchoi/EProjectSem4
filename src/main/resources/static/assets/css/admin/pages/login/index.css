@@ -1,0 +1,118 @@
+/* Login Page Styles */
+.login-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.img-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.img-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.login-page {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.heading-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.heading-login {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    margin-bottom: 0.5rem;
+}
+
+/* Form container improvements */
+.login-page>div:last-child {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Input focus improvements */
+.login-page input:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 66, 29, 0.15);
+}
+
+/* Button hover effects */
+.login-page button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(30, 66, 29, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .login-page {
+        padding: 1rem;
+    }
+
+    .heading-login {
+        font-size: 2rem;
+    }
+
+    .login-page>div:last-child {
+        margin: 1rem;
+        padding: 1.5rem !important;
+    }
+}
+
+/* Animation for form appearance */
+.login-page>div:last-child {
+    animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Logo animation */
+.login-page img {
+    animation: fadeIn 1s ease-out 0.3s both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

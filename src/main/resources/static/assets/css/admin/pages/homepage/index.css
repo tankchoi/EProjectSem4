@@ -1,76 +1,108 @@
 /* trong moi giao dien */
-.main-container{
+.main-container {
     background-color: rgba(243, 244, 246, 1);
     height: 100vh;
 }
-.page-container{
+
+.page-container {
     padding-left: 15rem;
 }
 
-.page-header{
+.page-header {
     background-color: rgba(243, 244, 246, 1);
 }
-.header-content{
+
+.header-content {
     display: flex;
 }
-.page-header h1{
+
+.page-header h1 {
     font-size: 2rem;
     font-weight: 600;
     color: rgba(31, 41, 55, 1);
     padding: 1.5rem 1rem;
 }
-.dashboard-header{
-    background-color: rgba(255,255,255,1);
+
+.dashboard-header {
+    background-color: rgba(255, 255, 255, 1);
     margin-bottom: 2rem;
 }
-.dashboard-title{
+
+.dashboard-title {
     font-size: 1.5rem;
     font-weight: 600;
     color: rgba(31, 41, 55, 1);
     padding: 1.5rem 1rem;
 }
+
 /* chu y css o duoi */
 
 
-.page-content{
+.page-content {
     padding: 1rem;
 
 }
-.dashboard{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.dashboard-item{
+.dashboard-item {
     background-color: rgba(255, 255, 255, 1);
     border-radius: 0.5rem;
-    padding: 1rem;
-    margin: 1rem;
-    flex-grow: 1;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
     display: flex;
     justify-content: space-between;
-
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-.dashboard-item h2{
+
+.dashboard-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-item h2 {
     font-size: 1.25rem;
     font-weight: 600;
     color: rgba(31, 41, 55, 0.5);
 }
-.dashboard-item p{
+
+.dashboard-item p {
     font-size: 2rem;
     font-weight: 600;
     color: rgba(31, 41, 55, 1);
     margin: 0;
 }
 
+.icon .material-symbols-outlined {
+    font-size: 2.5rem;
+    color: rgba(59, 130, 246, 1);
+}
+
+.chart-container {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.chart-container h3 {
+    margin-bottom: 1rem;
+    color: rgba(31, 41, 55, 1);
+    font-weight: 600;
+}
+
 @media (max-width: 1024px) {
-    html{
+    html {
         font-size: 8px;
     }
-    .page-container{
+
+    .page-container {
         padding-left: 0;
     }
 }
-
-

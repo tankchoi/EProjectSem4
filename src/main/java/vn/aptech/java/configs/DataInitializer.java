@@ -169,7 +169,7 @@ public class DataInitializer implements CommandLineRunner {
             // Tạo user admin
             User admin = new User();
             admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123"));
+            admin.setPassword(passwordEncoder.encode("123456"));
             admin.setFullname("Administrator");
             admin.setEmail("admin@company.com");
             admin.setPhone("0123456789");
@@ -177,7 +177,22 @@ public class DataInitializer implements CommandLineRunner {
             admin.setStatus(User.Status.ACTIVE);
             admin.setImg_link("/assets/images/default-avatar.png"); // Set default avatar
             userRepository.save(admin);
-            System.out.println("✅ Created admin user: admin/admin123");
+            System.out.println("✅ Created admin user: admin/123456");
+        }
+
+        // Tạo thêm một tài khoản admin test khác
+        if (userRepository.findByUsername("testadmin") == null) {
+            User testAdmin = new User();
+            testAdmin.setUsername("testadmin");
+            testAdmin.setPassword(passwordEncoder.encode("testadmin123"));
+            testAdmin.setFullname("Test Administrator");
+            testAdmin.setEmail("testadmin@company.com");
+            testAdmin.setPhone("0123456788");
+            testAdmin.setRole(User.Role.ADMIN);
+            testAdmin.setStatus(User.Status.ACTIVE);
+            testAdmin.setImg_link("/assets/images/default-avatar.png");
+            userRepository.save(testAdmin);
+            System.out.println("✅ Created test admin user: testadmin/testadmin123");
         }
 
         // Tạo một số nhân viên test
@@ -205,6 +220,43 @@ public class DataInitializer implements CommandLineRunner {
 
         // Tạo thêm khách hàng để test
         createCustomerIfNotExists("customer9", "Lê Văn Tùng", "customer9@gmail.com", "0123456788");
+
+        // Tạo tài khoản customer chuẩn
+        if (userRepository.findByUsername("customer") == null) {
+            User customer = new User();
+            customer.setUsername("customer");
+            customer.setPassword(passwordEncoder.encode("123456"));
+            customer.setFullname("Test Customer");
+            customer.setEmail("customer@gmail.com");
+            customer.setPhone("0123456000");
+            customer.setRole(User.Role.CUSTOMER);
+            customer.setStatus(User.Status.ACTIVE);
+            customer.setImg_link("/assets/images/default-avatar.png");
+            userRepository.save(customer);
+            System.out.println("✅ Created standard customer user: customer/123456");
+        }
+
+        // Tạo tài khoản staff chuẩn
+        if (userRepository.findByUsername("staff") == null) {
+            User staff = new User();
+            staff.setUsername("staff");
+            staff.setPassword(passwordEncoder.encode("123456"));
+            staff.setFullname("Test Staff");
+            staff.setEmail("staff@company.com");
+            staff.setPhone("0123456001");
+            staff.setRole(User.Role.STAFF);
+            staff.setStatus(User.Status.ACTIVE);
+            staff.setImg_link("/assets/images/default-avatar.png");
+            userRepository.save(staff);
+            System.out.println("✅ Created standard staff user: staff/123456");
+        }
+
+        System.out.println("🎉 Test accounts creation completed!");
+        System.out.println("📝 Login credentials:");
+        System.out.println("   Admin:      admin / 123456");
+        System.out.println("   Test Admin: testadmin / testadmin123");
+        System.out.println("   Staff:      staff / 123456");
+        System.out.println("   Customer:   customer / 123456");
     }
 
     private void createStaffIfNotExists(String username, String fullname, String email, String phone) {

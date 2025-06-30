@@ -44,8 +44,11 @@
                 <label for="name" class="block mb-1 font-medium">Tên laptop</label>
                 <div class="input-content flex space-x-2 items-center border border-gray-300 rounded-md">
                   <span class="material-symbols-outlined">laptop</span>
-                  <input type="text" th:field="*{name}" id="name" placeholder="Nhập tên laptop"
+                  <input type="text" name="name" th:value="${laptop.name}" id="name" placeholder="Nhập tên laptop"
                     class="w-full border border-none outline-none rounded-md p-2" required>
+                </div>
+                <div th:if="${#fields.hasErrors('name')}" class="text-red-500 text-xs italic">
+                  <span th:errors="*{name}"></span>
                 </div>
               </div>
             </div>
@@ -55,11 +58,15 @@
                 <label for="modelId" class="block mb-1 font-medium">Mã model</label>
                 <div class="input-content flex space-x-2 items-center border border-gray-300 rounded-md">
                   <span class="material-symbols-outlined">view_in_ar</span>
-                  <select th:field="*{model.id}" id="modelId"
-                    class="w-full border border-none outline-none rounded-md p-2" required>
+                  <select name="modelId" id="modelId" class="w-full border border-none outline-none rounded-md p-2"
+                    required>
                     <option value="" disabled selected>Chọn mã model</option>
-                    <option th:each="model : ${models}" th:value="${model.id}" th:text="${model.name}"></option>
+                    <option th:each="model : ${models}" th:value="${model.id}" th:text="${model.name}"
+                      th:selected="${model.id == laptop.modelId}"></option>
                   </select>
+                </div>
+                <div th:if="${#fields.hasErrors('modelId')}" class="text-red-500 text-xs italic">
+                  <span th:errors="*{modelId}"></span>
                 </div>
               </div>
             </div>
@@ -69,26 +76,66 @@
                 <label for="warrantyPeriod" class="block mb-1 font-medium">Bảo hành</label>
                 <div class="input-content flex space-x-2 items-center border border-gray-300 rounded-md">
                   <span class="material-symbols-outlined">verified</span>
-                  <select th:field="*{warrantyPeriod}" id="warrantyPeriod"
+                  <select name="warrantyPeriod" id="warrantyPeriod"
                     class="w-full border border-none outline-none rounded-md p-2" required>
                     <option value="" disabled selected>Chọn thời hạn bảo hành</option>
-                    <option value="1">1 năm</option>
-                    <option value="2">2 năm</option>
-                    <option value="3">3 năm</option>
-                    <option value="4">4 năm</option>
-                    <option value="5">5 năm</option>
+                    <option value="1" th:selected="${laptop.warrantyPeriod == 1}">1 năm</option>
+                    <option value="2" th:selected="${laptop.warrantyPeriod == 2}">2 năm</option>
+                    <option value="3" th:selected="${laptop.warrantyPeriod == 3}">3 năm</option>
+                    <option value="4" th:selected="${laptop.warrantyPeriod == 4}">4 năm</option>
+                    <option value="5" th:selected="${laptop.warrantyPeriod == 5}">5 năm</option>
                   </select>
+                </div>
+                <div th:if="${#fields.hasErrors('warrantyPeriod')}" class="text-red-500 text-xs italic">
+                  <span th:errors="*{warrantyPeriod}"></span>
                 </div>
               </div>
             </div>
 
             <div class="col-span-12">
               <div class="input-contain">
-                <label for="imgUrl" class="block mb-1 font-medium">URL hình ảnh</label>
-                <div class="input-content flex space-x-2 items-center border border-gray-300 rounded-md">
-                  <span class="material-symbols-outlined">image</span>
-                  <input type="url" th:field="*{imgUrl}" id="imgUrl" placeholder="Nhập URL hình ảnh"
-                    class="w-full border border-none outline-none rounded-md p-2">
+                <label class="block mb-2 font-medium">Hình ảnh laptop</label>
+
+                <!-- Tab selection -->
+                <div class="mb-3">
+                  <button type="button" id="urlTab" class="tab-btn active" onclick="showTab('url')">
+                    Nhập URL
+                  </button>
+                  <button type="button" id="fileTab" class="tab-btn" onclick="showTab('file')">
+                    Upload File
+                  </button>
+                </div>
+
+                <!-- URL Input -->
+                <div id="urlInput" class="tab-content">
+                  <label for="imageUrl" class="block mb-1 font-medium">URL hình ảnh</label>
+                  <div class="input-content flex space-x-2 items-center border border-gray-300 rounded-md">
+                    <span class="material-symbols-outlined">link</span>
+                    <input type="url" name="imageUrl" th:value="${laptop.imgUrl}" id="imageUrl"
+                      placeholder="https://example.com/image.jpg"
+                      class="w-full border border-none outline-none rounded-md p-2">
+                  </div>
+                  <small class="text-gray-500">Nhập URL trực tiếp đến hình ảnh (tối đa 255 ký tự)</small>
+                </div>
+
+                <!-- File Upload -->
+                <div id="fileInput" class="tab-content" style="display: none;">
+                  <label for="imageFile" class="block mb-1 font-medium">Chọn file ảnh</label>
+                  <div class="input-content flex space-x-2 items-center border border-gray-300 rounded-md">
+                    <span class="material-symbols-outlined">upload</span>
+                    <input type="file" name="imageFile" id="imageFile" accept="image/*"
+                      class="w-full border border-none outline-none rounded-md p-2">
+                  </div>
+                  <small class="text-gray-500">Chấp nhận: JPG, PNG, GIF, BMP, WEBP (tối đa 5MB)</small>
+                </div>
+
+                <!-- Preview -->
+                <div id="imagePreview" class="mt-3" style="display: none;">
+                  <img id="previewImg" src="" alt="Preview" class="max-w-xs max-h-48 object-contain border rounded">
+                </div>
+
+                <div th:if="${#fields.hasErrors('imgUrl')}" class="text-red-500 text-xs italic mt-1">
+                  <span th:errors="*{imgUrl}"></span>
                 </div>
               </div>
             </div>
@@ -104,84 +151,142 @@
     </div>
   </div>
   <script th:src="@{/assets/js/admin/script.js}"></script>
-  <script>
-    Dropzone.autoDiscover = false;
 
-    let uploadedImageUrls = [];
-
-    const myDropzone = new Dropzone("#imageUploadForm", {
-      url: "/upload",
-      maxFilesize: 2,
-      acceptedFiles: "image/*",
-      addRemoveLinks: true,
-      dictDefaultMessage: "Kéo và thả ảnh vào đây hoặc nhấn để chọn",
-      dictRemoveFile: "Xóa",
-      // ****** THÊM DÒNG NÀY VÀO ĐÂY ******
-      previewsContainer: "#dropzone-preview", // Chỉ định nơi ảnh preview sẽ hiển thị
-
-      init: function () {
-        // Dropzone.js tự động ẩn thông báo mặc định khi có file.
-        // Nếu bạn muốn kiểm soát hiển thị thông báo "Kéo và thả ảnh vào đây"
-        // (ví dụ: ẩn nó hoàn toàn hoặc di chuyển nó), bạn có thể thêm logic ở đây.
-        // Thông thường, bạn sẽ đặt div dz-message trực tiếp trong form,
-        // và Dropzone sẽ quản lý nó.
-
-        this.on("success", function (file, response) {
-          console.log("Ảnh đã được tải lên thành công:", response);
-          uploadedImageUrls.push(response);
-          file.uploadedFileName = response; // gán tên ảnh cho file (phòng khi cần)
-          updateImageCount();
-        });
-
-        this.on("removedfile", function (file) {
-          const name = file.uploadedFileName;
-          uploadedImageUrls = uploadedImageUrls.filter(url => url !== name);
-          updateImageCount();
-        });
-      }
-    });
-
-    function updateImageCount() {
-      const images = myDropzone.files.length;
-      const imageCount = document.getElementById("imageCount");
-      if (images > 0) {
-        imageCount.textContent = `Đã tải lên ${images} ảnh`;
-        imageCount.classList.remove("text-gray-500", "italic");
-      } else {
-        imageCount.textContent = "Chưa có ảnh nào";
-        imageCount.classList.add("text-gray-500", "italic");
-      }
+  <style>
+    .tab-btn {
+      padding: 8px 16px;
+      margin-right: 8px;
+      border: 1px solid #ccc;
+      background: #f8f9fa;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s;
     }
 
-    document.getElementById("confirmButton").addEventListener("click", function (e) {
-      e.preventDefault();
+    .tab-btn.active {
+      background: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
 
-      const vehicleData = {
-        vehicleName: document.getElementById("vehicleName").value,
-        brand: document.getElementById("brand").value,
-        price: parseFloat(document.getElementById("price").value),
-        licensePlate: document.getElementById("licensePlate").value,
-        description: document.getElementById("description").value,
-        imageUrls: uploadedImageUrls // Gửi mảng tên ảnh về backend
-      };
+    .tab-content {
+      margin-top: 12px;
+    }
+  </style>
 
-      fetch("/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(vehicleData)
-      })
-        .then(response => response.text())
-        .then(data => {
-          alert(data);
-          // Optionally reload or redirect
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Có lỗi xảy ra khi tạo laptop.');
-        });
+  <script>
+    // Tab functionality
+    function showTab(tabName) {
+      // Hide all tab contents
+      document.getElementById('urlInput').style.display = 'none';
+      document.getElementById('fileInput').style.display = 'none';
+
+      // Remove active class from all tabs
+      document.getElementById('urlTab').classList.remove('active');
+      document.getElementById('fileTab').classList.remove('active');
+
+      // Show selected tab content and mark tab as active
+      if (tabName === 'url') {
+        document.getElementById('urlInput').style.display = 'block';
+        document.getElementById('urlTab').classList.add('active');
+        document.getElementById('imageFile').value = ''; // Clear file input
+      } else if (tabName === 'file') {
+        document.getElementById('fileInput').style.display = 'block';
+        document.getElementById('fileTab').classList.add('active');
+        document.getElementById('imageUrl').value = ''; // Clear URL input
+      }
+
+      // Hide preview when switching tabs
+      document.getElementById('imagePreview').style.display = 'none';
+    }
+
+    // Image preview functionality
+    document.getElementById('imageUrl').addEventListener('input', function () {
+      const url = this.value.trim();
+
+      // Check URL length
+      if (url.length > 255) {
+        this.style.borderColor = '#ef4444';
+        this.nextElementSibling?.remove(); // Remove any existing warning
+        const warning = document.createElement('small');
+        warning.className = 'text-red-500';
+        warning.textContent = 'URL quá dài! Tối đa 255 ký tự (hiện tại: ' + url.length + ' ký tự)';
+        this.parentNode.insertAdjacentElement('afterend', warning);
+        hideImagePreview();
+        return;
+      } else {
+        this.style.borderColor = '';
+        // Remove warning if exists
+        const warning = this.parentNode.nextElementSibling;
+        if (warning && warning.className === 'text-red-500') {
+          warning.remove();
+        }
+      }
+
+      if (url) {
+        showImagePreview(url);
+      } else {
+        hideImagePreview();
+      }
     });
+
+    document.getElementById('imageFile').addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          showImagePreview(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        hideImagePreview();
+      }
+    });
+
+    function showImagePreview(src) {
+      document.getElementById('previewImg').src = src;
+      document.getElementById('imagePreview').style.display = 'block';
+    }
+
+    function hideImagePreview() {
+      document.getElementById('imagePreview').style.display = 'none';
+    }
+
+    // Initialize with URL tab active if there's existing URL
+    document.addEventListener('DOMContentLoaded', function () {
+      const existingUrl = document.getElementById('imageUrl').value;
+      if (existingUrl) {
+        showImagePreview(existingUrl);
+      }
+    });
+  </script>
+
+  const vehicleData = {
+  vehicleName: document.getElementById("vehicleName").value,
+  brand: document.getElementById("brand").value,
+  price: parseFloat(document.getElementById("price").value),
+  licensePlate: document.getElementById("licensePlate").value,
+  description: document.getElementById("description").value,
+  imageUrls: uploadedImageUrls // Gửi mảng tên ảnh về backend
+  };
+
+  fetch("/create", {
+  method: "POST",
+  headers: {
+  "Content-Type": "application/json"
+  },
+  body: JSON.stringify(vehicleData)
+  })
+  .then(response => response.text())
+  .then(data => {
+  alert(data);
+  // Optionally reload or redirect
+  })
+  .catch(error => {
+  console.error('Error:', error);
+  alert('Có lỗi xảy ra khi tạo laptop.');
+  });
+  });
   </script>
 
 

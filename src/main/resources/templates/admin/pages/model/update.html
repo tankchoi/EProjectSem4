@@ -61,7 +61,7 @@
                     <span class="material-symbols-outlined">edit</span>
                     <p>Form Cập nhật</p>
                 </div>
-                <form th:action="@{/admin/model/edit/{id}(id=${model.id})}" method="POST" th:object="${model}">
+                <form th:action="@{/admin/model/edit/{id}(id=${modelId})}" method="POST" th:object="${model}">
                     <div class="grid grid-cols-12 gap-4 mt-4">
                         <div class="col-span-12">
                             <div class="input-contain">
@@ -70,9 +70,12 @@
                                 <div
                                     class="input-content flex space-x-2 items-center border border-gray-300 rounded-md">
                                     <span class="material-symbols-outlined">dns</span>
-                                    <input type="text" name="name" id="name" th:field="*{name}"
+                                    <input type="text" name="name" id="name" th:value="${model.name}"
                                         placeholder="Nhập tên model"
                                         class="w-full border border-none outline-none rounded-md p-2" required>
+                                </div>
+                                <div th:if="${#fields.hasErrors('name')}" class="text-red-500 text-xs italic">
+                                    <span th:errors="*{name}"></span>
                                 </div>
                             </div>
                         </div>

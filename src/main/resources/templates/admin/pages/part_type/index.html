@@ -1,73 +1,338 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý Loại linh kiện</title>
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/part/index.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý loại linh kiện</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link href="/assets/css/admin/pages/part_type/index.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 </head>
+
 <body>
-<div class="main-container">
-    <div th:replace="admin/fragments/nav-side :: nav-side"></div>
-    <div th:replace="admin/fragments/nav-top :: nav-top"></div>
-    <div class="page-container">
-        <div class="page-header">
-            <div class="header-content">
-                <h1>Admin /</h1><h1>Quản lý Loại linh kiện</h1>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Quản lý loại linh kiện</h1>
+                </div>
             </div>
-        </div>
-        <div class="dashboard-header">
-            <div class="dashboard-title">
-                <h1>Danh sách Loại linh kiện</h1>
-            </div>
-            <div class="add-btn">
-                <a href="part_type/create">Thêm Loại linh kiện</a>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <table id="myTable" class="table-content">
-                <thead>
-                <tr>
-                    <th>Mã</th>
-                    <th>Tên</th>
-                    <th>Ngày tạo</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Dell</td>
-                    <td>12/01/2025</td>
-                    <td class="px-2 py-1">
-                        <div class="flex gap-2">
-                            <a href="accessory_type/update" class="edit-btn flex items-center gap-1 px-2 py-1" title="Bấm vào để xem chi tiết">
-                                Chi tiết
-                                <span class="material-symbols-outlined">edit</span>
-                            </a>
-                            <!--                            <form action="" class="delete-btn flex items-center justify-center px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">-->
-                            <!--                                <button class="flex item-center justify-center">-->
-                            <!--                                    Xóa <span class="material-symbols-outlined">delete</span>-->
-                            <!--                                </button>-->
-                            <!--                            </form>-->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h1 class="h3 mb-0 text-gray-800">
+                                    <i class="fas fa-tags me-2"></i>Quản lý loại linh kiện
+                                </h1>
+                                <p class="text-muted mb-0">Quản lý các loại linh kiện trong hệ thống</p>
+                            </div>
+                            <div>
+                                <a href="/admin/part-type/create" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Thêm loại linh kiện
+                                </a>
+                            </div>
                         </div>
-                    </td>
 
-                </tr>
+                        <!-- Alerts -->
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show"
+                            role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span th:text="${successMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
 
-                </tbody>
-            </table>
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show"
+                            role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
 
+                        <!-- Search and Filter Card -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <form method="get" th:action="@{/admin/part-type}" class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="search" class="form-label">Tìm kiếm</label>
+                                        <input type="text" class="form-control" id="search" name="search"
+                                            th:value="${search}" placeholder="Nhập tên loại linh kiện...">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="size" class="form-label">Số lượng</label>
+                                        <select class="form-select" id="size" name="size">
+                                            <option value="5" th:selected="${size == 5}">5</option>
+                                            <option value="10" th:selected="${size == 10}">10</option>
+                                            <option value="25" th:selected="${size == 25}">25</option>
+                                            <option value="50" th:selected="${size == 50}">50</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="sortBy" class="form-label">Sắp xếp theo</label>
+                                        <select class="form-select" id="sortBy" name="sortBy">
+                                            <option value="id" th:selected="${sortBy == 'id'}">ID</option>
+                                            <option value="name" th:selected="${sortBy == 'name'}">Tên</option>
+                                            <option value="createdAt" th:selected="${sortBy == 'createdAt'}">Ngày tạo
+                                            </option>
+                                            <option value="updatedAt" th:selected="${sortBy == 'updatedAt'}">Ngày cập
+                                                nhật</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="sortDir" class="form-label">Thứ tự</label>
+                                        <select class="form-select" id="sortDir" name="sortDir">
+                                            <option value="asc" th:selected="${sortDir == 'asc'}">Tăng dần</option>
+                                            <option value="desc" th:selected="${sortDir == 'desc'}">Giảm dần</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary me-2">
+                                            <i class="fas fa-search me-1"></i>Tìm kiếm
+                                        </button>
+                                        <a href="/admin/part-type" class="btn btn-outline-secondary">
+                                            <i class="fas fa-refresh me-1"></i>Reset
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
 
+                        <!-- Table Card -->
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-list me-2"></i>
+                                    Danh sách loại linh kiện
+                                    <span class="badge bg-primary ms-2" th:text="${totalElements}"></span>
+                                </h5>
+                                <div>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="window.print()">
+                                        <i class="fas fa-print me-1"></i>In
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm">
+                                        <i class="fas fa-file-excel me-1"></i>Excel
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th scope="col">
+                                                    <a th:href="@{/admin/part-type(page=${currentPage}, size=${size}, sortBy='id', sortDir=${sortBy == 'id' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search})}"
+                                                        class="text-white text-decoration-none">
+                                                        ID
+                                                        <i class="fas fa-sort ms-1"
+                                                            th:class="${sortBy == 'id' ? (sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down') : 'fas fa-sort'}"></i>
+                                                    </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a th:href="@{/admin/part-type(page=${currentPage}, size=${size}, sortBy='name', sortDir=${sortBy == 'name' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search})}"
+                                                        class="text-white text-decoration-none">
+                                                        Tên loại linh kiện
+                                                        <i class="fas fa-sort ms-1"
+                                                            th:class="${sortBy == 'name' ? (sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down') : 'fas fa-sort'}"></i>
+                                                    </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a th:href="@{/admin/part-type(page=${currentPage}, size=${size}, sortBy='createdAt', sortDir=${sortBy == 'createdAt' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search})}"
+                                                        class="text-white text-decoration-none">
+                                                        Ngày tạo
+                                                        <i class="fas fa-sort ms-1"
+                                                            th:class="${sortBy == 'createdAt' ? (sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down') : 'fas fa-sort'}"></i>
+                                                    </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a th:href="@{/admin/part-type(page=${currentPage}, size=${size}, sortBy='updatedAt', sortDir=${sortBy == 'updatedAt' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search})}"
+                                                        class="text-white text-decoration-none">
+                                                        Ngày cập nhật
+                                                        <i class="fas fa-sort ms-1"
+                                                            th:class="${sortBy == 'updatedAt' ? (sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down') : 'fas fa-sort'}"></i>
+                                                    </a>
+                                                </th>
+                                                <th scope="col" width="200">Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:if="${#lists.isEmpty(partTypes)}">
+                                                <td colspan="5" class="text-center text-muted">
+                                                    <i class="fas fa-inbox fa-3x mb-3"></i>
+                                                    <p>Không có dữ liệu loại linh kiện</p>
+                                                    <a href="/admin/part-type/create" class="btn btn-primary">
+                                                        <i class="fas fa-plus me-1"></i>Thêm loại linh kiện đầu tiên
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr th:each="partType : ${partTypes}">
+                                                <td th:text="${partType.id}"></td>
+                                                <td>
+                                                    <strong th:text="${partType.name}"></strong>
+                                                </td>
+                                                <td th:text="${#dates.format(partType.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                                </td>
+                                                <td th:text="${#dates.format(partType.updatedAt, 'dd/MM/yyyy HH:mm')}">
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a th:href="@{/admin/part-type/{id}(id=${partType.id})}"
+                                                            class="btn btn-sm btn-outline-info" title="Xem chi tiết">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a th:href="@{/admin/part-type/{id}/edit(id=${partType.id})}"
+                                                            class="btn btn-sm btn-outline-warning" title="Chỉnh sửa">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                                            data-bs-toggle="modal"
+                                                            th:data-bs-target="'#deleteModal' + ${partType.id}"
+                                                            title="Xóa">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Delete Modal -->
+                                                    <div class="modal fade" th:id="'deleteModal' + ${partType.id}"
+                                                        tabindex="-1" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Xác nhận xóa</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p>Bạn có chắc chắn muốn xóa loại linh kiện <strong
+                                                                            th:text="${partType.name}"></strong> không?
+                                                                    </p>
+                                                                    <p class="text-danger"><small>Lưu ý: Thao tác này
+                                                                            không thể hoàn tác!</small></p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Hủy</button>
+                                                                    <form
+                                                                        th:action="@{/admin/part-type/{id}/delete(id=${partType.id})}"
+                                                                        method="post" style="display: inline;">
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger">Xóa</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination -->
+                                <nav th:if="${totalPages > 1}" aria-label="Pagination">
+                                    <ul class="pagination justify-content-center">
+                                        <!-- Previous page -->
+                                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                            <a class="page-link"
+                                                th:href="@{/admin/part-type(page=${currentPage - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search})}">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </a>
+                                        </li>
+
+                                        <!-- Page numbers -->
+                                        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" class="page-item"
+                                            th:classappend="${i == currentPage} ? 'active'">
+                                            <a class="page-link"
+                                                th:href="@{/admin/part-type(page=${i}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search})}"
+                                                th:text="${i + 1}"></a>
+                                        </li>
+
+                                        <!-- Next page -->
+                                        <li class="page-item"
+                                            th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
+                                            <a class="page-link"
+                                                th:href="@{/admin/part-type(page=${currentPage + 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search})}">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                                <!-- Pagination Info -->
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <span class="text-muted">
+                                        Hiển thị <strong th:text="${(currentPage * size) + 1}"></strong> đến
+                                        <strong
+                                            th:text="${(currentPage + 1) * size > totalElements ? totalElements : (currentPage + 1) * size}"></strong>
+                                        trong tổng số <strong th:text="${totalElements}"></strong> bản ghi
+                                    </span>
+                                    <span class="text-muted">
+                                        Trang <strong th:text="${currentPage + 1}"></strong> / <strong
+                                            th:text="${totalPages}"></strong>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
+    </div>
 
     </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        @media print {
+
+            .btn,
+            .modal,
+            .pagination,
+            .no-print {
+                display: none !important;
+            }
+
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
+<span class="material-symbols-outlined">edit</span>
+</a>
+<!--                            <form action="" class="delete-btn flex items-center justify-center px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">-->
+<!--                                <button class="flex item-center justify-center">-->
+<!--                                    Xóa <span class="material-symbols-outlined">delete</span>-->
+<!--                                </button>-->
+<!--                            </form>-->
+</div>
+</td>
+
+</tr>
+
+</tbody>
+</table>
+
+
+</div>
+
+
+</div>
 </div>
 
 
@@ -98,4 +363,5 @@
     });
 </script>
 </body>
+
 </html>

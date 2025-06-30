@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Trang chủ</title>
@@ -11,56 +12,194 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
-<body>
-<div class="main-container">
-    <div th:replace="admin/fragments/nav-side :: nav-side"></div>
-    <div th:replace="admin/fragments/nav-top :: nav-top"></div>
-    <div class="page-container">
-        <div class="page-header">
-            <div class="header-content">
-                <h1>Admin /</h1><h1>Trang chủ</h1>
-            </div>
-        </div>
-        <div class="dashboard-header">
-            <div class="dashboard-title">
-                <h1>Dashboard</h1>
-            </div>
-        </div>
-        <div class="page-content">
-            <div class="dashboard">
-                <div class="dashboard-item">
-                    <div>
-                        <h2>Tổng số laptop</h2>
-                        <p>150</p>
-                    </div>
-                    <div class="icon">
-                        <span class="material-symbols-outlined md-36">laptop</span>
-                    </div>
-                </div>
-                <div class="dashboard-item">
-                    <div>
-                        <h2>Tổng số linh kiện</h2>
-                        <p>300</p>
-                    </div>
-                    <div class="icon">
-                        <span class="material-symbols-outlined md-36">memory</span>
-                    </div>
-                </div>
-                <div class="dashboard-item">
-                    <div>
-                        <h2>Tổng số yêu cầu sửa chữa</h2>
-                        <p>25</p>
-                    </div>
-                    <div class="icon">
-                        <span class="material-symbols-outlined md-36">build</span>
-                    </div>
-                </div>
-            </div>
-            <canvas id="myChart"></canvas>
-        </div>
 
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Trang chủ</h1>
+                </div>
+            </div>
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Dashboard</h1>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="dashboard">
+                    <div class="dashboard-item">
+                        <div>
+                            <h2>Tổng số laptop</h2>
+                            <p th:text="${stats.totalLaptops}">0</p>
+                        </div>
+                        <div class="icon">
+                            <span class="material-symbols-outlined md-36">laptop</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div>
+                            <h2>Tổng số linh kiện</h2>
+                            <p th:text="${stats.totalParts}">0</p>
+                        </div>
+                        <div class="icon">
+                            <span class="material-symbols-outlined md-36">memory</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div>
+                            <h2>Loại linh kiện</h2>
+                            <p th:text="${stats.totalPartTypes}">0</p>
+                        </div>
+                        <div class="icon">
+                            <span class="material-symbols-outlined md-36">category</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div>
+                            <h2>Tổng yêu cầu bảo hành</h2>
+                            <p th:text="${stats.totalRequests}">0</p>
+                        </div>
+                        <div class="icon">
+                            <span class="material-symbols-outlined md-36">build</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div>
+                            <h2>Yêu cầu đang chờ</h2>
+                            <p th:text="${stats.pendingRequests}">0</p>
+                        </div>
+                        <div class="icon">
+                            <span class="material-symbols-outlined md-36">pending</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div>
+                            <h2>Yêu cầu hoàn thành</h2>
+                            <p th:text="${stats.completedRequests}">0</p>
+                        </div>
+                        <div class="icon">
+                            <span class="material-symbols-outlined md-36">check_circle</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div>
+                            <h2>Tổng số khách hàng</h2>
+                            <p th:text="${stats.totalCustomers}">0</p>
+                        </div>
+                        <div class="icon">
+                            <span class="material-symbols-outlined md-36">group</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div>
+                            <h2>Tổng số nhân viên</h2>
+                            <p th:text="${stats.totalStaff}">0</p>
+                        </div>
+                        <div class="icon">
+                            <span class="material-symbols-outlined md-36">badge</span>
+                        </div>
+                    </div>
+                </div>
+                <canvas id="myChart"></canvas>
+
+                <!-- Chart for Request Status -->
+                <div class="chart-container" style="margin-top: 30px;">
+                    <h3>Thống kê yêu cầu bảo hành</h3>
+                    <canvas id="requestChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
-<script th:src="@{/assets/js/admin/script.js}"></script>
+    <script th:src="@{/assets/js/admin/script.js}"></script>
+    <script th:inline="javascript">
+        // Chart for Request Status
+        const ctx2 = document.getElementById('requestChart').getContext('2d');
+        const requestChart = new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ['Đang chờ xử lý', 'Hoàn thành', 'Còn lại'],
+                datasets: [{
+                    label: 'Yêu cầu bảo hành',
+                    data: [
+                    /*[[${stats.pendingRequests}]]*/ 0,
+                    /*[[${stats.completedRequests}]]*/ 0,
+                    /*[[${stats.totalRequests - stats.pendingRequests - stats.completedRequests}]]*/ 0
+                    ],
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Phân bố trạng thái yêu cầu'
+                    }
+                }
+            }
+        });
+
+        // Main dashboard chart (existing)
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Laptops', 'Linh kiện', 'Yêu cầu', 'Khách hàng', 'Nhân viên'],
+                datasets: [{
+                    label: 'Số lượng',
+                    data: [
+                    /*[[${stats.totalLaptops}]]*/ 0,
+                    /*[[${stats.totalParts}]]*/ 0,
+                    /*[[${stats.totalRequests}]]*/ 0,
+                    /*[[${stats.totalCustomers}]]*/ 0,
+                    /*[[${stats.totalStaff}]]*/ 0
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 205, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 205, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Thống kê tổng quan hệ thống'
+                    }
+                }
+            }
+        });
+    </script>
 </body>
+
 </html>

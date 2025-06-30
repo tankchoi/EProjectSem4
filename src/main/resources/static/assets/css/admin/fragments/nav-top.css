@@ -1,43 +1,51 @@
 /*top-side*/
-.nav-top-side{
+.nav-top-side {
     width: 100vw;
     height: 5rem;
     align-items: center;
     display: flex;
     justify-content: space-between;
     padding-left: 15rem;
-    background-color: rgba(255,255,255,1);
+    padding-right: 1rem;
+    background-color: rgba(255, 255, 255, 1);
     border: 0.2px solid #d1d5db;
     position: fixed;
 }
-.menu-toggle{
+
+.menu-toggle {
     display: none;
     cursor: pointer;
 }
-.menu-toggle span{
+
+.menu-toggle span {
     color: #000000;
     padding: 0.8rem 1rem;
     display: flex;
     align-items: center;
     font-weight: 600;
 }
-.search-contain{
-    padding:  0 1rem;
+
+.search-contain {
+    padding: 0 1rem;
 }
-.search-contain input{
+
+.search-contain input {
     width: 20rem;
     height: 2.5rem;
     border-radius: 0.5rem;
-    outline: 1px solid #d1d5db; /* Màu xám nhạt */
+    outline: 1px solid #d1d5db;
+    /* Màu xám nhạt */
     padding: 0.8rem 1rem;
 }
 
 .dropdown {
     position: relative;
     display: inline-block;
-    border-right: 1px solid #d1d5db; /* Viền cạnh phải */
-    border-left: 1px solid #d1d5db;  /* Viền cạnh trái */
-
+    border-right: 1px solid #d1d5db;
+    /* Viền cạnh phải */
+    border-left: 1px solid #d1d5db;
+    /* Viền cạnh trái */
+    display: flex;
 }
 
 .dropdown-toggle {
@@ -47,10 +55,12 @@
     display: flex;
     align-items: center;
 }
-.dropdown-text{
+
+.dropdown-text {
     margin: 0 0.5rem;
     font-weight: 600;
 }
+
 .dropdown-menu {
     display: none;
     /* Ẩn mặc định */
@@ -78,7 +88,11 @@
     background-color: #f1f1f1;
 }
 
-.logout-link{
+.logout-contain {
+    display: flex;
+}
+
+.logout-link {
     color: #000000;
     padding: 0.8rem 1rem;
     cursor: pointer;
@@ -88,10 +102,11 @@
 }
 
 @media (max-width: 1024px) {
-    html{
+    html {
         font-size: 8px;
     }
-    .menu-toggle{
+
+    .menu-toggle {
         display: block;
     }
 }

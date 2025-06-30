@@ -1,10 +1,13 @@
 package vn.aptech.java.controllers.admin;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import vn.aptech.java.dtos.CreateInvoiceDTO;
 import vn.aptech.java.models.Invoice;
 import vn.aptech.java.services.InvoiceService;
 import vn.aptech.java.services.RequestService;
@@ -31,33 +34,48 @@ public class ReceiptController {
     @GetMapping("/receipt/create")
     public String create(Model model) {
         model.addAttribute("activePage", "receipt");
-        model.addAttribute("invoice", new Invoice());
+        model.addAttribute("invoice", new CreateInvoiceDTO());
         model.addAttribute("requests", requestService.getAllRequests());
         return "admin/pages/receipt/create";
     }
 
     @PostMapping("/receipt/create")
-    public String store(@ModelAttribute Invoice invoice, RedirectAttributes redirectAttributes) {
-        try {
-            if (invoice.getTotalPrice() == null || invoice.getTotalPrice() <= 0) {
-                redirectAttributes.addFlashAttribute("error", "Tổng tiền không được để trống và phải lớn hơn 0!");
-                return "redirect:/admin/receipt/create";
-            }
+    public String store(@Valid @ModelAttribute("invoice") CreateInvoiceDTO createInvoiceDTO,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
-            invoiceService.createInvoice(invoice);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("activePage", "receipt");
+            model.addAttribute("requests", requestService.getAllRequests());
+            return "admin/pages/receipt/create";
+        }
+
+        try {
+            invoiceService.createInvoice(createInvoiceDTO);
             redirectAttributes.addFlashAttribute("success", "Thêm hóa đơn thành công!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi thêm hóa đơn: " + e.getMessage());
+            model.addAttribute("activePage", "receipt");
+            model.addAttribute("requests", requestService.getAllRequests());
+            model.addAttribute("error", "Có lỗi xảy ra khi thêm hóa đơn: " + e.getMessage());
+            return "admin/pages/receipt/create";
         }
         return "redirect:/admin/receipt";
     }
 
     @GetMapping("/receipt/edit/{id}")
     public String edit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Invoice> invoice = invoiceService.getInvoiceById(id);
-        if (invoice.isPresent()) {
+        Optional<Invoice> invoiceOpt = invoiceService.getInvoiceById(id);
+        if (invoiceOpt.isPresent()) {
+            Invoice invoice = invoiceOpt.get();
+            CreateInvoiceDTO invoiceDTO = new CreateInvoiceDTO();
+            invoiceDTO.setRequestId(invoice.getRequest().getId());
+            invoiceDTO.setTotalPrice(invoice.getTotalPrice());
+            invoiceDTO.setStatus(invoice.getStatus());
+
             model.addAttribute("activePage", "receipt");
-            model.addAttribute("invoice", invoice.get());
+            model.addAttribute("invoice", invoiceDTO);
+            model.addAttribute("invoiceId", id);
             model.addAttribute("requests", requestService.getAllRequests());
             return "admin/pages/receipt/edit";
         } else {
@@ -67,22 +85,32 @@ public class ReceiptController {
     }
 
     @PostMapping("/receipt/update/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute Invoice invoice,
-            RedirectAttributes redirectAttributes) {
-        try {
-            if (invoice.getTotalPrice() == null || invoice.getTotalPrice() <= 0) {
-                redirectAttributes.addFlashAttribute("error", "Tổng tiền không được để trống và phải lớn hơn 0!");
-                return "redirect:/admin/receipt/edit/" + id;
-            }
+    public String update(@PathVariable Long id,
+            @Valid @ModelAttribute("invoice") CreateInvoiceDTO createInvoiceDTO,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
-            Invoice updatedInvoice = invoiceService.updateInvoice(id, invoice);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("activePage", "receipt");
+            model.addAttribute("invoiceId", id);
+            model.addAttribute("requests", requestService.getAllRequests());
+            return "admin/pages/receipt/edit";
+        }
+
+        try {
+            Invoice updatedInvoice = invoiceService.updateInvoice(id, createInvoiceDTO);
             if (updatedInvoice != null) {
                 redirectAttributes.addFlashAttribute("success", "Cập nhật hóa đơn thành công!");
             } else {
                 redirectAttributes.addFlashAttribute("error", "Không tìm thấy hóa đơn để cập nhật!");
             }
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi cập nhật hóa đơn: " + e.getMessage());
+            model.addAttribute("activePage", "receipt");
+            model.addAttribute("invoiceId", id);
+            model.addAttribute("requests", requestService.getAllRequests());
+            model.addAttribute("error", "Có lỗi xảy ra khi cập nhật hóa đơn: " + e.getMessage());
+            return "admin/pages/receipt/edit";
         }
         return "redirect:/admin/receipt";
     }

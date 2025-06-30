@@ -1,11 +1,16 @@
 package vn.aptech.java.controllers.admin;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import vn.aptech.java.dtos.CreateLaptopDTO;
 import vn.aptech.java.models.Laptop;
+import vn.aptech.java.services.FileUploadService;
 import vn.aptech.java.services.LaptopService;
 import vn.aptech.java.services.ModelService;
 
@@ -21,6 +26,9 @@ public class LaptopController {
     @Autowired
     private ModelService modelService;
 
+    @Autowired
+    private FileUploadService fileUploadService;
+
     @GetMapping("/laptop")
     public String index(Model model) {
         model.addAttribute("activePage", "laptop");
@@ -31,28 +39,83 @@ public class LaptopController {
     @GetMapping("/laptop/create")
     public String create(Model model) {
         model.addAttribute("activePage", "laptop");
-        model.addAttribute("laptop", new Laptop());
+        model.addAttribute("laptop", new CreateLaptopDTO());
         model.addAttribute("models", modelService.getAllModels());
         return "admin/pages/laptop/create";
     }
 
     @PostMapping("/laptop/create")
-    public String store(@ModelAttribute Laptop laptop, RedirectAttributes redirectAttributes) {
+    public String store(@Valid @ModelAttribute("laptop") CreateLaptopDTO createLaptopDTO,
+            BindingResult bindingResult,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+            @RequestParam(value = "imageUrl", required = false) String imageUrl,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        // Handle image upload or URL
         try {
-            laptopService.createLaptop(laptop);
+            if (imageFile != null && !imageFile.isEmpty()) {
+                if (fileUploadService.isValidImageFile(imageFile)) {
+                    String imagePath = fileUploadService.saveFile(imageFile, "laptops");
+                    createLaptopDTO.setImgUrl(imagePath);
+                } else {
+                    model.addAttribute("error",
+                            "File không hợp lệ. Chỉ chấp nhận các file ảnh (jpg, png, gif, bmp, webp).");
+                    model.addAttribute("activePage", "laptop");
+                    model.addAttribute("models", modelService.getAllModels());
+                    return "admin/pages/laptop/create";
+                }
+            } else if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                if (fileUploadService.isValidImageUrl(imageUrl)) {
+                    // Validate and truncate URL if necessary for database compatibility
+                    String validatedUrl = fileUploadService.validateAndTruncateUrl(imageUrl);
+                    createLaptopDTO.setImgUrl(validatedUrl);
+                } else {
+                    model.addAttribute("error", "URL ảnh không hợp lệ hoặc quá dài (tối đa 255 ký tự).");
+                    model.addAttribute("activePage", "laptop");
+                    model.addAttribute("models", modelService.getAllModels());
+                    return "admin/pages/laptop/create";
+                }
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "Lỗi khi xử lý ảnh: " + e.getMessage());
+            model.addAttribute("activePage", "laptop");
+            model.addAttribute("models", modelService.getAllModels());
+            return "admin/pages/laptop/create";
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("activePage", "laptop");
+            model.addAttribute("models", modelService.getAllModels());
+            return "admin/pages/laptop/create";
+        }
+
+        try {
+            laptopService.createLaptop(createLaptopDTO);
             redirectAttributes.addFlashAttribute("success", "Thêm laptop thành công!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi thêm laptop!");
+            model.addAttribute("activePage", "laptop");
+            model.addAttribute("models", modelService.getAllModels());
+            model.addAttribute("error", "Có lỗi xảy ra khi thêm laptop: " + e.getMessage());
+            return "admin/pages/laptop/create";
         }
         return "redirect:/admin/laptop";
     }
 
     @GetMapping("/laptop/edit/{id}")
     public String edit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Laptop> laptop = laptopService.getLaptopById(id);
-        if (laptop.isPresent()) {
+        Optional<Laptop> laptopOpt = laptopService.getLaptopById(id);
+        if (laptopOpt.isPresent()) {
+            Laptop laptop = laptopOpt.get();
+            CreateLaptopDTO laptopDTO = new CreateLaptopDTO();
+            laptopDTO.setName(laptop.getName());
+            laptopDTO.setModelId(laptop.getModel().getId());
+            laptopDTO.setWarrantyPeriod(laptop.getWarrantyPeriod());
+            laptopDTO.setImgUrl(laptop.getImgUrl());
+
             model.addAttribute("activePage", "laptop");
-            model.addAttribute("laptop", laptop.get());
+            model.addAttribute("laptop", laptopDTO);
+            model.addAttribute("laptopId", id);
             model.addAttribute("models", modelService.getAllModels());
             return "admin/pages/laptop/update";
         } else {
@@ -62,16 +125,91 @@ public class LaptopController {
     }
 
     @PostMapping("/laptop/edit/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute Laptop laptop, RedirectAttributes redirectAttributes) {
+    public String update(@PathVariable Long id,
+            @Valid @ModelAttribute("laptop") CreateLaptopDTO createLaptopDTO,
+            BindingResult bindingResult,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+            @RequestParam(value = "imageUrl", required = false) String imageUrl,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        System.out.println("=== UPDATE LAPTOP DEBUG ===");
+        System.out.println("ID: " + id);
+        System.out.println("DTO Name: " + createLaptopDTO.getName());
+        System.out.println("DTO ModelId: " + createLaptopDTO.getModelId());
+        System.out.println("DTO WarrantyPeriod: " + createLaptopDTO.getWarrantyPeriod());
+        System.out.println("DTO ImgUrl: " + createLaptopDTO.getImgUrl());
+        System.out.println("Has errors: " + bindingResult.hasErrors());
+        if (bindingResult.hasErrors()) {
+            System.out.println("Validation errors: " + bindingResult.getAllErrors());
+        }
+
+        // Handle image upload or URL
         try {
-            Laptop updatedLaptop = laptopService.updateLaptop(id, laptop);
+            if (imageFile != null && !imageFile.isEmpty()) {
+                if (fileUploadService.isValidImageFile(imageFile)) {
+                    // Delete old image if it was uploaded before
+                    Optional<Laptop> existingLaptop = laptopService.getLaptopById(id);
+                    if (existingLaptop.isPresent() && existingLaptop.get().getImgUrl() != null &&
+                            existingLaptop.get().getImgUrl().startsWith("/images/")) {
+                        fileUploadService.deleteFile(existingLaptop.get().getImgUrl());
+                    }
+
+                    String imagePath = fileUploadService.saveFile(imageFile, "laptops");
+                    createLaptopDTO.setImgUrl(imagePath);
+                } else {
+                    model.addAttribute("error",
+                            "File không hợp lệ. Chỉ chấp nhận các file ảnh (jpg, png, gif, bmp, webp).");
+                    model.addAttribute("activePage", "laptop");
+                    model.addAttribute("laptopId", id);
+                    model.addAttribute("models", modelService.getAllModels());
+                    return "admin/pages/laptop/update";
+                }
+            } else if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                if (fileUploadService.isValidImageUrl(imageUrl)) {
+                    // Validate and truncate URL if necessary for database compatibility
+                    String validatedUrl = fileUploadService.validateAndTruncateUrl(imageUrl);
+                    createLaptopDTO.setImgUrl(validatedUrl);
+                } else {
+                    model.addAttribute("error", "URL ảnh không hợp lệ hoặc quá dài (tối đa 255 ký tự).");
+                    model.addAttribute("activePage", "laptop");
+                    model.addAttribute("laptopId", id);
+                    model.addAttribute("models", modelService.getAllModels());
+                    return "admin/pages/laptop/update";
+                }
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "Lỗi khi xử lý ảnh: " + e.getMessage());
+            model.addAttribute("activePage", "laptop");
+            model.addAttribute("laptopId", id);
+            model.addAttribute("models", modelService.getAllModels());
+            return "admin/pages/laptop/update";
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("activePage", "laptop");
+            model.addAttribute("laptopId", id);
+            model.addAttribute("models", modelService.getAllModels());
+            return "admin/pages/laptop/update";
+        }
+
+        try {
+            Laptop updatedLaptop = laptopService.updateLaptop(id, createLaptopDTO);
             if (updatedLaptop != null) {
+                System.out.println("Update successful!");
                 redirectAttributes.addFlashAttribute("success", "Cập nhật laptop thành công!");
             } else {
+                System.out.println("Update failed - laptop not found!");
                 redirectAttributes.addFlashAttribute("error", "Không tìm thấy laptop để cập nhật!");
             }
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi cập nhật laptop!");
+            System.out.println("Update exception: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("activePage", "laptop");
+            model.addAttribute("laptopId", id);
+            model.addAttribute("models", modelService.getAllModels());
+            model.addAttribute("error", "Có lỗi xảy ra khi cập nhật laptop: " + e.getMessage());
+            return "admin/pages/laptop/update";
         }
         return "redirect:/admin/laptop";
     }

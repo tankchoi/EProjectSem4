@@ -7,20 +7,23 @@
     <title>Chỉnh sửa khách hàng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/assets/css/admin/pages/customer/customer.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/customer/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
 <body>
-    <div class="wrapper">
-        <!-- Navigation -->
+    <div class="main-container">
         <div th:replace="admin/fragments/nav-side :: nav-side"></div>
-
-        <!-- Page Content -->
-        <div id="content">
-            <!-- Top Navigation -->
-            <div th:replace="admin/fragments/nav-top :: nav-top"></div>
-
-            <!-- Main Content -->
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Chỉnh sửa khách hàng</h1>
+                </div>
+            </div>
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
@@ -412,6 +415,8 @@
             }
         });
     </script>
+
+    <script th:src="@{/assets/js/admin/script.js}"></script>
 
 </body>
 

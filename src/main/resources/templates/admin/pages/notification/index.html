@@ -1,10 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Thông báo</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/homepage/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
 
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Thông báo</h1>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Danh sách thông báo</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="notification-item">
+                                        <div class="notification-icon">
+                                            <span class="material-symbols-outlined">info</span>
+                                        </div>
+                                        <div class="notification-content">
+                                            <h4>Chào mừng bạn đến với hệ thống quản lý</h4>
+                                            <p>Hệ thống đã được cập nhật với giao diện mới.</p>
+                                            <small class="text-muted">2 giờ trước</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="notification-item">
+                                        <div class="notification-icon">
+                                            <span class="material-symbols-outlined">assignment</span>
+                                        </div>
+                                        <div class="notification-content">
+                                            <h4>Yêu cầu sửa chữa mới</h4>
+                                            <p>Có 3 yêu cầu sửa chữa đang chờ xử lý.</p>
+                                            <small class="text-muted">1 ngày trước</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="notification-item">
+                                        <div class="notification-icon">
+                                            <span class="material-symbols-outlined">inventory</span>
+                                        </div>
+                                        <div class="notification-content">
+                                            <h4>Cảnh báo tồn kho</h4>
+                                            <p>Một số linh kiện sắp hết hàng, cần nhập thêm.</p>
+                                            <small class="text-muted">3 ngày trước</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/assets/js/admin/script.js}"></script>
+
+    <style>
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-icon {
+            margin-right: 15px;
+            color: #007bff;
+        }
+
+        .notification-content h4 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .notification-content p {
+            margin: 0 0 5px 0;
+            color: #666;
+        }
+
+        .notification-content small {
+            color: #999;
+        }
+    </style>
 </body>
+
 </html>

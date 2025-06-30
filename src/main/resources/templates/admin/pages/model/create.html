@@ -68,9 +68,12 @@
                 <label for="name" class="block mb-1 font-medium">Tên Model <span style="color: red;">*</span></label>
                 <div class="input-content flex space-x-2 items-center border border-gray-300 rounded-md">
                   <span class="material-symbols-outlined">dns</span>
-                  <input type="text" name="name" id="name" th:field="*{name}"
+                  <input type="text" name="name" id="name" th:value="${model.name}"
                     placeholder="Nhập tên model (VD: HP ProBook 450 G8)"
                     class="w-full border border-none outline-none rounded-md p-2" required>
+                </div>
+                <div th:if="${#fields.hasErrors('name')}" class="text-red-500 text-xs italic">
+                  <span th:errors="*{name}"></span>
                 </div>
               </div>
             </div>
