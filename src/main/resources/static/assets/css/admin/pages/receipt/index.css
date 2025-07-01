@@ -93,58 +93,6 @@ body {
     box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
 }
 
-.search-container {
-    margin: 1.5rem;
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
-}
-
-.search-form {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-}
-
-.search-input {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    transition: all 0.3s ease;
-    background: #f8fafc;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.search-btn {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.search-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
-}
-
 .table-container {
     margin: 1.5rem;
     background: white;
@@ -198,22 +146,17 @@ body {
     letter-spacing: 0.05em;
 }
 
+.status-paid {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
 .status-pending {
     background-color: #fef3c7;
     color: #92400e;
 }
 
-.status-processing {
-    background-color: #dbeafe;
-    color: #1e40af;
-}
-
-.status-completed {
-    background-color: #d1fae5;
-    color: #065f46;
-}
-
-.status-cancelled {
+.status-overdue {
     background-color: #fee2e2;
     color: #991b1b;
 }
@@ -268,6 +211,16 @@ body {
     transform: scale(1.1);
 }
 
+.btn-print {
+    background-color: #e0e7ff;
+    color: #3730a3;
+}
+
+.btn-print:hover {
+    background-color: #c7d2fe;
+    transform: scale(1.1);
+}
+
 .alert {
     margin: 1.5rem;
     padding: 1rem 1.5rem;
@@ -293,34 +246,6 @@ body {
 
 .alert .material-symbols-outlined {
     font-size: 1.25rem;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 2rem 1.5rem;
-}
-
-.pagination a,
-.pagination span {
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    text-decoration: none;
-    color: #374151;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.pagination a:hover {
-    background-color: #f3f4f6;
-    color: #1f2937;
-}
-
-.pagination .current {
-    background-color: #3b82f6;
-    color: white;
 }
 
 /* DataTables Custom Styling */
@@ -381,14 +306,6 @@ body {
         text-align: center;
     }
 
-    .search-form {
-        flex-direction: column;
-    }
-
-    .search-input {
-        width: 100%;
-    }
-
     .table-container {
         margin: 1rem;
         overflow-x: auto;
@@ -401,10 +318,5 @@ body {
     .action-buttons {
         flex-direction: column;
         gap: 0.25rem;
-    }
-
-    .pagination {
-        flex-wrap: wrap;
-        margin: 1rem;
     }
 }
