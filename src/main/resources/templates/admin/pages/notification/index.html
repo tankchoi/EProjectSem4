@@ -3,12 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Thông báo</title>
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/homepage/index.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Thông báo</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/notification/index.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -18,94 +21,310 @@
         <div class="page-container">
             <div class="page-header">
                 <div class="header-content">
-                    <h1>Admin /</h1>
-                    <h1>Thông báo</h1>
+                    <span class="material-symbols-outlined">notifications</span>
+                    <h1>Admin / Quản lý Thông báo</h1>
                 </div>
             </div>
+
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>
+                        <span class="material-symbols-outlined"
+                            style="vertical-align: middle; margin-right: 8px;">notifications_active</span>
+                        Thông báo hệ thống
+                    </h1>
+                    <p>Quản lý và theo dõi các thông báo trong hệ thống</p>
+                </div>
+            </div>
+
             <div class="page-content">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3>Danh sách thông báo</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="notification-item">
-                                        <div class="notification-icon">
-                                            <span class="material-symbols-outlined">info</span>
-                                        </div>
-                                        <div class="notification-content">
-                                            <h4>Chào mừng bạn đến với hệ thống quản lý</h4>
-                                            <p>Hệ thống đã được cập nhật với giao diện mới.</p>
-                                            <small class="text-muted">2 giờ trước</small>
-                                        </div>
-                                    </div>
+                <div class="notification-header">
+                    <h2>
+                        <span class="material-symbols-outlined"
+                            style="vertical-align: middle; margin-right: 8px;">list</span>
+                        Danh sách thông báo
+                    </h2>
+                </div>
 
-                                    <div class="notification-item">
-                                        <div class="notification-icon">
-                                            <span class="material-symbols-outlined">assignment</span>
-                                        </div>
-                                        <div class="notification-content">
-                                            <h4>Yêu cầu sửa chữa mới</h4>
-                                            <p>Có 3 yêu cầu sửa chữa đang chờ xử lý.</p>
-                                            <small class="text-muted">1 ngày trước</small>
-                                        </div>
-                                    </div>
+                <div class="notification-filter">
+                    <div class="filter-buttons">
+                        <a href="#" class="filter-btn active">
+                            <span class="material-symbols-outlined"
+                                style="font-size: 1rem; margin-right: 4px;">inbox</span>
+                            Tất cả
+                        </a>
+                        <a href="#" class="filter-btn">
+                            <span class="material-symbols-outlined"
+                                style="font-size: 1rem; margin-right: 4px;">mark_email_unread</span>
+                            Chưa đọc
+                        </a>
+                        <a href="#" class="filter-btn">
+                            <span class="material-symbols-outlined"
+                                style="font-size: 1rem; margin-right: 4px;">mark_email_read</span>
+                            Đã đọc
+                        </a>
+                        <a href="#" class="filter-btn">
+                            <span class="material-symbols-outlined"
+                                style="font-size: 1rem; margin-right: 4px;">priority_high</span>
+                            Quan trọng
+                        </a>
+                    </div>
+                </div>
 
-                                    <div class="notification-item">
-                                        <div class="notification-icon">
-                                            <span class="material-symbols-outlined">inventory</span>
-                                        </div>
-                                        <div class="notification-content">
-                                            <h4>Cảnh báo tồn kho</h4>
-                                            <p>Một số linh kiện sắp hết hàng, cần nhập thêm.</p>
-                                            <small class="text-muted">3 ngày trước</small>
-                                        </div>
-                                    </div>
-                                </div>
+                <div class="notification-content">
+                    <div class="notification-item notification-unread">
+                        <div class="notification-icon info">
+                            <span class="material-symbols-outlined">info</span>
+                        </div>
+                        <div class="notification-text">
+                            <h4>Chào mừng bạn đến với hệ thống quản lý</h4>
+                            <p>Hệ thống đã được cập nhật với giao diện mới và nhiều tính năng hỗ trợ tốt hơn. Vui lòng
+                                khám phá các module đã được tối ưu.</p>
+                            <div class="notification-time">2 giờ trước</div>
+                            <div class="notification-actions">
+                                <button class="notification-btn btn-read">
+                                    <span class="material-symbols-outlined">mark_email_read</span>
+                                    Đánh dấu đã đọc
+                                </button>
+                                <button class="notification-btn btn-delete">
+                                    <span class="material-symbols-outlined">delete</span>
+                                    Xóa
+                                </button>
                             </div>
                         </div>
                     </div>
+
+                    <div class="notification-item notification-unread">
+                        <div class="notification-icon success">
+                            <span class="material-symbols-outlined">assignment</span>
+                        </div>
+                        <div class="notification-text">
+                            <h4>Yêu cầu sửa chữa mới</h4>
+                            <p>Có yêu cầu sửa chữa mới từ khách hàng John Doe. Vui lòng kiểm tra và xử lý kịp thời.</p>
+                            <div class="notification-time">30 phút trước</div>
+                            <div class="notification-actions">
+                                <button class="notification-btn btn-read">
+                                    <span class="material-symbols-outlined">mark_email_read</span>
+                                    Đánh dấu đã đọc
+                                </button>
+                                <button class="notification-btn btn-delete">
+                                    <span class="material-symbols-outlined">delete</span>
+                                    Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notification-item notification-read">
+                        <div class="notification-icon warning">
+                            <span class="material-symbols-outlined">warning</span>
+                        </div>
+                        <div class="notification-text">
+                            <h4>Cảnh báo tồn kho thấp</h4>
+                            <p>Một số linh kiện có số lượng tồn kho thấp. Vui lòng kiểm tra và nhập thêm hàng.</p>
+                            <div class="notification-time">1 ngày trước</div>
+                            <div class="notification-actions">
+                                <button class="notification-btn btn-delete">
+                                    <span class="material-symbols-outlined">delete</span>
+                                    Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notification-item notification-read">
+                        <div class="notification-icon error">
+                            <span class="material-symbols-outlined">error</span>
+                        </div>
+                        <div class="notification-text">
+                            <h4>Lỗi hệ thống đã được khắc phục</h4>
+                            <p>Lỗi kết nối cơ sở dữ liệu đã được khắc phục thành công. Hệ thống hoạt động bình thường.
+                            </p>
+                            <div class="notification-time">2 ngày trước</div>
+                            <div class="notification-actions">
+                                <button class="notification-btn btn-delete">
+                                    <span class="material-symbols-outlined">delete</span>
+                                    Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notification-item notification-read">
+                        <div class="notification-icon info">
+                            <span class="material-symbols-outlined">update</span>
+                        </div>
+                        <div class="notification-text">
+                            <h4>Cập nhật hệ thống</h4>
+                            <p>Hệ thống đã được cập nhật lên phiên bản mới với nhiều cải tiến về giao diện và hiệu suất.
+                            </p>
+                            <div class="notification-time">1 tuần trước</div>
+                            <div class="notification-actions">
+                                <button class="notification-btn btn-delete">
+                                    <span class="material-symbols-outlined">delete</span>
+                                    Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Empty State (hidden when there are notifications) -->
+                    <!-- <div class="empty-state" style="display: none;">
+                        <span class="material-symbols-outlined">notifications_off</span>
+                        <h3>Không có thông báo nào</h3>
+                        <p>Hiện tại chưa có thông báo nào trong hệ thống</p>
+                    </div> -->
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const notificationItems = document.querySelectorAll('.notification-item');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+
+                    const filterType = this.textContent.trim().toLowerCase();
+
+                    notificationItems.forEach(item => {
+                        if (filterType.includes('tất cả')) {
+                            item.style.display = 'flex';
+                        } else if (filterType.includes('chưa đọc')) {
+                            item.style.display = item.classList.contains('notification-unread') ? 'flex' : 'none';
+                        } else if (filterType.includes('đã đọc')) {
+                            item.style.display = item.classList.contains('notification-read') ? 'flex' : 'none';
+                        } else if (filterType.includes('quan trọng')) {
+                            // Filter by important notifications (you can define your own logic)
+                            item.style.display = item.querySelector('.notification-icon.error, .notification-icon.warning') ? 'flex' : 'none';
+                        }
+                    });
+                });
+            });
+
+            // Mark as read functionality
+            const readButtons = document.querySelectorAll('.btn-read');
+            readButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const notificationItem = this.closest('.notification-item');
+                    notificationItem.classList.remove('notification-unread');
+                    notificationItem.classList.add('notification-read');
+                    this.remove();
+                });
+            });
+
+            // Delete functionality
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    if (confirm('Bạn có chắc chắn muốn xóa thông báo này?')) {
+                        const notificationItem = this.closest('.notification-item');
+                        notificationItem.style.transition = 'opacity 0.3s ease';
+                        notificationItem.style.opacity = '0';
+                        setTimeout(() => {
+                            notificationItem.remove();
+
+                            // Check if there are any notifications left
+                            const remainingNotifications = document.querySelectorAll('.notification-item');
+                            if (remainingNotifications.length === 0) {
+                                // Show empty state
+                                document.querySelector('.notification-content').innerHTML = `
+                                    <div class="empty-state">
+                                        <span class="material-symbols-outlined">notifications_off</span>
+                                        <h3>Không có thông báo nào</h3>
+                                        <p>Tất cả thông báo đã được xóa</p>
+                                    </div>
+                                `;
+                            }
+                        }, 300);
+                    }
+                });
+            });
+
+            // Hover effects
+            notificationItems.forEach(item => {
+                item.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateX(4px)';
+                });
+
+                item.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+        });
+    </script>
+
     <script th:src="@{/assets/js/admin/script.js}"></script>
+</body>
 
-    <style>
-        .notification-item {
-            display: flex;
-            align-items: flex-start;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            transition: background-color 0.3s;
-        }
+</html>
+<p>Có 3 yêu cầu sửa chữa đang chờ xử lý.</p>
+<small class="text-muted">1 ngày trước</small>
+</div>
+</div>
 
-        .notification-item:hover {
-            background-color: #f8f9fa;
-        }
+<div class="notification-item">
+    <div class="notification-icon">
+        <span class="material-symbols-outlined">inventory</span>
+    </div>
+    <div class="notification-content">
+        <h4>Cảnh báo tồn kho</h4>
+        <p>Một số linh kiện sắp hết hàng, cần nhập thêm.</p>
+        <small class="text-muted">3 ngày trước</small>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script th:src="@{/assets/js/admin/script.js}"></script>
 
-        .notification-icon {
-            margin-right: 15px;
-            color: #007bff;
-        }
+<style>
+    .notification-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        transition: background-color 0.3s;
+    }
 
-        .notification-content h4 {
-            margin: 0 0 5px 0;
-            font-size: 16px;
-            font-weight: 600;
-        }
+    .notification-item:hover {
+        background-color: #f8f9fa;
+    }
 
-        .notification-content p {
-            margin: 0 0 5px 0;
-            color: #666;
-        }
+    .notification-icon {
+        margin-right: 15px;
+        color: #007bff;
+    }
 
-        .notification-content small {
-            color: #999;
-        }
-    </style>
+    .notification-content h4 {
+        margin: 0 0 5px 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .notification-content p {
+        margin: 0 0 5px 0;
+        color: #666;
+    }
+
+    .notification-content small {
+        color: #999;
+    }
+</style>
 </body>
 
 </html>

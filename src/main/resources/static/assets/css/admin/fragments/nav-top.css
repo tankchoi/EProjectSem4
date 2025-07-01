@@ -10,6 +10,20 @@
     background-color: rgba(255, 255, 255, 1);
     border: 0.2px solid #d1d5db;
     position: fixed;
+    z-index: 500;
+}
+
+.top-left {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.top-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
 }
 
 .menu-toggle {
@@ -46,6 +60,7 @@
     border-left: 1px solid #d1d5db;
     /* Viền cạnh trái */
     display: flex;
+    height: 100%;
 }
 
 .dropdown-toggle {
@@ -54,6 +69,7 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    gap: 0.5rem;
 }
 
 .dropdown-text {
@@ -73,15 +89,18 @@
     min-width: 160px;
     border-radius: 4px;
     z-index: 100;
+    top: 5rem;
+    width: 100%;
+
 }
 
 .dropdown-menu li a {
-    display: block;
+    /* display: block; */
     padding: 1rem;
-    margin-right: 0.5rem;
     text-decoration: none;
     color: #333;
-
+    display: flex;
+    gap: 0.5rem;
 }
 
 .dropdown-menu li a:hover {
@@ -99,6 +118,8 @@
     display: flex;
     align-items: center;
     font-weight: 600;
+    text-decoration: none;
+    gap: 0.5rem;
 }
 
 @media (max-width: 1024px) {

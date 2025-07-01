@@ -1,151 +1,326 @@
-/* trong moi giao dien */
-*{
+/* Reset và base styles */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-.main-container{
-    background-color: rgba(243, 244, 246, 1);
-    width: 100vw;
+
+/* Common layout styles */
+.main-container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
 }
-.page-container{
+
+.page-container {
     padding-left: 15rem;
     padding-top: 5rem;
-    padding-bottom: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 2rem;
 }
 
-.page-header{
-    background-color: rgba(243, 244, 246, 1);
+.page-header {
+    background: transparent;
+    margin-bottom: 1rem;
 }
-.header-content{
+
+.header-content {
     display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
-.page-header h1{
-    font-size: 2rem;
+
+.page-header h1 {
+    font-size: 1.8rem;
     font-weight: 600;
-    color: rgba(31, 41, 55, 1);
-    padding: 1.5rem 1rem;
+    color: #2d3748;
+    margin: 0;
+    padding: 0.5rem 0;
 }
-.dashboard-header{
-    background-color: rgba(255,255,255,1);
-    margin-bottom: 2rem;
+
+.page-header h1:first-child {
+    color: #718096;
 }
-.dashboard-title{
+
+/* Dashboard header */
+.dashboard-header {
+    background: white;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.dashboard-title h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: rgba(31, 41, 55, 1);
-    padding: 1.5rem 1rem;
-}
-/* chu y css o duoi */
-
-
-.page-content{
-    background-color: rgba(255, 255, 255, 1);
-    margin: 2rem;
+    color: #2d3748;
+    margin: 0;
 }
 
-.form-header{
-    font-weight: 600;
-    color: rgba(31, 41, 55, 1);
-    border-bottom: 0.2px solid #e5e5e5;
-    display: flex;
-    padding: 1rem;
+/* Form container */
+.page-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    margin: 0 auto;
+    max-width: 800px;
 }
 
-
-.dropzone{
-    border: none !important;
-    padding: 1rem !important;
-}
-
-.input-content{
-    padding: 1rem;
-}
-.input-content label{
-    font-weight: 600;
-
-}
-
-.input-content input{
-    width: 100%;
-    border-radius: 0.5rem;
-    border: none;
-    margin-left: 1rem;
-}
-.input-content select{
-    width: 100%;
-    border-radius: 0.5rem;
-    border: none;
-    margin-left: 1rem;
-}
-
-.confirm-btn{
-    margin-right: 1.25rem;
-    margin-top: 1.25rem;
-    padding: 0.5rem 1.25rem;
-    background: forestgreen;
-    border-radius: 0.5rem;
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.confirm-btn:hover{
-    background: #145313;
-    color: #ffffff;
-    transition: 0.7ms ease;
-}
-
-.cancel-btn{
-    background: #ffffff;
-    border: 2px solid red;
-    color: red;
-    border-radius: 0.5rem;
-    padding: 0.5rem 1.25rem;
-    margin-right: 1.25rem;
-    margin-top: 1.25rem;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.cancel-btn:hover{
-    transition: 0.7ms ease;
-    color: #ffffff;
-    background: #ff0000;
-}
-
-.back-btn{
-    background: #ffffff;
-    border: 2px solid rgba(0, 0, 0, 0.81);
-    color: rgba(0, 0, 0, 0.81);
-    border-radius: 0.5rem;
-    padding: 0.5rem 1.25rem;
-    margin-right: 1.25rem;
-    margin-top: 1.25rem;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.back-btn:hover{
-    transition: 0.7ms ease;
-    color: rgb(255, 255, 255);
-    background: rgba(0, 0, 0, 0.81);
-}
-
-.form-content{
+.form-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     padding: 1.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    border-radius: 16px 16px 0 0;
 }
 
-.table-container{
-    background-color: rgba(255,255,255,1);
-    padding: 1rem;
-    margin: 1rem;
-    border-radius: 0.5rem;
+.form-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+    text-align: center;
 }
 
-.table-content img{
-    width: 10rem;
-    height: 10rem;
+.form-content {
+    padding: 2rem;
+}
+
+/* Form groups */
+.input-content {
+    margin-bottom: 1.5rem;
+}
+
+.input-content label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.input-content input,
+.input-content select,
+.input-content textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: #fafafa;
+    margin-left: 0;
+}
+
+.input-content input:focus,
+.input-content select:focus,
+.input-content textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: white;
+}
+
+.input-content textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* File upload styling */
+.dropzone {
+    border: 2px dashed #cbd5e0 !important;
+    border-radius: 10px !important;
+    background: #f7fafc !important;
+    padding: 2rem !important;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.dropzone:hover {
+    border-color: #667eea !important;
+    background: #edf2f7 !important;
+}
+
+.dropzone .dz-message {
+    color: #4a5568;
+    font-weight: 500;
+}
+
+/* Button styles */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.confirm-btn,
+.cancel-btn,
+.back-btn {
+    padding: 0.875rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.confirm-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.confirm-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.cancel-btn {
+    background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+    color: white;
+}
+
+.cancel-btn:hover {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(245, 101, 101, 0.4);
+}
+
+.back-btn {
+    background: #f7fafc;
+    color: #4a5568;
+    border: 2px solid #e2e8f0;
+}
+
+.back-btn:hover {
+    background: #edf2f7;
+    border-color: #cbd5e0;
+    transform: translateY(-1px);
+}
+
+/* Alert styles */
+.alert {
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alert-success {
+    color: #2f855a;
+    background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+    border-left: 4px solid #38a169;
+}
+
+.alert-error {
+    color: #c53030;
+    background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+    border-left: 4px solid #e53e3e;
+}
+
+/* Image preview */
+.image-preview {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.image-preview img {
+    max-width: 300px;
+    max-height: 200px;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Table container (nếu có) */
+.table-container {
+    background: white;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.table-content img {
+    width: 60px;
+    height: 60px;
     object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid #e2e8f0;
+}
+
+/* Validation error styles */
+.input-content.error input,
+.input-content.error select,
+.input-content.error textarea {
+    border-color: #e53e3e;
+    background: #fed7d7;
+}
+
+.error-message {
+    color: #c53030;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .page-container {
+        padding-left: 1rem;
+        padding-top: 6rem;
+    }
+
+    .page-content {
+        margin: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .form-content {
+        padding: 1.5rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .confirm-btn,
+    .cancel-btn,
+    .back-btn {
+        width: 100%;
+    }
+
+    .page-content {
+        border-radius: 12px;
+    }
 }

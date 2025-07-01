@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thêm loại linh kiện</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/assets/css/admin/pages/part_type/create.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/part_type/create.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
 <body>
@@ -20,160 +18,58 @@
             <div class="page-header">
                 <div class="header-content">
                     <h1>Admin /</h1>
-                    <h1>Thêm loại linh kiện</h1>
+                    <h1>Quản lý loại linh kiện</h1>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <!-- Header -->
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                            <h1 class="h3 mb-0 text-gray-800">
-                                <i class="fas fa-plus me-2"></i>Thêm loại linh kiện
-                            </h1>
-                            <p class="text-muted mb-0">Tạo loại linh kiện mới trong hệ thống</p>
-                        </div>
-                        <div>
-                            <a href="/admin/part-type" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Quay lại
-                            </a>
-                        </div>
-                    </div>
 
-                    <!-- Error Alert -->
-                    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        <span th:text="${errorMessage}"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Thêm loại linh kiện mới</h1>
+                </div>
+            </div>
 
-                    <!-- Form Card -->
-                    <div class="card shadow">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-info-circle me-2"></i>Thông tin loại linh kiện
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <form th:action="@{/admin/part-type}" th:object="${partType}" method="post">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label for="name" class="form-label">
-                                                <i class="fas fa-tag me-1"></i>Tên loại linh kiện *
-                                            </label>
-                                            <input type="text" class="form-control" id="name" th:field="*{name}"
-                                                placeholder="Ví dụ: RAM, SSD, CPU, Ổ cứng..." required>
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
-                                                th:errors="*{name}">
-                                            </div>
-                                            <div class="form-text">
-                                                <i class="fas fa-info-circle me-1"></i>
-                                                Tên loại linh kiện phải có từ 2 đến 100 ký tự
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+            <div class="page-content">
+                <div class="form-header">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    <h2>Thông tin loại linh kiện</h2>
+                </div>
+                <div class="form-content">
+                    <form th:action="@{/admin/part-type}" th:object="${partType}" method="post">
 
-                                <!-- Form Actions -->
-                                <div class="row">
-                                    <div class="col-12">
-                                        <hr>
-                                        <div class="d-flex justify-content-end gap-2">
-                                            <a href="/admin/part-type" class="btn btn-outline-secondary">
-                                                <i class="fas fa-times me-1"></i>Hủy
-                                            </a>
-                                            <button type="reset" class="btn btn-outline-warning">
-                                                <i class="fas fa-undo me-1"></i>Reset
-                                            </button>
-                                            <button type="submit" class="btn btn-primary">
-                                                <i class="fas fa-save me-1"></i>Lưu
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                        <!-- Thông báo lỗi -->
+                        <div th:if="${errorMessage}" class="alert alert-error">
+                            <span th:text="${errorMessage}"></span>
                         </div>
-                    </div>
 
-                    <!-- Tips Card -->
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">
-                                <i class="fas fa-lightbulb me-2"></i>Gợi ý
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-check text-success me-1"></i>Các loại linh kiện phổ biến:
-                                    </h6>
-                                    <ul class="list-unstyled">
-                                        <li><i class="fas fa-dot-circle text-primary me-2"></i>RAM (Bộ nhớ)</li>
-                                        <li><i class="fas fa-dot-circle text-primary me-2"></i>SSD/HDD (Ổ cứng)</li>
-                                        <li><i class="fas fa-dot-circle text-primary me-2"></i>CPU (Vi xử lý)</li>
-                                        <li><i class="fas fa-dot-circle text-primary me-2"></i>GPU (Card đồ họa)
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-info text-info me-1"></i>Lưu ý:</h6>
-                                    <ul class="list-unstyled">
-                                        <li><i class="fas fa-dot-circle text-warning me-2"></i>Tên không được trùng
-                                            lặp</li>
-                                        <li><i class="fas fa-dot-circle text-warning me-2"></i>Sử dụng tên dễ hiểu
-                                        </li>
-                                        <li><i class="fas fa-dot-circle text-warning me-2"></i>Tránh viết tắt không
-                                            rõ nghĩa</li>
-                                    </ul>
-                                </div>
+                        <div class="input-content">
+                            <label for="name">
+                                <span class="material-symbols-outlined">category</span>
+                                Tên loại linh kiện
+                            </label>
+                            <input type="text" th:field="*{name}" id="name" placeholder="Nhập tên loại linh kiện"
+                                required>
+                            <div th:if="${#fields.hasErrors('name')}" class="error-message">
+                                <span th:errors="*{name}"></span>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="confirm-btn">
+                                <span class="material-symbols-outlined">save</span>
+                                Thêm loại linh kiện
+                            </button>
+                            <a th:href="@{/admin/part-type}" class="back-btn">
+                                <span class="material-symbols-outlined">arrow_back</span>
+                                Quay lại
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        // Form validation
-        (function () {
-            'use strict';
-            window.addEventListener('load', function () {
-                var forms = document.getElementsByClassName('needs-validation');
-                var validation = Array.prototype.filter.call(forms, function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-
-        // Auto focus on name field
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('name').focus();
-        });
-    </script>
-</body>
-
-</html>
-<button type="button" class="cancel-btn" onclick="window.history.back()">Hủy</button>
-</div>
-</form>
-</div>
-</div>
-</div>
-<script th:src="@{/assets/js/admin/script.js}"></script>
-
-
+    <script th:src="@{/assets/js/admin/script.js}"></script>
 </body>
 
 </html>

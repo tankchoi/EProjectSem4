@@ -3,60 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Model</title>
     <link rel="stylesheet" th:href="@{/assets/css/admin/pages/model/index.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <style>
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-
-        .alert-success {
-            color: #3c763d;
-            background-color: #dff0d8;
-            border-color: #d6e9c6;
-        }
-
-        .alert-error {
-            color: #a94442;
-            background-color: #f2dede;
-            border-color: #ebccd1;
-        }
-
-        .search-container {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
-        }
-
-        .btn-edit {
-            background: #28a745;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-right: 5px;
-        }
-
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-        }
-    </style>
 </head>
 
 <body>
@@ -66,38 +22,53 @@
         <div class="page-container">
             <div class="page-header">
                 <div class="header-content">
-                    <h1>Admin /</h1>
-                    <h1>Quản lý Model</h1>
-                </div>
-            </div>
-            <div class="dashboard-header">
-                <div class="dashboard-title">
-                    <h1>Danh sách Model</h1>
-                </div>
-                <div class="add-btn">
-                    <a href="/admin/model/create">Thêm Model</a>
+                    <span class="material-symbols-outlined">devices</span>
+                    <h1>Admin / Quản lý Model</h1>
                 </div>
             </div>
 
-            <!-- Thông báo -->
+            <!-- Flash Messages -->
             <div th:if="${success}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
                 <span th:text="${success}"></span>
             </div>
             <div th:if="${error}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
                 <span th:text="${error}"></span>
             </div>
 
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>
+                        <span class="material-symbols-outlined"
+                            style="vertical-align: middle; margin-right: 8px;">smartphone</span>
+                        Danh sách Model
+                    </h1>
+                    <p th:if="${totalElements != null}">
+                        Tổng số: <span th:text="${totalElements}">0</span> model
+                    </p>
+                </div>
+                <div class="add-btn">
+                    <a href="/admin/model/create">
+                        <span class="material-symbols-outlined">add</span>
+                        Thêm Model
+                    </a>
+                </div>
+            </div>
+
             <!-- Form tìm kiếm -->
-            <div class="search-container" style="margin-bottom: 20px;">
-                <form action="/admin/model/search" method="get" style="display: flex; gap: 10px;">
+            <div class="search-container">
+                <form action="/admin/model/search" method="get" class="search-form">
                     <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm model..."
-                        style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; flex: 1;">
-                    <button type="submit"
-                        style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px;">
+                        class="search-input">
+                    <button type="submit" class="btn-search">
+                        <span class="material-symbols-outlined"
+                            style="font-size: 18px; margin-right: 4px;">search</span>
                         Tìm kiếm
                     </button>
-                    <a href="/admin/model"
-                        style="padding: 8px 16px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px;">
+                    <a href="/admin/model" class="btn-reset">
+                        <span class="material-symbols-outlined"
+                            style="font-size: 18px; margin-right: 4px;">refresh</span>
                         Hiện tất cả
                     </a>
                 </form>
@@ -121,12 +92,29 @@
                             <td>0</td>
                             <td th:text="${#dates.format(model.createdAt, 'dd/MM/yyyy')}">12/01/2025</td>
                             <td>
-                                <a th:href="@{/admin/model/edit/{id}(id=${model.id})}" class="btn-edit">Sửa</a>
+                                <a th:href="@{/admin/model/edit/{id}(id=${model.id})}" class="btn-edit">
+                                    <span class="material-symbols-outlined"
+                                        style="font-size: 16px; margin-right: 4px;">edit</span>
+                                    Sửa
+                                </a>
                                 <form th:action="@{/admin/model/delete/{id}(id=${model.id})}" method="post"
                                     style="display: inline;"
                                     onsubmit="return confirm('Bạn có chắc chắn muốn xóa model này?')">
-                                    <button type="submit" class="btn-delete">Xóa</button>
+                                    <button type="submit" class="btn-delete">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size: 16px; margin-right: 4px;">delete</span>
+                                        Xóa
+                                    </button>
                                 </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(models)}">
+                            <td colspan="5" style="text-align: center; padding: 2rem; color: #718096;">
+                                <span class="material-symbols-outlined"
+                                    style="font-size: 2rem; margin-bottom: 0.5rem; display: block;">devices</span>
+                                <span th:if="${keyword}">Không tìm thấy model nào với từ khóa "<strong
+                                        th:text="${keyword}"></strong>"</span>
+                                <span th:unless="${keyword}">Chưa có model nào trong hệ thống</span>
                             </td>
                         </tr>
                     </tbody>
@@ -135,6 +123,8 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({

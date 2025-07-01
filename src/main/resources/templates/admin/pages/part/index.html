@@ -3,40 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý linh kiện</title>
     <link rel="stylesheet" th:href="@{/assets/css/admin/pages/part/index.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-    <style>
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-
-        .alert-success {
-            color: #3c763d;
-            background-color: #dff0d8;
-            border-color: #d6e9c6;
-        }
-
-        .alert-error {
-            color: #a94442;
-            background-color: #f2dede;
-            border-color: #ebccd1;
-        }
-
-        .search-container {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
@@ -46,38 +23,45 @@
         <div class="page-container">
             <div class="page-header">
                 <div class="header-content">
-                    <h1>Admin /</h1>
+                    <h1>Admin</h1>
+                    <span class="material-symbols-outlined" style="color: #64748b; margin: 0 8px;">chevron_right</span>
                     <h1>Quản lý linh kiện</h1>
                 </div>
             </div>
+
             <div class="dashboard-header">
                 <div class="dashboard-title">
                     <h1>Danh sách linh kiện</h1>
                 </div>
                 <div class="add-btn">
-                    <a href="/admin/part/create">Thêm linh kiện</a>
+                    <a href="/admin/part/create">
+                        <span class="material-symbols-outlined">add</span>
+                        Thêm linh kiện
+                    </a>
                 </div>
             </div>
 
             <!-- Thông báo -->
             <div th:if="${success}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
                 <span th:text="${success}"></span>
             </div>
             <div th:if="${error}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
                 <span th:text="${error}"></span>
             </div>
 
             <!-- Form tìm kiếm -->
-            <div class="search-container" style="margin-bottom: 20px;">
-                <form action="/admin/part/search" method="get" style="display: flex; gap: 10px;">
-                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm linh kiện..."
-                        style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; flex: 1;">
-                    <button type="submit"
-                        style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px;">
+            <div class="search-container">
+                <form action="/admin/part/search" method="get" class="search-form">
+                    <input type="text" name="keyword" th:value="${keyword}"
+                        placeholder="Tìm kiếm theo tên linh kiện, loại linh kiện..." class="search-input">
+                    <button type="submit" class="btn-search">
+                        <span class="material-symbols-outlined">search</span>
                         Tìm kiếm
                     </button>
-                    <a href="/admin/part"
-                        style="padding: 8px 16px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px;">
+                    <a href="/admin/part" class="btn-reset">
+                        <span class="material-symbols-outlined">refresh</span>
                         Hiện tất cả
                     </a>
                 </form>
@@ -95,7 +79,7 @@
                             <th>Số lượng</th>
                             <th>Thời hạn bảo hành</th>
                             <th>Ngày tạo</th>
-                            <th></th>
+                            <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,7 +87,7 @@
                             <td th:text="${part.id}">1</td>
                             <td>
                                 <img th:src="${part.imgUrl != null ? part.imgUrl : '/assets/images/default-part.jpg'}"
-                                    style="width: 60px; height: 60px; object-fit: cover;" alt="Part image">
+                                    alt="Ảnh linh kiện">
                             </td>
                             <td th:text="${part.name}">RAM DDR4</td>
                             <td th:text="${part.partType != null ? part.partType.name : 'N/A'}">Bộ nhớ</td>
@@ -111,67 +95,72 @@
                             <td th:text="${part.quantity}">100</td>
                             <td th:text="${part.warrantyPeriod + ' năm'}">3 năm</td>
                             <td th:text="${#dates.format(part.createdAt, 'dd/MM/yyyy')}">12/01/2025</td>
-                            <td class="px-2 py-1">
-                                <div class="flex gap-2">
-                                    <a th:href="@{'/admin/part/edit/' + ${part.id}}"
-                                        class="edit-btn flex items-center gap-1 px-2 py-1" title="Bấm vào để chỉnh sửa"
-                                        style="background: #007bff; color: white; text-decoration: none; border-radius: 4px;">
-                                        Sửa
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <a th:href="@{'/admin/part/edit/' + ${part.id}}" class="btn-edit"
+                                        title="Chỉnh sửa linh kiện">
                                         <span class="material-symbols-outlined">edit</span>
+                                        Sửa
                                     </a>
                                     <form th:action="@{'/admin/part/delete/' + ${part.id}}" method="post"
                                         style="display: inline;"
                                         onsubmit="return confirm('Bạn có chắc chắn muốn xóa linh kiện này?')">
-                                        <button type="submit" class="flex items-center gap-1 px-2 py-1"
-                                            style="background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                                            Xóa <span class="material-symbols-outlined">delete</span>
+                                        <button type="submit" class="btn-delete">
+                                            <span class="material-symbols-outlined">delete</span>
+                                            Xóa
                                         </button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(parts)}">
-                            <td colspan="9" style="text-align: center; padding: 20px;">
-                                <span th:if="${keyword}">Không tìm thấy linh kiện nào với từ khóa "<span
-                                        th:text="${keyword}"></span>"</span>
-                                <span th:unless="${keyword}">Chưa có linh kiện nào trong hệ thống</span>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
 
-
+                <!-- Empty state -->
+                <div th:if="${#lists.isEmpty(parts)}" class="empty-state">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    <h3 th:if="${keyword}">Không tìm thấy linh kiện nào</h3>
+                    <h3 th:unless="${keyword}">Chưa có linh kiện nào</h3>
+                    <p th:if="${keyword}">Không có linh kiện nào phù hợp với từ khóa "<strong
+                            th:text="${keyword}"></strong>"</p>
+                    <p th:unless="${keyword}">Hệ thống chưa có linh kiện nào. Hãy thêm linh kiện đầu tiên!</p>
+                </div>
             </div>
-
-
         </div>
     </div>
 
-
-
     <script th:src="@{/assets/js/admin/script.js}"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            new DataTable("#myTable", {
-                paging: true,        // Bật phân trang
-                searching: true,     // Bật tìm kiếm
-                ordering: true,      // Cho phép sắp xếp
-                info: true,          // Hiển thị số dòng đang xem
-                lengthMenu: [10, 20, 30, 40], // Tùy chọn số dòng hiển thị
-                language: {
-                    search: "Tìm kiếm:",
-                    lengthMenu: "Hiển thị _MENU_ dòng",
-                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
-                    paginate: {
-                        first: "Đầu",
-                        last: "Cuối",
-                        next: "Tiếp",
-                        previous: "Trước"
-                    }
-                }
-            });
+            // Kiểm tra nếu có dữ liệu thì mới khởi tạo DataTable
+            if (document.querySelector('#myTable tbody tr:not(.empty-row)')) {
+                new DataTable("#myTable", {
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+                    info: true,
+                    lengthMenu: [10, 25, 50, 100],
+                    pageLength: 10,
+                    language: {
+                        search: "Tìm kiếm:",
+                        lengthMenu: "Hiển thị _MENU_ dòng",
+                        info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
+                        infoEmpty: "Hiển thị 0 đến 0 của 0 dòng",
+                        infoFiltered: "(được lọc từ _MAX_ dòng)",
+                        paginate: {
+                            first: "Đầu",
+                            last: "Cuối",
+                            next: "Tiếp",
+                            previous: "Trước"
+                        },
+                        emptyTable: "Không có dữ liệu trong bảng",
+                        zeroRecords: "Không tìm thấy dòng nào phù hợp"
+                    },
+                    columnDefs: [
+                        { orderable: false, targets: [1, 8] } // Không sắp xếp cột ảnh và thao tác
+                    ]
+                });
+            }
         });
     </script>
 </body>

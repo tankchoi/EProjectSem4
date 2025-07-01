@@ -5,14 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý yêu cầu bảo hành</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/request/index.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <link href="/assets/css/admin/pages/request/index.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -22,39 +21,38 @@
         <div class="page-container">
             <div class="page-header">
                 <div class="header-content">
-                    <h1>Admin /</h1>
+                    <h1>Admin</h1>
+                    <span class="material-symbols-outlined" style="color: #64748b; margin: 0 8px;">chevron_right</span>
                     <h1>Quản lý yêu cầu bảo hành</h1>
                 </div>
             </div>
+
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Quản lý yêu cầu bảo hành</h1>
+                </div>
+                <div class="add-btn">
+                    <a href="/admin/request/create">
+                        <span class="material-symbols-outlined">add</span>
+                        Thêm yêu cầu
+                    </a>
+                </div>
+            </div>
+
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <!-- Header -->
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div>
-                                <h1 class="h3 mb-0 text-gray-800">
-                                    <i class="fas fa-wrench me-2"></i>Quản lý yêu cầu bảo hành
-                                </h1>
-                                <p class="text-muted mb-0">Quản lý yêu cầu bảo hành của khách hàng</p>
-                            </div>
-                            <div>
-                                <a href="/admin/request/create" class="btn btn-primary">
-                                    <i class="fas fa-plus me-2"></i>Thêm yêu cầu
-                                </a>
-                            </div>
-                        </div>
-
                         <!-- Alerts -->
                         <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show"
                             role="alert">
-                            <i class="fas fa-check-circle me-2"></i>
+                            <span class="material-symbols-outlined">check_circle</span>
                             <span th:text="${successMessage}"></span>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
 
                         <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show"
                             role="alert">
-                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span class="material-symbols-outlined">error</span>
                             <span th:text="${errorMessage}"></span>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
@@ -63,18 +61,25 @@
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">
-                                    <i class="fas fa-filter me-2"></i>Bộ lọc và Tìm kiếm
+                                    <span class="material-symbols-outlined">filter_list</span>
+                                    Bộ lọc và Tìm kiếm
                                 </h6>
                             </div>
                             <div class="card-body">
                                 <form method="get" action="/admin/request" class="row g-3">
                                     <div class="col-md-4">
-                                        <label for="search" class="form-label">Tìm kiếm:</label>
+                                        <label for="search" class="form-label">
+                                            <span class="material-symbols-outlined">search</span>
+                                            Tìm kiếm:
+                                        </label>
                                         <input type="text" class="form-control" id="search" name="search"
                                             th:value="${search}" placeholder="Tên, email, số điện thoại, địa chỉ...">
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="status" class="form-label">Trạng thái:</label>
+                                        <label for="status" class="form-label">
+                                            <span class="material-symbols-outlined">radio_button_checked</span>
+                                            Trạng thái:
+                                        </label>
                                         <select class="form-select" id="status" name="status">
                                             <option value="">Tất cả</option>
                                             <option value="PENDING" th:selected="${status == 'PENDING'}">Chờ xử lý
@@ -90,7 +95,10 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2">
-                                        <label for="size" class="form-label">Hiển thị:</label>
+                                        <label for="size" class="form-label">
+                                            <span class="material-symbols-outlined">view_list</span>
+                                            Hiển thị:
+                                        </label>
                                         <select class="form-select" id="size" name="size">
                                             <option value="5" th:selected="${size == 5}">5</option>
                                             <option value="10" th:selected="${size == 10}">10</option>
@@ -102,10 +110,12 @@
                                         <label class="form-label">&nbsp;</label>
                                         <div class="d-grid gap-2 d-md-flex">
                                             <button type="submit" class="btn btn-primary me-2">
-                                                <i class="fas fa-search me-1"></i>Tìm kiếm
+                                                <span class="material-symbols-outlined">search</span>
+                                                Tìm kiếm
                                             </button>
                                             <a href="/admin/request" class="btn btn-secondary">
-                                                <i class="fas fa-times me-1"></i>Xóa lọc
+                                                <span class="material-symbols-outlined">refresh</span>
+                                                Xóa lọc
                                             </a>
                                         </div>
                                     </div>
@@ -117,23 +127,28 @@
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                                 <h6 class="m-0 font-weight-bold text-primary">
-                                    <i class="fas fa-table me-2"></i>Danh sách yêu cầu
+                                    <span class="material-symbols-outlined">table_view</span>
+                                    Danh sách yêu cầu
                                     <span class="badge bg-primary ms-2" th:text="${totalElements}">0</span>
                                 </h6>
                                 <div class="dropdown">
                                     <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button"
                                         data-bs-toggle="dropdown">
-                                        <i class="fas fa-download me-1"></i>Xuất dữ liệu
+                                        <span class="material-symbols-outlined">download</span>
+                                        Xuất dữ liệu
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#" onclick="exportTable('excel')">
-                                                <i class="fas fa-file-excel me-1"></i>Excel
+                                                <span class="material-symbols-outlined">description</span>
+                                                Excel
                                             </a></li>
                                         <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">
-                                                <i class="fas fa-file-pdf me-1"></i>PDF
+                                                <span class="material-symbols-outlined">picture_as_pdf</span>
+                                                PDF
                                             </a></li>
                                         <li><a class="dropdown-item" href="#" onclick="printTable()">
-                                                <i class="fas fa-print me-1"></i>In
+                                                <span class="material-symbols-outlined">print</span>
+                                                In
                                             </a></li>
                                     </ul>
                                 </div>
@@ -147,18 +162,22 @@
                                                     <a th:href="@{/admin/request(page=${currentPage}, size=${size}, sortBy='id', sortDir=${sortBy == 'id' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search}, status=${status})}"
                                                         class="text-white text-decoration-none">
                                                         ID
-                                                        <i th:if="${sortBy == 'id'}"
-                                                            th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
-                                                        <i th:unless="${sortBy == 'id'}" class="fas fa-sort"></i>
+                                                        <span th:if="${sortBy == 'id'}"
+                                                            th:class="${sortDir == 'asc' ? 'material-symbols-outlined' : 'material-symbols-outlined'}"
+                                                            th:text="${sortDir == 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}"></span>
+                                                        <span th:unless="${sortBy == 'id'}"
+                                                            class="material-symbols-outlined">sort</span>
                                                     </a>
                                                 </th>
                                                 <th>
                                                     <a th:href="@{/admin/request(page=${currentPage}, size=${size}, sortBy='fullname', sortDir=${sortBy == 'fullname' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search}, status=${status})}"
                                                         class="text-white text-decoration-none">
                                                         Họ tên
-                                                        <i th:if="${sortBy == 'fullname'}"
-                                                            th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
-                                                        <i th:unless="${sortBy == 'fullname'}" class="fas fa-sort"></i>
+                                                        <span th:if="${sortBy == 'fullname'}"
+                                                            th:class="${sortDir == 'asc' ? 'material-symbols-outlined' : 'material-symbols-outlined'}"
+                                                            th:text="${sortDir == 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}"></span>
+                                                        <span th:unless="${sortBy == 'fullname'}"
+                                                            class="material-symbols-outlined">sort</span>
                                                     </a>
                                                 </th>
                                                 <th>Email</th>
@@ -168,19 +187,22 @@
                                                     <a th:href="@{/admin/request(page=${currentPage}, size=${size}, sortBy='bookingDate', sortDir=${sortBy == 'bookingDate' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search}, status=${status})}"
                                                         class="text-white text-decoration-none">
                                                         Ngày hẹn
-                                                        <i th:if="${sortBy == 'bookingDate'}"
-                                                            th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
-                                                        <i th:unless="${sortBy == 'bookingDate'}"
-                                                            class="fas fa-sort"></i>
+                                                        <span th:if="${sortBy == 'bookingDate'}"
+                                                            th:class="${sortDir == 'asc' ? 'material-symbols-outlined' : 'material-symbols-outlined'}"
+                                                            th:text="${sortDir == 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}"></span>
+                                                        <span th:unless="${sortBy == 'bookingDate'}"
+                                                            class="material-symbols-outlined">sort</span>
                                                     </a>
                                                 </th>
                                                 <th>
                                                     <a th:href="@{/admin/request(page=${currentPage}, size=${size}, sortBy='status', sortDir=${sortBy == 'status' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search}, status=${status})}"
                                                         class="text-white text-decoration-none">
                                                         Trạng thái
-                                                        <i th:if="${sortBy == 'status'}"
-                                                            th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
-                                                        <i th:unless="${sortBy == 'status'}" class="fas fa-sort"></i>
+                                                        <span th:if="${sortBy == 'status'}"
+                                                            th:class="${sortDir == 'asc' ? 'material-symbols-outlined' : 'material-symbols-outlined'}"
+                                                            th:text="${sortDir == 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}"></span>
+                                                        <span th:unless="${sortBy == 'status'}"
+                                                            class="material-symbols-outlined">sort</span>
                                                     </a>
                                                 </th>
                                                 <th>Kỹ thuật viên</th>
@@ -200,19 +222,24 @@
                                                 <td>
                                                     <span th:switch="${request.status}" class="badge">
                                                         <span th:case="'PENDING'" class="badge bg-warning">
-                                                            <i class="fas fa-clock me-1"></i>Chờ xử lý
+                                                            <span class="material-symbols-outlined">schedule</span>
+                                                            Chờ xử lý
                                                         </span>
                                                         <span th:case="'APPROVED'" class="badge bg-info">
-                                                            <i class="fas fa-check me-1"></i>Đã duyệt
+                                                            <span class="material-symbols-outlined">check_circle</span>
+                                                            Đã duyệt
                                                         </span>
                                                         <span th:case="'REJECTED'" class="badge bg-danger">
-                                                            <i class="fas fa-times me-1"></i>Từ chối
+                                                            <span class="material-symbols-outlined">cancel</span>
+                                                            Từ chối
                                                         </span>
                                                         <span th:case="'IN_PROGRESS'" class="badge bg-primary">
-                                                            <i class="fas fa-cog me-1"></i>Đang thực hiện
+                                                            <span class="material-symbols-outlined">settings</span>
+                                                            Đang thực hiện
                                                         </span>
                                                         <span th:case="'COMPLETED'" class="badge bg-success">
-                                                            <i class="fas fa-check-circle me-1"></i>Hoàn thành
+                                                            <span class="material-symbols-outlined">task_alt</span>
+                                                            Hoàn thành
                                                         </span>
                                                     </span>
                                                 </td>
@@ -222,16 +249,16 @@
                                                     <div class="btn-group" role="group">
                                                         <a th:href="@{/admin/request/{id}(id=${request.id})}"
                                                             class="btn btn-sm btn-info" title="Xem chi tiết">
-                                                            <i class="fas fa-eye"></i>
+                                                            <span class="material-symbols-outlined">visibility</span>
                                                         </a>
                                                         <a th:href="@{/admin/request/{id}/edit(id=${request.id})}"
                                                             class="btn btn-sm btn-warning" title="Chỉnh sửa">
-                                                            <i class="fas fa-edit"></i>
+                                                            <span class="material-symbols-outlined">edit</span>
                                                         </a>
                                                         <button type="button" class="btn btn-sm btn-danger"
                                                             th:onclick="|confirmDelete(${request.id}, '${request.fullname}')|"
                                                             title="Xóa">
-                                                            <i class="fas fa-trash"></i>
+                                                            <span class="material-symbols-outlined">delete</span>
                                                         </button>
                                                     </div>
                                                 </td>
@@ -296,33 +323,42 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Xác nhận xóa</h5>
+                    <h5 class="modal-title">
+                        <span class="material-symbols-outlined">warning</span>
+                        Xác nhận xóa
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <p>Bạn có chắc chắn muốn xóa yêu cầu của khách hàng
                         <strong id="deleteRequestName"></strong>?
                     </p>
-                    <p class="text-danger"><small>Hành động này không thể hoàn tác.</small></p>
+                    <p class="text-danger">
+                        <small>
+                            <span class="material-symbols-outlined">info</span>
+                            Hành động này không thể hoàn tác.
+                        </small>
+                    </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <span class="material-symbols-outlined">close</span>
+                        Hủy
+                    </button>
                     <form id="deleteForm" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-danger">Xóa</button>
+                        <button type="submit" class="btn btn-danger">
+                            <span class="material-symbols-outlined">delete</span>
+                            Xóa
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    </div>
-    </div>
-
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -398,6 +434,166 @@
             printWindow.print();
         }
     </script>
+</body>
+
+</html>
+
+<!-- Pagination -->
+<nav th:if="${totalPages > 1}">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link"
+                th:href="@{/admin/request(page=0, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
+                th:class="${currentPage == 0} ? 'disabled'">Đầu</a>
+        </li>
+        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link"
+                th:href="@{/admin/request(page=${currentPage - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
+                th:class="${currentPage == 0} ? 'disabled'">Trước</a>
+        </li>
+
+        <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+            th:if="${pageNum >= currentPage - 2 and pageNum <= currentPage + 2}" class="page-item"
+            th:classappend="${pageNum == currentPage} ? 'active'">
+            <a class="page-link"
+                th:href="@{/admin/request(page=${pageNum}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
+                th:text="${pageNum + 1}">1</a>
+        </li>
+
+        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+            <a class="page-link"
+                th:href="@{/admin/request(page=${currentPage + 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
+                th:class="${currentPage == totalPages - 1} ? 'disabled'">Sau</a>
+        </li>
+        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+            <a class="page-link"
+                th:href="@{/admin/request(page=${totalPages - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
+                th:class="${currentPage == totalPages - 1} ? 'disabled'">Cuối</a>
+        </li>
+    </ul>
+    <div class="text-center mt-3">
+        <small class="text-muted">
+            Hiển thị <span th:text="${currentPage * size + 1}">1</span> đến
+            <span th:text="${currentPage * size + requests.numberOfElements}">10</span>
+            trong tổng số <span th:text="${totalElements}">100</span> yêu cầu
+        </small>
+    </div>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa yêu cầu của khách hàng
+                    <strong id="deleteRequestName"></strong>?
+                </p>
+                <p class="text-danger"><small>Hành động này không thể hoàn tác.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+    function confirmDelete(requestId, requestName) {
+        document.getElementById('deleteRequestName').textContent = requestName;
+        document.getElementById('deleteForm').action = '/admin/request/' + requestId + '/delete';
+        var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+    }
+
+    function exportTable(format) {
+        const table = document.getElementById('requestTable');
+        const data = [];
+
+        // Get headers
+        const headers = [];
+        table.querySelectorAll('thead th').forEach((th, index) => {
+            if (index < 8) { // Exclude action column
+                headers.push(th.textContent.trim());
+            }
+        });
+        data.push(headers);
+
+        // Get data rows
+        table.querySelectorAll('tbody tr').forEach(tr => {
+            const row = [];
+            tr.querySelectorAll('td').forEach((td, index) => {
+                if (index < 8) { // Exclude action column
+                    row.push(td.textContent.trim());
+                }
+            });
+            data.push(row);
+        });
+
+        if (format === 'excel') {
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Yêu cầu bảo hành");
+            XLSX.writeFile(wb, "danh-sach-yeu-cau-bao-hanh.xlsx");
+        } else if (format === 'pdf') {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.autoTable({
+                head: [headers],
+                body: data.slice(1),
+                styles: { fontSize: 8 }
+            });
+            doc.save('danh-sach-yeu-cau-bao-hanh.pdf');
+        }
+    }
+
+    function printTable() {
+        const printWindow = window.open('', '_blank');
+        const table = document.getElementById('requestTable').outerHTML;
+        printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Danh sách yêu cầu bảo hành</title>
+                        <style>
+                            table { border-collapse: collapse; width: 100%; }
+                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                            th { background-color: #f2f2f2; }
+                        </style>
+                    </head>
+                    <body>
+                        <h2>Danh sách yêu cầu bảo hành</h2>
+                        ${table}
+                    </body>
+                </html>
+            `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+</script>
 </body>
 
 </html>
