@@ -19,8 +19,6 @@ Write-Host "Đang kết nối tới MySQL và import dữ liệu..." -Foreground
 Write-Host ""
 
 # Thực hiện import
-$mysqlCommand = "mysql -u root -p --database=sem4"
-$sqlFile = "sample_data_request_module.sql"
 
 try {
     # Import dữ liệu

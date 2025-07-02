@@ -53,6 +53,12 @@
                     <span class="menu-item-icon">Yêu cầu sửa chữa</span>
                 </a>
             </div>
+            <div class="menu-item" th:classappend="${activePage == 'requestDetail'} ? 'active'">
+                <a th:href="@{/admin/request-detail}">
+                    <span class="material-symbols-outlined">build_circle</span>
+                    <span class="menu-item-icon">Chi tiết yêu cầu</span>
+                </a>
+            </div>
             <div class="menu-item" th:classappend="${activePage == 'receipt'} ? 'active'">
                 <a th:href="@{/admin/receipt}">
                     <span class="material-symbols-outlined">credit_card</span>

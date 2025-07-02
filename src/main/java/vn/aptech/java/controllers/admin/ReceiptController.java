@@ -2,6 +2,7 @@ package vn.aptech.java.controllers.admin;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,10 +10,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.java.dtos.CreateInvoiceDTO;
 import vn.aptech.java.models.Invoice;
+import vn.aptech.java.models.RequestDetail;
+import vn.aptech.java.repositories.RequestDetailRepository;
 import vn.aptech.java.services.InvoiceService;
 import vn.aptech.java.services.RequestService;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -23,6 +30,9 @@ public class ReceiptController {
 
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    private RequestDetailRepository requestDetailRepository;
 
     @GetMapping("/receipt")
     public String index(Model model) {
@@ -149,5 +159,60 @@ public class ReceiptController {
             model.addAttribute("invoices", invoiceService.getAllInvoices());
         }
         return "admin/pages/receipt/index";
+    }
+
+    /**
+     * API endpoint để lấy tổng tiền tính từ RequestDetail
+     */
+    @GetMapping("/receipt/calculate-total/{requestId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> calculateTotalPrice(@PathVariable Long requestId) {
+        try {
+            List<RequestDetail> requestDetails = requestDetailRepository.findByRequestId(requestId);
+
+            Double totalPrice = invoiceService.calculateTotalPriceFromRequestDetails(requestId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("totalPrice", totalPrice);
+            response.put("requestDetailsCount", requestDetails.size());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Không thể tính tổng tiền: " + e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+
+    /**
+     * API endpoint để kiểm tra xem request đã có hóa đơn chưa
+     */
+    @GetMapping("/receipt/api/check-by-request/{requestId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> checkInvoiceByRequest(@PathVariable Long requestId) {
+        try {
+            // Tìm hóa đơn theo request ID
+            Optional<Invoice> invoiceOpt = invoiceService.getAllInvoices().stream()
+                    .filter(invoice -> invoice.getRequest().getId().equals(requestId))
+                    .findFirst();
+
+            Map<String, Object> response = new HashMap<>();
+            if (invoiceOpt.isPresent()) {
+                Invoice invoice = invoiceOpt.get();
+                response.put("exists", true);
+                response.put("invoiceId", invoice.getId());
+                response.put("totalPrice", invoice.getTotalPrice());
+                response.put("status", invoice.getStatus());
+            } else {
+                response.put("exists", false);
+            }
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Không thể kiểm tra hóa đơn: " + e.getMessage());
+            errorResponse.put("exists", false);
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
 }

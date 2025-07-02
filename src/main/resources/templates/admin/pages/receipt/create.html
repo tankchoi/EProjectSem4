@@ -65,9 +65,15 @@
                     <div class="form-group">
                         <label class="form-label" for="totalPrice">
                             Tổng tiền (VNĐ) <span class="required">*</span>
+                            <span class="form-note">(Tự động tính từ chi tiết linh kiện)</span>
                         </label>
                         <input name="totalPrice" th:value="${invoice.totalPrice}" type="number" step="1000" min="0"
-                            id="totalPrice" class="form-input" placeholder="Nhập tổng tiền" required>
+                            id="totalPrice" class="form-input" placeholder="Chọn yêu cầu để tự động tính tổng tiền"
+                            readonly required>
+                        <div id="totalPriceInfo" class="form-info">
+                            <span class="material-symbols-outlined">info</span>
+                            <span>Tổng tiền sẽ được tính tự động dựa trên các linh kiện trong yêu cầu bảo hành</span>
+                        </div>
                         <div th:if="${#fields.hasErrors('totalPrice')}" class="error-message">
                             <span th:errors="*{totalPrice}"></span>
                         </div>
@@ -180,17 +186,89 @@
                 });
             }
 
-            // Request selection enhancement
+            // Request selection enhancement và auto-calculate total price
             const requestSelect = document.getElementById('requestId');
-            if (requestSelect) {
+            const totalPriceInput = document.getElementById('totalPrice');
+
+            if (requestSelect && totalPriceInput) {
                 requestSelect.addEventListener('change', function () {
                     if (this.value) {
                         // Add visual feedback for selected request
                         this.style.borderColor = '#10b981';
                         this.style.backgroundColor = '#f0f9ff';
+
+                        // Show loading state
+                        totalPriceInput.value = '';
+                        totalPriceInput.placeholder = 'Đang tính toán...';
+                        totalPriceInput.style.backgroundColor = '#f9f9f9';
+
+                        // Fetch calculated total price from server
+                        fetch(`/admin/receipt/calculate-total/${this.value}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.totalPrice !== undefined) {
+                                    totalPriceInput.value = data.totalPrice;
+                                    totalPriceInput.placeholder = 'Tổng tiền tự động tính';
+                                    totalPriceInput.style.backgroundColor = '#f0fdf4';
+                                    totalPriceInput.style.borderColor = '#10b981';
+
+                                    // Show success message
+                                    const infoDiv = document.getElementById('totalPriceInfo');
+                                    if (infoDiv) {
+                                        infoDiv.innerHTML = `
+                                            <span class="material-symbols-outlined">check_circle</span>
+                                            <span>Đã tính tổng từ ${data.requestDetailsCount} linh kiện: ${new Intl.NumberFormat('vi-VN').format(data.totalPrice)} VNĐ</span>
+                                        `;
+                                        infoDiv.style.color = '#059669';
+                                    }
+                                } else if (data.error) {
+                                    totalPriceInput.value = 0;
+                                    totalPriceInput.placeholder = 'Lỗi tính toán';
+                                    totalPriceInput.style.backgroundColor = '#fef2f2';
+                                    totalPriceInput.style.borderColor = '#ef4444';
+
+                                    const infoDiv = document.getElementById('totalPriceInfo');
+                                    if (infoDiv) {
+                                        infoDiv.innerHTML = `
+                                            <span class="material-symbols-outlined">error</span>
+                                            <span>${data.error}</span>
+                                        `;
+                                        infoDiv.style.color = '#dc2626';
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error calculating total price:', error);
+                                totalPriceInput.value = 0;
+                                totalPriceInput.placeholder = 'Lỗi kết nối';
+                                totalPriceInput.style.backgroundColor = '#fef2f2';
+                                totalPriceInput.style.borderColor = '#ef4444';
+
+                                const infoDiv = document.getElementById('totalPriceInfo');
+                                if (infoDiv) {
+                                    infoDiv.innerHTML = `
+                                        <span class="material-symbols-outlined">error</span>
+                                        <span>Không thể tính tổng tiền. Vui lòng thử lại.</span>
+                                    `;
+                                    infoDiv.style.color = '#dc2626';
+                                }
+                            });
                     } else {
                         this.style.borderColor = '#e2e8f0';
                         this.style.backgroundColor = 'white';
+                        totalPriceInput.value = '';
+                        totalPriceInput.placeholder = 'Chọn yêu cầu để tự động tính tổng tiền';
+                        totalPriceInput.style.backgroundColor = 'white';
+                        totalPriceInput.style.borderColor = '#e2e8f0';
+
+                        const infoDiv = document.getElementById('totalPriceInfo');
+                        if (infoDiv) {
+                            infoDiv.innerHTML = `
+                                <span class="material-symbols-outlined">info</span>
+                                <span>Tổng tiền sẽ được tính tự động dựa trên các linh kiện trong yêu cầu bảo hành</span>
+                            `;
+                            infoDiv.style.color = '#6b7280';
+                        }
                     }
                 });
             }

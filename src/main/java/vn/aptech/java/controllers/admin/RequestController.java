@@ -137,15 +137,12 @@ public class RequestController {
             requestDTO.setBookingDate(request.getBookingDate());
             requestDTO.setStatus(request.getStatus());
             requestDTO.setTechnicianId(request.getTechnician() != null ? request.getTechnician().getId() : null);
-
             model.addAttribute("request", requestDTO);
             model.addAttribute("requestId", id);
-
             List<CustomerLaptop> customerLaptops = customerLaptopRepository.findAll();
             List<User> technicians = userRepository.findByRoleAndStatus(User.Role.STAFF, User.Status.ACTIVE);
             model.addAttribute("customerLaptops", customerLaptops);
             model.addAttribute("technicians", technicians);
-
             return "admin/pages/request/edit";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy yêu cầu!");
@@ -159,6 +156,29 @@ public class RequestController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
+
+        // Debug logging
+        System.out.println("=== DEBUG UPDATE REQUEST ===");
+        System.out.println("Request ID: " + id);
+        System.out.println("DTO - CustomerLaptopId: " + createRequestDTO.getCustomerLaptopId());
+        System.out.println("DTO - Fullname: " + createRequestDTO.getFullname());
+        System.out.println("DTO - Email: " + createRequestDTO.getEmail());
+        System.out.println("DTO - Phone: " + createRequestDTO.getPhone());
+        System.out.println("DTO - Address: " + createRequestDTO.getAddress());
+        System.out.println("DTO - Description: " + createRequestDTO.getDescription());
+        System.out.println("DTO - BookingDate: " + createRequestDTO.getBookingDate());
+        System.out.println("DTO - Status: " + createRequestDTO.getStatus());
+        System.out.println("DTO - TechnicianId: " + createRequestDTO.getTechnicianId());
+        System.out.println("Binding errors: " + bindingResult.hasErrors());
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(error -> System.out.println("Error: " + error.getDefaultMessage()));
+        }
+
+        // Xử lý technicianId nếu là chuỗi rỗng
+        if (createRequestDTO.getTechnicianId() != null && createRequestDTO.getTechnicianId() == 0) {
+            createRequestDTO.setTechnicianId(null);
+        }
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("requestId", id);
             List<CustomerLaptop> customerLaptops = customerLaptopRepository.findAll();
@@ -167,13 +187,15 @@ public class RequestController {
             model.addAttribute("technicians", technicians);
             return "admin/pages/request/edit";
         }
-
         try {
             Request request = requestService.updateRequest(id, createRequestDTO);
+            System.out.println("Request updated successfully: " + request.getId());
             redirectAttributes.addFlashAttribute("successMessage",
                     "Yêu cầu bảo hành '" + request.getFullname() + "' đã được cập nhật thành công!");
             return "redirect:/admin/request";
         } catch (Exception e) {
+            System.out.println("Error updating request: " + e.getMessage());
+            e.printStackTrace();
             model.addAttribute("requestId", id);
             model.addAttribute("errorMessage", "Lỗi khi cập nhật yêu cầu: " + e.getMessage());
             List<CustomerLaptop> customerLaptops = customerLaptopRepository.findAll();
@@ -219,11 +241,5 @@ public class RequestController {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi khi cập nhật trạng thái: " + e.getMessage());
         }
         return "redirect:/admin/request/" + id;
-    }
-
-    // Uncomment if you need to update a request
-    @GetMapping("/request/update")
-    public String update() {
-        return "admin/pages/request/update";
     }
 }

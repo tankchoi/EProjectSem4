@@ -10,6 +10,8 @@ public interface PartService {
 
         Optional<Part> getPartById(Long id);
 
+        Part getPartByIdOrThrow(Long id);
+
         Part createPart(Part part);
 
         Part createPart(String name, String description, Double price, Integer quantity, Long partTypeId,

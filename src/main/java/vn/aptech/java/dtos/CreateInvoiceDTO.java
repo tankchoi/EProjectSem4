@@ -1,14 +1,12 @@
 package vn.aptech.java.dtos;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
 public class CreateInvoiceDTO {
     @NotNull(message = "Yêu cầu không được để trống")
     private Long requestId;
 
-    @NotNull(message = "Tổng tiền không được để trống")
-    @Positive(message = "Tổng tiền phải lớn hơn 0")
+    // Tổng tiền sẽ được tính tự động từ RequestDetail, không cần validation
     private Double totalPrice;
 
     private String status = "UNPAID"; // Default status

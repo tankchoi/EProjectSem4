@@ -1,7 +1,5 @@
 package vn.aptech.java.aspects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.persistence.EntityManager;
@@ -28,9 +26,6 @@ public class AuditAspect {
 
     @Autowired
     private EntityManager entityManager;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     // Tạo method để serialize entity với độ dài giới hạn
     private String serializeEntitySafely(Object entity) {

@@ -132,7 +132,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public void deleteRequest(Long id) {
-        Request request = getRequestByIdOrThrow(id);
+        getRequestByIdOrThrow(id); // Validation to ensure request exists
         requestRepository.deleteById(id);
     }
 

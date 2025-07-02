@@ -65,11 +65,17 @@
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="totalPrice">
                             Tổng tiền (VNĐ) *
+                            <span class="text-xs text-gray-500 font-normal">(Tự động tính từ chi tiết linh kiện)</span>
                         </label>
                         <input name="totalPrice" th:value="${invoice.totalPrice}" type="number" step="1000" min="0"
                             id="totalPrice"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            required>
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                            readonly required>
+                        <div id="totalPriceInfo"
+                            class="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm text-blue-700">
+                            <span class="material-symbols-outlined text-sm">info</span>
+                            Tổng tiền được tính tự động từ các linh kiện trong yêu cầu bảo hành
+                        </div>
                         <div th:if="${#fields.hasErrors('totalPrice')}" class="text-red-500 text-xs italic">
                             <span th:errors="*{totalPrice}"></span>
                         </div>
@@ -106,6 +112,90 @@
     </div>
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Auto-calculate total price when request is changed
+            const requestSelect = document.getElementById('requestId');
+            const totalPriceInput = document.getElementById('totalPrice');
+
+            if (requestSelect && totalPriceInput) {
+                requestSelect.addEventListener('change', function () {
+                    if (this.value) {
+                        // Show loading state
+                        totalPriceInput.value = '';
+                        totalPriceInput.placeholder = 'Đang tính toán...';
+                        totalPriceInput.style.backgroundColor = '#f9f9f9';
+
+                        // Fetch calculated total price from server
+                        fetch(`/admin/receipt/calculate-total/${this.value}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.totalPrice !== undefined) {
+                                    totalPriceInput.value = data.totalPrice;
+                                    totalPriceInput.placeholder = 'Tổng tiền tự động tính';
+                                    totalPriceInput.classList.remove('bg-red-50', 'border-red-300');
+                                    totalPriceInput.classList.add('bg-green-50', 'border-green-300');
+
+                                    // Update info message
+                                    const infoDiv = document.getElementById('totalPriceInfo');
+                                    if (infoDiv) {
+                                        infoDiv.innerHTML = `
+                                            <span class="material-symbols-outlined text-sm">check_circle</span>
+                                            Đã tính tổng từ ${data.requestDetailsCount} linh kiện: ${new Intl.NumberFormat('vi-VN').format(data.totalPrice)} VNĐ
+                                        `;
+                                        infoDiv.className = 'mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700';
+                                    }
+                                } else if (data.error) {
+                                    totalPriceInput.value = 0;
+                                    totalPriceInput.placeholder = 'Lỗi tính toán';
+                                    totalPriceInput.classList.remove('bg-green-50', 'border-green-300');
+                                    totalPriceInput.classList.add('bg-red-50', 'border-red-300');
+
+                                    const infoDiv = document.getElementById('totalPriceInfo');
+                                    if (infoDiv) {
+                                        infoDiv.innerHTML = `
+                                            <span class="material-symbols-outlined text-sm">error</span>
+                                            ${data.error}
+                                        `;
+                                        infoDiv.className = 'mt-2 p-2 bg-red-50 border border-red-200 rounded text-sm text-red-700';
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error calculating total price:', error);
+                                totalPriceInput.value = 0;
+                                totalPriceInput.placeholder = 'Lỗi kết nối';
+                                totalPriceInput.classList.remove('bg-green-50', 'border-green-300');
+                                totalPriceInput.classList.add('bg-red-50', 'border-red-300');
+
+                                const infoDiv = document.getElementById('totalPriceInfo');
+                                if (infoDiv) {
+                                    infoDiv.innerHTML = `
+                                        <span class="material-symbols-outlined text-sm">error</span>
+                                        Không thể tính tổng tiền. Vui lòng thử lại.
+                                    `;
+                                    infoDiv.className = 'mt-2 p-2 bg-red-50 border border-red-200 rounded text-sm text-red-700';
+                                }
+                            });
+                    } else {
+                        totalPriceInput.value = '';
+                        totalPriceInput.placeholder = 'Chọn yêu cầu để tự động tính tổng tiền';
+                        totalPriceInput.classList.remove('bg-green-50', 'border-green-300', 'bg-red-50', 'border-red-300');
+                        totalPriceInput.classList.add('bg-gray-100');
+
+                        const infoDiv = document.getElementById('totalPriceInfo');
+                        if (infoDiv) {
+                            infoDiv.innerHTML = `
+                                <span class="material-symbols-outlined text-sm">info</span>
+                                Tổng tiền được tính tự động từ các linh kiện trong yêu cầu bảo hành
+                            `;
+                            infoDiv.className = 'mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm text-blue-700';
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

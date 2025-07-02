@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import vn.aptech.java.dtos.CreateInvoiceDTO;
 import vn.aptech.java.models.Invoice;
 import vn.aptech.java.models.Request;
+import vn.aptech.java.models.RequestDetail;
 import vn.aptech.java.repositories.InvoiceRepository;
 import vn.aptech.java.repositories.RequestRepository;
+import vn.aptech.java.repositories.RequestDetailRepository;
 import vn.aptech.java.services.InvoiceService;
 
 import java.util.List;
@@ -20,6 +22,20 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     private RequestRepository requestRepository;
+
+    @Autowired
+    private RequestDetailRepository requestDetailRepository;
+
+    /**
+     * Tính tổng tiền từ các RequestDetail của một request
+     */
+    @Override
+    public Double calculateTotalPriceFromRequestDetails(Long requestId) {
+        List<RequestDetail> requestDetails = requestDetailRepository.findByRequestId(requestId);
+        return requestDetails.stream()
+                .mapToDouble(detail -> detail.getQuantity() * detail.getPart().getPrice())
+                .sum();
+    }
 
     @Override
     public List<Invoice> getAllInvoices() {
@@ -45,7 +61,11 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy yêu cầu"));
 
         invoice.setRequest(request);
-        invoice.setTotalPrice(createInvoiceDTO.getTotalPrice());
+
+        // Tính tổng tiền từ RequestDetail thay vì lấy từ input
+        Double calculatedTotalPrice = calculateTotalPriceFromRequestDetails(createInvoiceDTO.getRequestId());
+        invoice.setTotalPrice(calculatedTotalPrice);
+
         invoice.setStatus(createInvoiceDTO.getStatus());
 
         return invoiceRepository.save(invoice);
@@ -70,7 +90,11 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy yêu cầu"));
 
         existingInvoice.setRequest(request);
-        existingInvoice.setTotalPrice(createInvoiceDTO.getTotalPrice());
+
+        // Tính lại tổng tiền từ RequestDetail thay vì lấy từ input
+        Double calculatedTotalPrice = calculateTotalPriceFromRequestDetails(createInvoiceDTO.getRequestId());
+        existingInvoice.setTotalPrice(calculatedTotalPrice);
+
         existingInvoice.setStatus(createInvoiceDTO.getStatus());
 
         return invoiceRepository.save(existingInvoice);

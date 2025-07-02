@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết Yêu cầu - Admin</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/request_detail/view.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <span class="material-symbols-outlined">assignment</span>
+                    <h1>Admin / Chi tiết yêu cầu sửa chữa</h1>
+                </div>
+            </div>
+
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>
+                        <span class="material-symbols-outlined"
+                            style="vertical-align: middle; margin-right: 8px;">visibility</span>
+                        Chi tiết Yêu cầu #<span th:text="${requestDetail.id}"></span>
+                    </h1>
+                    <p>Xem và quản lý thông tin chi tiết yêu cầu sửa chữa laptop</p>
+                </div>
+                <div class="action-buttons">
+                    <a th:href="@{/admin/request-detail}" class="btn-outline-secondary">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Quay lại
+                    </a>
+                    <a th:href="@{/admin/request-detail/{id}/edit(id=${requestDetail.id})}" class="btn-warning">
+                        <span class="material-symbols-outlined">edit</span>
+                        Chỉnh sửa
+                    </a>
+                </div>
+            </div>
+
+            <!-- Flash Messages -->
+            <div th:if="${successMessage}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span th:text="${successMessage}"></span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
+                <span th:text="${errorMessage}"></span>
+            </div>
+
+            <!-- Main Content -->
+            <div class="content-wrapper">
+                <div class="detail-container">
+                    <!-- Request Information -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3>
+                                <span class="material-symbols-outlined">assignment</span>
+                                Thông tin Yêu cầu Sửa chữa
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>ID Yêu cầu:</label>
+                                    <span class="value" th:text="'#' + ${requestDetail.request.id}"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Khách hàng:</label>
+                                    <span class="value" th:text="${requestDetail.request.fullname}"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Email:</label>
+                                    <span class="value" th:text="${requestDetail.request.email}"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Số điện thoại:</label>
+                                    <span class="value" th:text="${requestDetail.request.phone}"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Địa chỉ:</label>
+                                    <span class="value" th:text="${requestDetail.request.address}"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Mô tả sự cố:</label>
+                                    <span class="value description"
+                                        th:text="${requestDetail.request.description}"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Ngày đặt lịch:</label>
+                                    <span class="value"
+                                        th:text="${#dates.format(requestDetail.request.bookingDate, 'dd/MM/yyyy')}"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Trạng thái:</label>
+                                    <span class="status-badge"
+                                        th:class="'status-badge status-' + ${#strings.toLowerCase(requestDetail.request.status)}"
+                                        th:text="${requestDetail.request.status == 'PENDING' ? 'Chờ xử lý' : 
+                                                   requestDetail.request.status == 'APPROVED' ? 'Đã duyệt' : 
+                                                   requestDetail.request.status == 'IN_PROGRESS' ? 'Đang sửa chữa' : 
+                                                   requestDetail.request.status == 'COMPLETED' ? 'Hoàn thành' : 
+                                                   requestDetail.request.status == 'REJECTED' ? 'Từ chối' : requestDetail.request.status}"></span>
+                                </div>
+                                <div class="info-item" th:if="${requestDetail.request.technician}">
+                                    <label>Kỹ thuật viên:</label>
+                                    <span class="value" th:text="${requestDetail.request.technician.fullname}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Part Information -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3>
+                                <span class="material-symbols-outlined">build</span>
+                                Thông tin Linh kiện
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="part-details">
+                                <div class="part-image" th:if="${requestDetail.part.imgUrl}">
+                                    <img th:src="@{${requestDetail.part.imgUrl}}" th:alt="${requestDetail.part.name}"
+                                        onerror="this.src='/assets/images/no-image.png'">
+                                </div>
+                                <div class="part-info">
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <label>Tên linh kiện:</label>
+                                            <span class="value part-name" th:text="${requestDetail.part.name}"></span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Loại linh kiện:</label>
+                                            <span class="value" th:text="${requestDetail.part.partType.name}"></span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Đơn giá:</label>
+                                            <span class="value price"
+                                                th:text="${#numbers.formatDecimal(requestDetail.part.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Tồn kho:</label>
+                                            <span class="value stock" th:text="${requestDetail.part.quantity}"></span>
+                                        </div>
+                                        <div class="info-item" th:if="${requestDetail.part.description}">
+                                            <label>Mô tả:</label>
+                                            <span class="value description"
+                                                th:text="${requestDetail.part.description}"></span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Thời gian bảo hành:</label>
+                                            <span class="value"
+                                                th:text="${requestDetail.part.warrantyPeriod} + ' tháng'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    th:text="${requestDetail.part.warrantyPeriod} + ' tháng'"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- Quantity and Cost Information -->
+    <div class="detail-card">
+        <div class="card-header">
+            <h3>
+                <span class="material-symbols-outlined">calculate</span>
+                Thông tin Số lượng & Chi phí
+            </h3>
+        </div>
+        <div class="card-content">
+            <div class="cost-breakdown">
+                <div class="cost-item">
+                    <label>Số lượng cần thiết:</label>
+                    <span class="value quantity" th:text="${requestDetail.quantity}"></span>
+                </div>
+                <div class="cost-item">
+                    <label>Đơn giá:</label>
+                    <span class="value"
+                        th:text="${#numbers.formatDecimal(requestDetail.part.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                </div>
+                <div class="cost-item total">
+                    <label>Thành tiền:</label>
+                    <span class="value total-amount"
+                        th:text="${#numbers.formatDecimal(requestDetail.part.price * requestDetail.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timestamps -->
+    <div class="detail-card">
+        <div class="card-header">
+            <h3>
+                <span class="material-symbols-outlined">schedule</span>
+                Thông tin Thời gian
+            </h3>
+        </div>
+        <div class="card-content">
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Ngày tạo:</label>
+                    <span class="value"
+                        th:text="${#dates.format(requestDetail.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></span>
+                </div>
+                <div class="info-item">
+                    <label>Cập nhật lần cuối:</label>
+                    <span class="value"
+                        th:text="${#dates.format(requestDetail.updatedAt, 'dd/MM/yyyy HH:mm:ss')}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-bar">
+        <a th:href="@{/admin/request-detail/{id}/edit(id=${requestDetail.id})}" class="btn btn-warning">
+            <span class="material-symbols-outlined">edit</span>
+            Chỉnh sửa
+        </a>
+        <button class="btn btn-danger" onclick="confirmDelete()">
+            <span class="material-symbols-outlined">delete</span>
+            Xóa
+        </button>
+        <a th:href="@{/admin/request-detail}" class="btn btn-outline-secondary">
+            <span class="material-symbols-outlined">list</span>
+            Danh sách
+        </a>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h4>Xác nhận xóa</h4>
+            <p>Bạn có chắc chắn muốn xóa chi tiết yêu cầu này? Hành động này không thể hoàn tác.</p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-outline-secondary" onclick="closeDeleteModal()">Hủy</button>
+                <button type="button" class="btn btn-danger" onclick="deleteRecord()">Xóa</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete() {
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        function deleteRecord() {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/admin/request-detail/${/*[[${requestDetail.id}]]*/ ''}/delete`;
+
+            const csrfToken = document.querySelector('meta[name="_csrf"]');
+            if (csrfToken) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = '_token';
+                input.value = csrfToken.getAttribute('content');
+                form.appendChild(input);
+            }
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+</body>
+
+</html>

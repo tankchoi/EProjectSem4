@@ -36,7 +36,7 @@ public class AuditAspectTest {
         // getEntityId on a Long
         try {
             // This should throw NoSuchMethodException since Long doesn't have getId()
-            java.lang.reflect.Method getIdMethod = id.getClass().getMethod("getId");
+            id.getClass().getMethod("getId");
             fail("Long should not have a getId() method");
         } catch (NoSuchMethodException e) {
             System.out.println("EXPECTED: Long does not have getId() method - " + e.getMessage());

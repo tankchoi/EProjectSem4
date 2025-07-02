@@ -36,6 +36,12 @@ public class PartServiceImpl implements PartService {
     }
 
     @Override
+    public Part getPartByIdOrThrow(Long id) {
+        return partRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy linh kiện với ID: " + id));
+    }
+
+    @Override
     public Part createPart(Part part) {
         return partRepository.save(part);
     }

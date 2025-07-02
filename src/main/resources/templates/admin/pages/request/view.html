@@ -51,7 +51,7 @@
                         <span class="material-symbols-outlined">arrow_back</span>
                         Quay lại
                     </a>
-                    <a th:href="@{/admin/request/edit/{id}(id=${request.id})}" class="btn-warning">
+                    <a th:href="@{/admin/request/{id}/edit(id=${request.id})}" class="btn-warning">
                         <span class="material-symbols-outlined">edit</span>
                         Chỉnh sửa
                     </a>
@@ -167,6 +167,49 @@
                                         </span>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Parts & Cost Info Card -->
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="material-symbols-outlined">build</span>
+                                <h3>Thông tin linh kiện & chi phí</h3>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Số lượng linh kiện:</div>
+                                <div class="info-value">
+                                    <span id="partsCount">Đang tải...</span>
+                                    <a th:href="@{/admin/request-detail/by-request/{requestId}(requestId=${request.id})}"
+                                        class="btn-view-parts" title="Xem chi tiết linh kiện">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                        Xem chi tiết
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Tổng giá trị linh kiện:</div>
+                                <div class="info-value">
+                                    <span id="totalValue" class="price-display">Đang tính...</span>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Hóa đơn:</div>
+                                <div class="info-value">
+                                    <span id="invoiceStatus">Đang kiểm tra...</span>
+                                </div>
+                            </div>
+                            <div class="action-buttons">
+                                <a th:href="@{/admin/request-detail/create(requestId=${request.id})}"
+                                    class="btn-primary">
+                                    <span class="material-symbols-outlined">add</span>
+                                    Thêm linh kiện
+                                </a>
+                                <a th:href="@{/admin/receipt/create(requestId=${request.id})}" class="btn-success"
+                                    id="createInvoiceBtn" style="display: none;">
+                                    <span class="material-symbols-outlined">receipt</span>
+                                    Tạo hóa đơn
+                                </a>
                             </div>
                         </div>
 
@@ -297,6 +340,57 @@
     </div>
 
     <script>
+        // Load parts and cost information
+        function loadPartsInfo() {
+            const requestId = /*[[${request.id}]]*/ 0;
+
+            // Fetch request details count and total value
+            fetch(`/admin/request-detail/api/by-request/${requestId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update parts count
+                    document.getElementById('partsCount').textContent = data.count + ' linh kiện';
+
+                    // Update total value
+                    const totalValue = new Intl.NumberFormat('vi-VN').format(data.totalValue) + ' VNĐ';
+                    document.getElementById('totalValue').textContent = totalValue;
+
+                    // Show create invoice button if there are parts and status is approved
+                    if (data.count > 0 && /*[[${request.status}]]*/ 'PENDING' === 'APPROVED') {
+                        document.getElementById('createInvoiceBtn').style.display = 'inline-flex';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading parts info:', error);
+                    document.getElementById('partsCount').textContent = '0 linh kiện';
+                    document.getElementById('totalValue').textContent = '0 VNĐ';
+                });
+
+            // Check if invoice exists for this request
+            fetch(`/admin/receipt/api/check-by-request/${requestId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const invoiceStatusElement = document.getElementById('invoiceStatus');
+                    if (data.exists) {
+                        invoiceStatusElement.innerHTML = `
+                            <span class="status-badge status-success">Đã có hóa đơn</span>
+                            <a href="/admin/receipt/view/${data.invoiceId}" class="btn-view-invoice" title="Xem hóa đơn">
+                                <span class="material-symbols-outlined">receipt</span>
+                                Xem hóa đơn
+                            </a>
+                        `;
+                        // Hide create invoice button if invoice exists
+                        document.getElementById('createInvoiceBtn').style.display = 'none';
+                    } else {
+                        invoiceStatusElement.innerHTML = '<span class="status-badge status-pending">Chưa có hóa đơn</span>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking invoice:', error);
+                    document.getElementById('invoiceStatus').textContent = 'Không thể kiểm tra';
+                });
+        }
+
         function showDeleteModal() {
             document.getElementById('deleteModal').style.display = 'flex';
         }
@@ -307,6 +401,9 @@
 
         // Auto-hide alerts after 5 seconds
         document.addEventListener("DOMContentLoaded", function () {
+            // Load parts information when page loads
+            loadPartsInfo();
+
             setTimeout(function () {
                 const alerts = document.querySelectorAll('.alert');
                 alerts.forEach(alert => {

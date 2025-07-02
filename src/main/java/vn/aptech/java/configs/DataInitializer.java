@@ -9,7 +9,6 @@ import vn.aptech.java.models.PartType;
 import vn.aptech.java.models.User;
 import vn.aptech.java.repositories.UserRepository;
 import vn.aptech.java.services.ModelService;
-import vn.aptech.java.services.PartService;
 import vn.aptech.java.services.PartTypeService;
 
 @Component
@@ -20,9 +19,6 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private PartTypeService partTypeService;
-
-    @Autowired
-    private PartService partService;
 
     @Autowired
     private UserRepository userRepository;

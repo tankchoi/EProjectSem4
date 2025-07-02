@@ -348,6 +348,68 @@ body {
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
+/* Form Info Styles */
+.form-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background-color: #f0f9ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    transition: all 0.3s ease;
+}
+
+.form-info .material-symbols-outlined {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.form-note {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 400;
+    margin-left: 0.5rem;
+}
+
+/* Readonly Input Styles */
+.form-input[readonly] {
+    background-color: #f9fafb;
+    color: #374151;
+    cursor: not-allowed;
+    border-color: #d1d5db;
+}
+
+.form-input[readonly]:focus {
+    box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.1);
+    border-color: #9ca3af;
+}
+
+/* Auto-calculated input success state */
+.form-input.auto-calculated {
+    background-color: #f0fdf4;
+    border-color: #10b981;
+    color: #065f46;
+}
+
+.form-input.auto-calculated:focus {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Error state for auto-calculation */
+.form-input.calculation-error {
+    background-color: #fef2f2;
+    border-color: #ef4444;
+    color: #dc2626;
+}
+
+.form-input.calculation-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .page-container {

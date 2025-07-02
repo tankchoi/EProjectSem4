@@ -25,4 +25,9 @@ public interface InvoiceService {
     List<Invoice> getInvoicesByStatus(String status);
 
     List<Invoice> getInvoicesByTechnician(Long technicianId);
+
+    /**
+     * Tính tổng tiền từ các RequestDetail của một request
+     */
+    Double calculateTotalPriceFromRequestDetails(Long requestId);
 }
