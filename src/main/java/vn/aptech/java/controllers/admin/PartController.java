@@ -49,6 +49,7 @@ public class PartController {
 
     @PostMapping("/part/create")
     public String store(@RequestParam("name") String name,
+            @RequestParam(value = "description", required = false) String description,
             @RequestParam("price") Double price,
             @RequestParam("quantity") Integer quantity,
             @RequestParam("partType") Long partTypeId,
@@ -92,7 +93,8 @@ public class PartController {
                 return "redirect:/admin/part/create";
             }
 
-            partService.createPart(name, price, quantity, partTypeId, warrantyPeriod, laptopId, finalImgUrl);
+            partService.createPart(name, description, price, quantity, partTypeId, warrantyPeriod, laptopId,
+                    finalImgUrl);
             redirectAttributes.addFlashAttribute("success", "Thêm linh kiện thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi thêm linh kiện: " + e.getMessage());
@@ -118,6 +120,7 @@ public class PartController {
     @PostMapping("/part/edit/{id}")
     public String update(@PathVariable Long id,
             @RequestParam("name") String name,
+            @RequestParam(value = "description", required = false) String description,
             @RequestParam("price") Double price,
             @RequestParam("quantity") Integer quantity,
             @RequestParam("partType") Long partTypeId,
@@ -173,7 +176,8 @@ public class PartController {
                 return "redirect:/admin/part/edit/" + id;
             }
 
-            Part updatedPart = partService.updatePart(id, name, price, quantity, partTypeId, warrantyPeriod, laptopId,
+            Part updatedPart = partService.updatePart(id, name, description, price, quantity, partTypeId,
+                    warrantyPeriod, laptopId,
                     finalImgUrl);
             if (updatedPart != null) {
                 redirectAttributes.addFlashAttribute("success", "Cập nhật linh kiện thành công!");

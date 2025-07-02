@@ -1,0 +1,428 @@
+/* ===== ADMIN FORM STYLES - MATERIAL DESIGN ===== */
+
+/* Reset và base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: #1a202c;
+    background: #f7fafc;
+}
+
+/* Layout containers */
+.main-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+.page-container {
+    padding-left: 15rem;
+    padding-top: 5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 2rem;
+}
+
+/* Page header */
+.page-header {
+    background: transparent;
+    margin-bottom: 1.5rem;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+.page-header h1:first-child {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Dashboard header */
+.dashboard-header {
+    background: white;
+    margin-bottom: 2rem;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-title h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0;
+}
+
+/* Form header */
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem 2rem;
+    background: white;
+    border-radius: 12px 12px 0 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-header .material-symbols-outlined {
+    font-size: 1.5rem;
+    color: #667eea;
+}
+
+.form-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+}
+
+/* Form content */
+.form-content {
+    background: white;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.form-content form {
+    padding: 2rem;
+}
+
+/* Input groups */
+.input-content {
+    margin-bottom: 1.5rem;
+}
+
+.input-content label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.input-content label .material-symbols-outlined {
+    font-size: 1.125rem;
+    color: #667eea;
+}
+
+/* Input fields */
+.input-content input[type="text"],
+.input-content input[type="email"],
+.input-content input[type="password"],
+.input-content input[type="number"],
+.input-content input[type="tel"],
+.input-content input[type="date"],
+.input-content textarea,
+.input-content select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    background: #ffffff;
+    outline: none;
+}
+
+.input-content input:focus,
+.input-content textarea:focus,
+.input-content select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-content textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Error messages */
+.error-message {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #fed7d7;
+    border: 1px solid #feb2b2;
+    border-radius: 6px;
+    color: #c53030;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-message::before {
+    content: "error";
+    font-family: 'Material Symbols Outlined';
+    font-size: 1rem;
+}
+
+/* Success messages */
+.success-message {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #c6f6d5;
+    border: 1px solid #9ae6b4;
+    border-radius: 6px;
+    color: #22543d;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.success-message::before {
+    content: "check_circle";
+    font-family: 'Material Symbols Outlined';
+    font-size: 1rem;
+}
+
+/* Alert messages */
+.alert {
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: #c6f6d5;
+    border: 1px solid #9ae6b4;
+    color: #22543d;
+}
+
+.alert-error {
+    background: #fed7d7;
+    border: 1px solid #feb2b2;
+    color: #c53030;
+}
+
+.alert-warning {
+    background: #fefcbf;
+    border: 1px solid #f6e05e;
+    color: #744210;
+}
+
+.alert-info {
+    background: #bee3f8;
+    border: 1px solid #90cdf4;
+    color: #2c5282;
+}
+
+.alert::before {
+    font-family: 'Material Symbols Outlined';
+    font-size: 1.25rem;
+}
+
+.alert-success::before {
+    content: "check_circle";
+}
+
+.alert-error::before {
+    content: "error";
+}
+
+.alert-warning::before {
+    content: "warning";
+}
+
+.alert-info::before {
+    content: "info";
+}
+
+/* Form actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding: 1.5rem 2rem 2rem;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 2rem;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    justify-content: center;
+    min-width: 120px;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn .material-symbols-outlined {
+    font-size: 1.125rem;
+}
+
+/* Button variants */
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5a67d8;
+}
+
+.btn-secondary {
+    background: #718096;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #4a5568;
+}
+
+.btn-danger {
+    background: #e53e3e;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c53030;
+}
+
+.btn-success {
+    background: #38a169;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #2f855a;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #e2e8f0;
+    color: #4a5568;
+}
+
+.btn-outline:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
+}
+
+/* File upload styles */
+.file-upload {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.file-upload input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    border: 2px dashed #cbd5e0;
+    border-radius: 8px;
+    background: #f7fafc;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.file-upload-label:hover {
+    border-color: #667eea;
+    background: #edf2f7;
+    color: #667eea;
+}
+
+.file-upload-label .material-symbols-outlined {
+    font-size: 1.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .page-container {
+        padding-left: 0;
+        padding-top: 4rem;
+        padding-right: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .dashboard-header,
+    .form-header,
+    .form-content {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-title h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-header h2 {
+        font-size: 1.125rem;
+    }
+
+    .form-content form {
+        padding: 1.5rem;
+    }
+
+    .form-actions {
+        padding: 1rem 1.5rem;
+    }
+}

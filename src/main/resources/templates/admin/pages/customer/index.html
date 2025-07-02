@@ -11,11 +11,12 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 </head>
 
-<body>
+<body class="preload">
     <div class="main-container">
         <div th:replace="admin/fragments/nav-side :: nav-side"></div>
         <div th:replace="admin/fragments/nav-top :: nav-top"></div>
@@ -53,6 +54,23 @@
                         <span class="material-symbols-outlined">add</span>
                         Thêm khách hàng
                     </a>
+                    <div class="export-dropdown">
+                        <button class="export-btn" id="exportDropdown">
+                            <span class="material-symbols-outlined">download</span>
+                            Xuất dữ liệu
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </button>
+                        <div class="dropdown-menu" id="exportMenu">
+                            <a href="#" onclick="exportTable('excel')">
+                                <span class="material-symbols-outlined">table_chart</span>
+                                Xuất Excel
+                            </a>
+                            <a href="#" onclick="exportTable('pdf')">
+                                <span class="material-symbols-outlined">picture_as_pdf</span>
+                                Xuất PDF
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -141,13 +159,17 @@
                                         </a>
                                         <button th:if="${customer.status.name() == 'ACTIVE'}" type="button"
                                             class="action-btn btn-delete" title="Khóa khách hàng"
-                                            th:onclick="'confirmBan(' + ${customer.id} + ', \'' + ${customer.username} + '\')'">
+                                            th:data-customer-id="${customer.id}"
+                                            th:data-customer-username="${customer.username}"
+                                            onclick="confirmBan(this.dataset.customerId, this.dataset.customerUsername)">
                                             <span class="material-symbols-outlined">block</span>
                                             Khóa
                                         </button>
                                         <button th:if="${customer.status.name() == 'BANNED'}" type="button"
                                             class="action-btn btn-view" title="Mở khóa khách hàng"
-                                            th:onclick="'confirmRestore(' + ${customer.id} + ', \'' + ${customer.username} + '\')'">
+                                            th:data-customer-id="${customer.id}"
+                                            th:data-customer-username="${customer.username}"
+                                            onclick="confirmRestore(this.dataset.customerId, this.dataset.customerUsername)">
                                             <span class="material-symbols-outlined">refresh</span>
                                             Mở khóa
                                         </button>
@@ -202,10 +224,69 @@
         <input type="hidden" name="_method" value="put">
     </form>
 
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <script>
+        // Remove preload class after page loads
+        window.addEventListener('load', function () {
+            document.body.classList.remove('preload');
+        });
+
         document.addEventListener("DOMContentLoaded", function () {
+            // Custom dropdown functionality
+            const exportDropdown = document.getElementById('exportDropdown');
+            const exportMenu = document.getElementById('exportMenu');
+
+            if (exportDropdown && exportMenu) {
+                exportDropdown.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    exportMenu.classList.toggle('show');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function (e) {
+                    if (!exportDropdown.contains(e.target)) {
+                        exportMenu.classList.remove('show');
+                    }
+                });
+
+                // Close dropdown on Escape key
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        exportMenu.classList.remove('show');
+                    }
+                });
+            }
+
+            // Add ripple effect to buttons
+            function addRippleEffect(button) {
+                button.addEventListener('click', function (e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+
+                    this.appendChild(ripple);
+
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            }
+
+            // Apply ripple effect to all buttons
+            document.querySelectorAll('.export-btn, .search-btn, .clear-btn, .action-btn, .add-btn a').forEach(addRippleEffect);
+
             // Initialize DataTable with Vietnamese language
             if (!$('#customerTable tbody tr td[colspan]').length) {
                 new DataTable("#customerTable", {
@@ -235,12 +316,13 @@
                 });
             }
 
-            // Auto-hide alerts after 5 seconds
+            // Auto-hide alerts after 5 seconds with improved animation
             setTimeout(function () {
                 const alerts = document.querySelectorAll('.alert');
                 alerts.forEach(alert => {
-                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
                     alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-20px)';
                     setTimeout(() => {
                         if (alert.parentNode) {
                             alert.parentNode.removeChild(alert);
@@ -249,24 +331,39 @@
                 });
             }, 5000);
 
-            // Search input enhancements
+            // Enhanced search input interactions
             const searchInput = document.querySelector('input[name="search"]');
             if (searchInput) {
                 searchInput.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
+                        // Add loading state
+                        const submitBtn = this.closest('form').querySelector('.search-btn');
+                        submitBtn.classList.add('btn-loading');
                         this.closest('form').submit();
                     }
                 });
 
                 searchInput.addEventListener('focus', function () {
                     this.style.transform = 'scale(1.02)';
+                    this.parentElement.style.zIndex = '10';
                 });
 
                 searchInput.addEventListener('blur', function () {
                     this.style.transform = 'scale(1)';
+                    this.parentElement.style.zIndex = 'auto';
                 });
             }
+
+            // Add loading states to form submissions
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function () {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.classList.add('btn-loading');
+                    }
+                });
+            });
         });
 
         function confirmBan(customerId, customerName) {
@@ -284,247 +381,73 @@
                 form.submit();
             }
         }
+
+        function exportTable(format) {
+            const table = document.getElementById('customerTable');
+            const data = [];
+
+            // Get headers
+            const headers = [];
+            table.querySelectorAll('thead th').forEach((th, index) => {
+                if (index < 7) { // Exclude action column
+                    headers.push(th.textContent.trim());
+                }
+            });
+            data.push(headers);
+
+            // Get data rows
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach((td, index) => {
+                    if (index < 7) { // Exclude action column
+                        row.push(td.textContent.trim());
+                    }
+                });
+                if (row.length > 0) {
+                    data.push(row);
+                }
+            });
+
+            if (format === 'excel') {
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Khách hàng");
+                XLSX.writeFile(wb, "danh-sach-khach-hang.xlsx");
+            } else if (format === 'pdf') {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                // Add Vietnamese font support
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(16);
+                doc.text("DANH SACH KHACH HANG", 20, 20);
+
+                let y = 40;
+                data.forEach((row, index) => {
+                    if (index === 0) {
+                        doc.setFont("helvetica", "bold");
+                        doc.setFontSize(10);
+                    } else {
+                        doc.setFont("helvetica", "normal");
+                        doc.setFontSize(8);
+                    }
+
+                    const text = row.join(" | ");
+                    doc.text(text, 20, y);
+                    y += 8;
+
+                    if (y > 280) {
+                        doc.addPage();
+                        y = 20;
+                    }
+                });
+
+                doc.save("danh-sach-khach-hang.pdf");
+            }
+        }
     </script>
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
-</body>
-
-</html>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-<!-- Pagination -->
-<div th:if="${customers.totalPages > 1}" class="d-flex justify-content-between align-items-center mt-4">
-    <div class="d-flex align-items-center">
-        <span class="text-muted">
-            Hiển thị <span th:text="${customers.size}">10</span>
-            trong tổng số <span th:text="${customers.totalElements}">100</span> khách
-            hàng
-        </span>
-    </div>
-    <nav>
-        <ul class="pagination pagination-sm">
-            <!-- Previous Page -->
-            <li class="page-item" th:classappend="${customers.first} ? 'disabled'">
-                <a class="page-link"
-                    th:href="@{/admin/customer(page=${currentPage - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}">
-                    <i class="fas fa-chevron-left"></i>
-                </a>
-            </li>
-
-            <!-- Page Numbers -->
-            <li th:each="page : ${#numbers.sequence(0, customers.totalPages - 1)}" class="page-item"
-                th:classappend="${page == currentPage} ? 'active'">
-                <a class="page-link"
-                    th:href="@{/admin/customer(page=${page}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
-                    th:text="${page + 1}">1</a>
-            </li>
-
-            <!-- Next Page -->
-            <li class="page-item" th:classappend="${customers.last} ? 'disabled'">
-                <a class="page-link"
-                    th:href="@{/admin/customer(page=${currentPage + 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}">
-                    <i class="fas fa-chevron-right"></i>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-ban me-2 text-danger"></i>Xác nhận khóa khách hàng
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Bạn có chắc chắn muốn khóa khách hàng <strong id="deleteCustomerName"></strong>?</p>
-                <p class="text-muted small">Khách hàng sẽ không thể đăng nhập vào hệ thống.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <form id="deleteForm" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-ban me-1"></i>Khóa khách hàng
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Restore Confirmation Modal -->
-<div class="modal fade" id="restoreModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-undo me-2 text-success"></i>Xác nhận mở khóa khách hàng
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Bạn có chắc chắn muốn mở khóa khách hàng <strong id="restoreCustomerName"></strong>?</p>
-                <p class="text-muted small">Khách hàng sẽ có thể đăng nhập lại vào hệ thống.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <form id="restoreForm" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-undo me-1"></i>Mở khóa
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-        // Initialize DataTable
-        $('#customerTable').DataTable({
-            "paging": false,
-            "searching": false,
-            "info": false,
-            "ordering": false,
-            "columnDefs": [
-                { "orderable": false, "targets": [7] }
-            ],
-            "language": {
-                "emptyTable": "Không có dữ liệu"
-            }
-        });
-
-        // Auto hide alerts after 5 seconds
-        setTimeout(function () {
-            $('.alert').fadeOut('slow');
-        }, 5000);
-    });
-
-    function confirmDelete(customerId, customerName) {
-        document.getElementById('deleteCustomerName').textContent = customerName;
-        document.getElementById('deleteForm').action = '/admin/customer/' + customerId + '/delete';
-        var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        modal.show();
-    }
-
-    function confirmRestore(customerId, customerName) {
-        document.getElementById('restoreCustomerName').textContent = customerName;
-        document.getElementById('restoreForm').action = '/admin/customer/' + customerId + '/restore';
-        var modal = new bootstrap.Modal(document.getElementById('restoreModal'));
-        modal.show();
-    }
-
-    function exportTable(format) {
-        const table = document.getElementById('customerTable');
-        const data = [];
-
-        // Get headers
-        const headers = [];
-        table.querySelectorAll('thead th').forEach((th, index) => {
-            if (index < 7) { // Exclude action column
-                headers.push(th.textContent.trim());
-            }
-        });
-        data.push(headers);
-
-        // Get data rows
-        table.querySelectorAll('tbody tr').forEach(tr => {
-            const row = [];
-            tr.querySelectorAll('td').forEach((td, index) => {
-                if (index < 7) { // Exclude action column
-                    row.push(td.textContent.trim());
-                }
-            });
-            if (row.length > 0) {
-                data.push(row);
-            }
-        });
-
-        if (format === 'excel') {
-            const ws = XLSX.utils.aoa_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Khách hàng");
-            XLSX.writeFile(wb, "danh-sach-khach-hang.xlsx");
-        } else if (format === 'pdf') {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(16);
-            doc.text("DANH SÁCH KHÁCH HÀNG", 20, 20);
-
-            let y = 40;
-            data.forEach((row, index) => {
-                if (index === 0) {
-                    doc.setFont("helvetica", "bold");
-                    doc.setFontSize(10);
-                } else {
-                    doc.setFont("helvetica", "normal");
-                    doc.setFontSize(8);
-                }
-
-                doc.text(row.join(" | "), 20, y);
-                y += 8;
-
-                if (y > 280) {
-                    doc.addPage();
-                    y = 20;
-                }
-            });
-
-            doc.save("danh-sach-khach-hang.pdf");
-        }
-    }
-</script>
-
-<script th:src="@{/assets/js/admin/script.js}"></script>
-
-<style>
-    @media print {
-
-        .btn,
-        .pagination,
-        .alert,
-        .dropdown {
-            display: none !important;
-        }
-
-        .card {
-            border: none !important;
-            box-shadow: none !important;
-        }
-
-        .table {
-            font-size: 12px;
-        }
-    }
-</style>
-
 </body>
 
 </html>

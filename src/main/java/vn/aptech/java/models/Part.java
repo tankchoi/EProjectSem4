@@ -22,6 +22,7 @@ public class Part {
     private Laptop laptop;
 
     private String name;
+    private String description;
     private Double price;
     private Integer quantity;
     private Integer warrantyPeriod;
@@ -36,12 +37,14 @@ public class Part {
     public Part() {
     }
 
-    public Part(Long id, PartType partType, Laptop laptop, String name, Double price, Integer quantity,
+    public Part(Long id, PartType partType, Laptop laptop, String name, String description, Double price,
+            Integer quantity,
             Integer warrantyPeriod, String imgUrl, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.partType = partType;
         this.laptop = laptop;
         this.name = name;
+        this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.warrantyPeriod = warrantyPeriod;
@@ -64,6 +67,10 @@ public class Part {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Double getPrice() {
@@ -104,6 +111,10 @@ public class Part {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setPrice(Double price) {

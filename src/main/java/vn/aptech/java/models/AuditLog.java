@@ -18,7 +18,11 @@ public class AuditLog {
     private String tableName;
     private Long recordId;
     private String actionType;
+
+    @Column(columnDefinition = "TEXT")
     private String oldValue;
+
+    @Column(columnDefinition = "TEXT")
     private String newValue;
 
     @CreationTimestamp

@@ -1,65 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết nhân viên</title>
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/staff/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/staff/view.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-        .alert {
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .alert-success {
-            background-color: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .status-active {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-
-        .status-banned {
-            background-color: #fee2e2;
-            color: #991b1b;
-        }
-
-        .info-item {
-            margin-bottom: 16px;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 4px;
-        }
-
-        .info-value {
-            color: #6b7280;
-            padding: 8px 12px;
-            background-color: #f9fafb;
-            border-radius: 6px;
-            border: 1px solid #e5e7eb;
-        }
-    </style>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -67,107 +19,208 @@
         <div th:replace="admin/fragments/nav-side :: nav-side"></div>
         <div th:replace="admin/fragments/nav-top :: nav-top"></div>
         <div class="page-container">
-            <a th:href="@{/admin/staff}">← Quay lại danh sách</a>
-            <h2 class="heading-page">Thông tin chi tiết nhân viên</h2>
-            <p class="item-id">ID: <span th:text="${staff.id}">1</span></p>
+            <div class="page-header">
+                <div class="header-content">
+                    <span class="material-symbols-outlined">person</span>
+                    <h1>Admin / Chi tiết nhân viên</h1>
+                </div>
+            </div>
 
             <!-- Flash Messages -->
             <div th:if="${success}" class="alert alert-success">
-                <span>✓</span>
+                <span class="material-symbols-outlined">check_circle</span>
                 <span th:text="${success}"></span>
             </div>
 
-            <div class="flex gap-4 mb-4">
-                <a th:href="@{/admin/staff/{id}/edit(id=${staff.id})}"
-                    class="edit-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                    Chỉnh sửa
-                </a>
-                <form th:if="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE}"
-                    th:action="@{/admin/staff/{id}/delete(id=${staff.id})}" method="post" class="inline"
-                    onsubmit="return confirm('Bạn có chắc chắn muốn khóa tài khoản này?')">
-                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
-                        Khóa tài khoản
-                    </button>
-                </form>
-                <form th:if="${staff.status == T(vn.aptech.java.models.User.Status).BANNED}"
-                    th:action="@{/admin/staff/{id}/restore(id=${staff.id})}" method="post" class="inline"
-                    onsubmit="return confirm('Bạn có chắc chắn muốn khôi phục tài khoản này?')">
-                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
-                        Khôi phục tài khoản
-                    </button>
-                </form>
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>
+                        <span class="material-symbols-outlined"
+                            style="vertical-align: middle; margin-right: 8px;">badge</span>
+                        Chi tiết nhân viên #<span th:text="${staff.id}">1</span>
+                    </h1>
+                    <p>Xem và quản lý thông tin chi tiết của nhân viên</p>
+                </div>
+                <div class="action-buttons">
+                    <a th:href="@{/admin/staff}" class="btn-outline-secondary">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Quay lại danh sách
+                    </a>
+                    <a th:href="@{/admin/staff/{id}/edit(id=${staff.id})}" class="btn-warning">
+                        <span class="material-symbols-outlined">edit</span>
+                        Chỉnh sửa
+                    </a>
+                </div>
             </div>
 
-            <div class="grid grid-cols-12 gap-4 mt-4">
-                <div class="col-span-6">
-                    <div class="info-item">
-                        <div class="info-label">Tên đăng nhập</div>
-                        <div class="info-value" th:text="${staff.username}">username</div>
-                    </div>
-                </div>
-                <div class="col-span-6">
-                    <div class="info-item">
-                        <div class="info-label">Vai trò</div>
-                        <div class="info-value">
-                            <span
-                                th:text="${staff.role == T(vn.aptech.java.models.User.Role).STAFF} ? 'Nhân viên' : 
-                                       (${staff.role == T(vn.aptech.java.models.User.Role).ADMIN} ? 'Quản trị viên' : 'Khách hàng')">
-                                Nhân viên
-                            </span>
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <ul class="breadcrumb-list">
+                    <li class="breadcrumb-item">
+                        <a href="/admin/dashboard">
+                            <span class="material-symbols-outlined">home</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="breadcrumb-separator">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/admin/staff">
+                            <span class="material-symbols-outlined">group</span>
+                            Nhân viên
+                        </a>
+                    </li>
+                    <li class="breadcrumb-separator">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </li>
+                    <li class="breadcrumb-item active">Chi tiết</li>
+                </ul>
+            </div>
+
+            <div class="page-content">
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Staff Info Card -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <h3>
+                                <span class="material-symbols-outlined">person</span>
+                                Thông tin cá nhân
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <span class="material-symbols-outlined">account_circle</span>
+                                        Tên đăng nhập
+                                    </div>
+                                    <div class="info-value" th:text="${staff.username}">username</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <span class="material-symbols-outlined">admin_panel_settings</span>
+                                        Vai trò
+                                    </div>
+                                    <div class="info-value">
+                                        <span class="role-badge"
+                                            th:classappend="${staff.role == T(vn.aptech.java.models.User.Role).ADMIN} ? 'role-admin' : 
+                                                             (${staff.role == T(vn.aptech.java.models.User.Role).STAFF} ? 'role-staff' : 'role-customer')"
+                                            th:text="${staff.role == T(vn.aptech.java.models.User.Role).STAFF} ? 'Nhân viên' : 
+                                                       (${staff.role == T(vn.aptech.java.models.User.Role).ADMIN} ? 'Quản trị viên' : 'Khách hàng')">
+                                            <span class="material-symbols-outlined">work</span>
+                                            Nhân viên
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <span class="material-symbols-outlined">badge</span>
+                                        Họ và tên
+                                    </div>
+                                    <div class="info-value" th:text="${staff.fullname}">Họ và tên</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <span class="material-symbols-outlined">toggle_on</span>
+                                        Trạng thái
+                                    </div>
+                                    <div class="info-value">
+                                        <span class="status-badge"
+                                            th:classappend="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE} ? 'status-active' : 'status-banned'"
+                                            th:text="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE} ? 'Hoạt động' : 'Đã khóa'">
+                                            <span class="material-symbols-outlined"
+                                                th:text="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE} ? 'check_circle' : 'block'"></span>
+                                            Trạng thái
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <span class="material-symbols-outlined">email</span>
+                                        Email
+                                    </div>
+                                    <div class="info-value" th:text="${staff.email}">email@example.com</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <span class="material-symbols-outlined">phone</span>
+                                        Số điện thoại
+                                    </div>
+                                    <div class="info-value" th:text="${staff.phone}">0123456789</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <span class="material-symbols-outlined">calendar_add_on</span>
+                                        Ngày tạo
+                                    </div>
+                                    <div class="info-value"
+                                        th:text="${#dates.format(staff.createdAt, 'dd/MM/yyyy HH:mm:ss')}">
+                                        01/01/2024 00:00:00
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <span class="material-symbols-outlined">update</span>
+                                        Cập nhật lần cuối
+                                    </div>
+                                    <div class="info-value"
+                                        th:text="${#dates.format(staff.updatedAt, 'dd/MM/yyyy HH:mm:ss')}">
+                                        01/01/2024 00:00:00
+                                    </div>
+                                </div>
+                                <div th:if="${staff.img_link}" class="info-item full-width">
+                                    <div class="info-label">
+                                        <span class="material-symbols-outlined">image</span>
+                                        Ảnh đại diện
+                                    </div>
+                                    <div class="info-value">
+                                        <div class="avatar-container">
+                                            <img th:src="${staff.img_link}" alt="Avatar" class="avatar">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-span-6">
-                    <div class="info-item">
-                        <div class="info-label">Họ và tên</div>
-                        <div class="info-value" th:text="${staff.fullname}">Họ và tên</div>
-                    </div>
-                </div>
-                <div class="col-span-6">
-                    <div class="info-item">
-                        <div class="info-label">Trạng thái</div>
-                        <div class="info-value">
-                            <span
-                                th:class="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE} ? 'status-badge status-active' : 'status-badge status-banned'"
-                                th:text="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE} ? 'Hoạt động' : 'Đã khóa'">
-                                Trạng thái
-                            </span>
+
+                <!-- Sidebar Content -->
+                <div class="sidebar-content">
+                    <!-- Actions Card -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <h3>
+                                <span class="material-symbols-outlined">build</span>
+                                Thao tác
+                            </h3>
                         </div>
-                    </div>
-                </div>
-                <div class="col-span-6">
-                    <div class="info-item">
-                        <div class="info-label">Email</div>
-                        <div class="info-value" th:text="${staff.email}">email@example.com</div>
-                    </div>
-                </div>
-                <div class="col-span-6">
-                    <div class="info-item">
-                        <div class="info-label">Số điện thoại</div>
-                        <div class="info-value" th:text="${staff.phone}">0123456789</div>
-                    </div>
-                </div>
-                <div class="col-span-6">
-                    <div class="info-item">
-                        <div class="info-label">Ngày tạo</div>
-                        <div class="info-value" th:text="${#dates.format(staff.createdAt, 'dd/MM/yyyy HH:mm:ss')}">
-                            01/01/2024 00:00:00
-                        </div>
-                    </div>
-                </div>
-                <div class="col-span-6">
-                    <div class="info-item">
-                        <div class="info-label">Cập nhật lần cuối</div>
-                        <div class="info-value" th:text="${#dates.format(staff.updatedAt, 'dd/MM/yyyy HH:mm:ss')}">
-                            01/01/2024 00:00:00
-                        </div>
-                    </div>
-                </div>
-                <div th:if="${staff.img_link}" class="col-span-12">
-                    <div class="info-item">
-                        <div class="info-label">Ảnh đại diện</div>
-                        <div class="info-value">
-                            <img th:src="${staff.img_link}" alt="Avatar" class="w-24 h-24 rounded-full object-cover">
+                        <div class="card-body">
+                            <div class="actions-section">
+                                <a th:href="@{/admin/staff/{id}/edit(id=${staff.id})}" class="btn-warning">
+                                    <span class="material-symbols-outlined">edit</span>
+                                    Chỉnh sửa thông tin
+                                </a>
+
+                                <form th:if="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE}"
+                                    th:action="@{/admin/staff/{id}/delete(id=${staff.id})}" method="post"
+                                    onsubmit="return confirm('Bạn có chắc chắn muốn khóa tài khoản này?')">
+                                    <button type="submit" class="btn-danger">
+                                        <span class="material-symbols-outlined">block</span>
+                                        Khóa tài khoản
+                                    </button>
+                                </form>
+
+                                <form th:if="${staff.status == T(vn.aptech.java.models.User.Status).BANNED}"
+                                    th:action="@{/admin/staff/{id}/restore(id=${staff.id})}" method="post"
+                                    onsubmit="return confirm('Bạn có chắc chắn muốn khôi phục tài khoản này?')">
+                                    <button type="submit" class="btn-success">
+                                        <span class="material-symbols-outlined">lock_open</span>
+                                        Khôi phục tài khoản
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -177,18 +230,21 @@
 
     <script>
         // Auto-hide alerts after 5 seconds
-        setTimeout(function () {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                alert.style.transition = 'opacity 0.5s';
-                alert.style.opacity = '0';
-                setTimeout(() => alert.remove(), 500);
-            });
-        }, 5000);
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(function () {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.parentNode.removeChild(alert);
+                        }
+                    }, 500);
+                });
+            }, 5000);
+        });
     </script>
-
-    <script th:src="@{/assets/js/admin/script.js}"></script>
-
 </body>
 
 </html>

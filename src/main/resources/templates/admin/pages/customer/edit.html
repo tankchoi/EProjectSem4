@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chỉnh sửa khách hàng</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/customer/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/customer/create_new.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
 </head>
 
 <body>
@@ -20,404 +20,242 @@
         <div class="page-container">
             <div class="page-header">
                 <div class="header-content">
-                    <h1>Admin /</h1>
+                    <h1>Admin</h1>
+                    <span class="material-symbols-outlined" style="color: #64748b; margin: 0 8px;">chevron_right</span>
+                    <h1>Quản lý khách hàng</h1>
+                </div>
+            </div>
+
+            <div class="dashboard-header">
+                <div class="dashboard-title">
                     <h1>Chỉnh sửa khách hàng</h1>
                 </div>
             </div>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <!-- Breadcrumb -->
-                        <nav aria-label="breadcrumb" class="mb-4">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item">
-                                    <a href="/admin/dashboard">
-                                        <i class="fas fa-home"></i> Dashboard
-                                    </a>
-                                </li>
-                                <li class="breadcrumb-item">
-                                    <a href="/admin/customer">
-                                        <i class="fas fa-users"></i> Khách hàng
-                                    </a>
-                                </li>
-                                <li class="breadcrumb-item active">Chỉnh sửa</li>
-                            </ol>
-                        </nav>
 
-                        <!-- Header -->
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div>
-                                <h1 class="h3 mb-0 text-gray-800">
-                                    <i class="fas fa-user-edit me-2"></i>Chỉnh sửa khách hàng
-                                </h1>
-                                <p class="text-muted mb-0">Cập nhật thông tin khách hàng</p>
+            <!-- Thông báo -->
+            <div th:if="${errorMessage}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
+                <span th:text="${errorMessage}"></span>
+            </div>
+
+            <div th:if="${successMessage}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span th:text="${successMessage}"></span>
+            </div>
+
+            <div class="page-content">
+                <div class="form-header">
+                    <span class="material-symbols-outlined">edit</span>
+                    <h2>Cập nhật thông tin khách hàng</h2>
+                </div>
+
+                <!-- Error Alert -->
+                <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span th:text="${errorMessage}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <!-- Form Card -->
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-edit me-2"></i>Thông tin khách hàng
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/customer/{id}(id=${customerId})}" th:object="${customer}"
+                            method="post" class="form-content">
+                            <div class="form-grid">
+                                <!-- Username -->
+                                <div class="input-group">
+                                    <label for="username" class="required">
+                                        <span class="material-symbols-outlined">person</span>
+                                        Tên đăng nhập
+                                    </label>
+                                    <input type="text" id="username" th:field="*{username}"
+                                        placeholder="Nhập tên đăng nhập" required>
+                                    <div class="error-message" th:if="${#fields.hasErrors('username')}"
+                                        th:errors="*{username}">
+                                        Vui lòng nhập tên đăng nhập.
+                                    </div>
+                                </div>
+
+                                <!-- Password -->
+                                <div class="input-group">
+                                    <label for="password">
+                                        <span class="material-symbols-outlined">lock</span>
+                                        Mật khẩu mới (để trống nếu không đổi)
+                                    </label>
+                                    <div class="password-toggle">
+                                        <input type="password" id="password" th:field="*{password}"
+                                            placeholder="Nhập mật khẩu mới">
+                                        <button type="button" class="toggle-btn" onclick="togglePassword('password')">
+                                            <span class="material-symbols-outlined"
+                                                id="togglePasswordIcon">visibility</span>
+                                        </button>
+                                    </div>
+                                    <div class="error-message" th:if="${#fields.hasErrors('password')}"
+                                        th:errors="*{password}">
+                                        Mật khẩu không hợp lệ.
+                                    </div>
+                                </div>
+
+                                <!-- Full Name -->
+                                <div class="input-group">
+                                    <label for="fullname" class="required">
+                                        <span class="material-symbols-outlined">badge</span>
+                                        Họ và tên
+                                    </label>
+                                    <input type="text" id="fullname" th:field="*{fullname}"
+                                        placeholder="Nhập họ và tên đầy đủ" required>
+                                    <div class="error-message" th:if="${#fields.hasErrors('fullname')}"
+                                        th:errors="*{fullname}">
+                                        Vui lòng nhập họ và tên.
+                                    </div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="input-group">
+                                    <label for="email">
+                                        <span class="material-symbols-outlined">email</span>
+                                        Email
+                                    </label>
+                                    <input type="email" id="email" th:field="*{email}" placeholder="Nhập địa chỉ email">
+                                    <div class="error-message" th:if="${#fields.hasErrors('email')}"
+                                        th:errors="*{email}">
+                                        Vui lòng nhập email hợp lệ.
+                                    </div>
+                                </div>
+
+                                <!-- Phone -->
+                                <div class="input-group">
+                                    <label for="phone">
+                                        <span class="material-symbols-outlined">phone</span>
+                                        Số điện thoại
+                                    </label>
+                                    <input type="tel" id="phone" th:field="*{phone}" placeholder="0123456789">
+                                    <div class="error-message" th:if="${#fields.hasErrors('phone')}"
+                                        th:errors="*{phone}">
+                                        Vui lòng nhập số điện thoại hợp lệ.
+                                    </div>
+                                </div>
+
+                                <!-- Status -->
+                                <div class="input-group">
+                                    <label for="status">
+                                        <span class="material-symbols-outlined">toggle_on</span>
+                                        Trạng thái
+                                    </label>
+                                    <select id="status" th:field="*{status}">
+                                        <option value="ACTIVE">Hoạt động</option>
+                                        <option value="BANNED">Đã khóa</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>
-                                <a href="/admin/customer" class="btn btn-outline-secondary">
-                                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="material-symbols-outlined">save</span>
+                                    Cập nhật
+                                </button>
+                                <a th:href="@{/admin/customer}" class="btn btn-secondary">
+                                    <span class="material-symbols-outlined">close</span>
+                                    Hủy
                                 </a>
-                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Info Card -->
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <span class="material-symbols-outlined">info</span>
+                            <h3>Lưu ý khi chỉnh sửa</h3>
                         </div>
-
-                        <!-- Error Alert -->
-                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show"
-                            role="alert">
-                            <i class="fas fa-exclamation-circle me-2"></i>
-                            <span th:text="${errorMessage}"></span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-
-                        <!-- Form Card -->
-                        <div class="card shadow">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">
-                                    <i class="fas fa-edit me-2"></i>Thông tin khách hàng
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <form th:action="@{/admin/customer/{id}(id=${customerId})}" th:object="${customer}"
-                                    method="post" class="needs-validation" novalidate>
-                                    <div class="row">
-                                        <!-- Username -->
-                                        <div class="col-md-6 mb-3">
-                                            <label for="username" class="form-label">
-                                                <i class="fas fa-user me-1"></i>Tên đăng nhập
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <input type="text" class="form-control" id="username" th:field="*{username}"
-                                                th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''"
-                                                placeholder="Nhập tên đăng nhập" required>
-                                            <div th:if="${#fields.hasErrors('username')}" class="invalid-feedback">
-                                                <span th:errors="*{username}"></span>
-                                            </div>
-                                            <div class="valid-feedback">Hợp lệ!</div>
-                                        </div>
-
-                                        <!-- Password -->
-                                        <div class="col-md-6 mb-3">
-                                            <label for="password" class="form-label">
-                                                <i class="fas fa-lock me-1"></i>Mật khẩu mới
-                                                <span class="text-muted">(Để trống nếu không đổi)</span>
-                                            </label>
-                                            <div class="input-group">
-                                                <input type="password" class="form-control" id="password"
-                                                    th:field="*{password}"
-                                                    th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
-                                                    placeholder="Nhập mật khẩu mới">
-                                                <button class="btn btn-outline-secondary" type="button"
-                                                    onclick="togglePassword('password')">
-                                                    <i class="fas fa-eye" id="togglePasswordIcon"></i>
-                                                </button>
-                                                <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
-                                                    <span th:errors="*{password}"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-text">Để trống nếu không muốn thay đổi mật khẩu</div>
-                                        </div>
-
-                                        <!-- Full Name -->
-                                        <div class="col-md-6 mb-3">
-                                            <label for="fullname" class="form-label">
-                                                <i class="fas fa-id-card me-1"></i>Họ và tên
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <input type="text" class="form-control" id="fullname" th:field="*{fullname}"
-                                                th:classappend="${#fields.hasErrors('fullname')} ? 'is-invalid' : ''"
-                                                placeholder="Nhập họ và tên đầy đủ" required>
-                                            <div th:if="${#fields.hasErrors('fullname')}" class="invalid-feedback">
-                                                <span th:errors="*{fullname}"></span>
-                                            </div>
-                                            <div class="valid-feedback">Hợp lệ!</div>
-                                        </div>
-
-                                        <!-- Email -->
-                                        <div class="col-md-6 mb-3">
-                                            <label for="email" class="form-label">
-                                                <i class="fas fa-envelope me-1"></i>Email
-                                            </label>
-                                            <input type="email" class="form-control" id="email" th:field="*{email}"
-                                                th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
-                                                placeholder="Nhập địa chỉ email">
-                                            <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback">
-                                                <span th:errors="*{email}"></span>
-                                            </div>
-                                            <div class="valid-feedback">Email hợp lệ!</div>
-                                        </div>
-
-                                        <!-- Phone -->
-                                        <div class="col-md-6 mb-3">
-                                            <label for="phone" class="form-label">
-                                                <i class="fas fa-phone me-1"></i>Số điện thoại
-                                            </label>
-                                            <input type="tel" class="form-control" id="phone" th:field="*{phone}"
-                                                th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
-                                                placeholder="0123456789" pattern="^0\d{9}$">
-                                            <div th:if="${#fields.hasErrors('phone')}" class="invalid-feedback">
-                                                <span th:errors="*{phone}"></span>
-                                            </div>
-                                            <div class="form-text">Số điện thoại 10 chữ số, bắt đầu bằng số 0</div>
-                                        </div>
-
-                                        <!-- Status -->
-                                        <div class="col-md-6 mb-3">
-                                            <label for="status" class="form-label">
-                                                <i class="fas fa-toggle-on me-1"></i>Trạng thái
-                                            </label>
-                                            <select class="form-select" id="status" th:field="*{status}">
-                                                <option value="ACTIVE">Hoạt động</option>
-                                                <option value="BANNED">Đã khóa</option>
-                                            </select>
-                                            <div class="form-text">Trạng thái tài khoản khách hàng</div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Buttons -->
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <hr class="my-4">
-                                            <div class="d-flex justify-content-between">
-                                                <div>
-                                                    <button type="button" class="btn btn-outline-info"
-                                                        onclick="previewChanges()">
-                                                        <i class="fas fa-eye me-2"></i>Xem trước
-                                                    </button>
-                                                </div>
-                                                <div>
-                                                    <a href="/admin/customer" class="btn btn-secondary me-2">
-                                                        <i class="fas fa-times me-2"></i>Hủy
-                                                    </a>
-                                                    <button type="submit" class="btn btn-warning">
-                                                        <i class="fas fa-save me-2"></i>Cập nhật
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Change History Card -->
-                        <div class="card mt-4">
-                            <div class="card-header">
-                                <h6 class="m-0 font-weight-bold text-info">
-                                    <i class="fas fa-history me-2"></i>Lưu ý khi chỉnh sửa
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6><i class="fas fa-exclamation-triangle text-warning me-2"></i>Cảnh báo:</h6>
-                                        <ul class="list-unstyled ms-3">
-                                            <li><i class="fas fa-dot-circle text-warning me-2"></i>Thay đổi tên đăng
-                                                nhập có thể ảnh hưởng đến đăng nhập</li>
-                                            <li><i class="fas fa-dot-circle text-warning me-2"></i>Khóa tài khoản sẽ
-                                                ngăn khách hàng đăng nhập</li>
-                                            <li><i class="fas fa-dot-circle text-warning me-2"></i>Thay đổi mật khẩu sẽ
-                                                bắt đăng nhập lại</li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6><i class="fas fa-info-circle text-info me-2"></i>Thông tin:</h6>
-                                        <ul class="list-unstyled ms-3">
-                                            <li><i class="fas fa-dot-circle text-info me-2"></i>Email và số điện thoại
-                                                phải duy nhất</li>
-                                            <li><i class="fas fa-dot-circle text-info me-2"></i>Để trống mật khẩu nếu
-                                                không muốn thay đổi</li>
-                                            <li><i class="fas fa-dot-circle text-info me-2"></i>Thay đổi sẽ có hiệu lực
-                                                ngay lập tức</li>
-                                        </ul>
-                                    </div>
+                        <div class="info-card-body">
+                            <div class="info-list">
+                                <div class="info-item">
+                                    <span class="material-symbols-outlined">warning</span>
+                                    <span>Thay đổi tên đăng nhập có thể ảnh hưởng đến đăng nhập</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="material-symbols-outlined">block</span>
+                                    <span>Khóa tài khoản sẽ ngăn khách hàng đăng nhập</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="material-symbols-outlined">key</span>
+                                    <span>Để trống mật khẩu nếu không muốn thay đổi</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="material-symbols-outlined">email</span>
+                                    <span>Email và số điện thoại phải duy nhất</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="material-symbols-outlined">update</span>
+                                    <span>Thay đổi sẽ có hiệu lực ngay lập tức</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="material-symbols-outlined">logout</span>
+                                    <span>Thay đổi mật khẩu sẽ bắt đăng nhập lại</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Preview Modal -->
-    <div class="modal fade" id="previewModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-eye me-2"></i>Xem trước thay đổi
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6 class="text-primary">Thông tin sẽ được cập nhật:</h6>
-                            <div id="previewContent"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="text-info">Lưu ý:</h6>
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-check text-success me-2"></i>Thông tin sẽ được lưu ngay lập tức
-                                </li>
-                                <li><i class="fas fa-info-circle text-info me-2"></i>Khách hàng có thể cần đăng nhập lại
-                                </li>
-                                <li><i class="fas fa-shield-alt text-warning me-2"></i>Thay đổi trạng thái ảnh hưởng
-                                    quyền truy cập</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-warning" onclick="submitForm()">
-                        <i class="fas fa-save me-1"></i>Xác nhận cập nhật
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+            <script th:src="@{/assets/js/admin/script.js}"></script>
+            <script>
+                // Toggle password visibility
+                function togglePassword(fieldId) {
+                    const field = document.getElementById(fieldId);
+                    const icon = document.getElementById('togglePasswordIcon');
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                    if (field.type === 'password') {
+                        field.type = 'text';
+                        icon.textContent = 'visibility_off';
+                    } else {
+                        field.type = 'password';
+                        icon.textContent = 'visibility';
+                    }
+                }
 
-    <script>
-        // Form validation
-        (function () {
-            'use strict';
-            window.addEventListener('load', function () {
-                var forms = document.getElementsByClassName('needs-validation');
-                var validation = Array.prototype.filter.call(forms, function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
+                // Form validation
+                document.querySelector('form').addEventListener('submit', function (e) {
+                    const username = document.getElementById('username').value.trim();
+                    const fullname = document.getElementById('fullname').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const phone = document.getElementById('phone').value.trim();
+                    const password = document.getElementById('password').value.trim();
+
+                    if (!username || !fullname) {
+                        e.preventDefault();
+                        alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+                        return;
+                    }
+
+                    // Email validation (if provided)
+                    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                        e.preventDefault();
+                        alert('Vui lòng nhập email hợp lệ!');
+                        return;
+                    }
+
+                    // Phone validation (if provided)
+                    if (phone && !/^0\d{9}$/.test(phone)) {
+                        e.preventDefault();
+                        alert('Vui lòng nhập số điện thoại hợp lệ (10 chữ số, bắt đầu bằng 0)!');
+                        return;
+                    }
+
+                    // Password length validation (if provided)
+                    if (password && password.length < 6) {
+                        e.preventDefault();
+                        alert('Mật khẩu phải có ít nhất 6 ký tự!');
+                        return;
+                    }
                 });
-            }, false);
-        })();
-
-        // Toggle password visibility
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const icon = document.getElementById('togglePasswordIcon');
-
-            if (field.type === 'password') {
-                field.type = 'text';
-                icon.className = 'fas fa-eye-slash';
-            } else {
-                field.type = 'password';
-                icon.className = 'fas fa-eye';
-            }
-        }
-
-        // Preview changes
-        function previewChanges() {
-            const form = document.querySelector('form');
-            const formData = new FormData(form);
-
-            let previewHtml = '<div class="list-group">';
-
-            previewHtml += `<div class="list-group-item">
-        <strong>Tên đăng nhập:</strong> ${formData.get('username') || 'Chưa nhập'}
-    </div>`;
-
-            if (formData.get('password')) {
-                previewHtml += `<div class="list-group-item">
-            <strong>Mật khẩu:</strong> <span class="text-warning">Sẽ được thay đổi</span>
-        </div>`;
-            } else {
-                previewHtml += `<div class="list-group-item">
-            <strong>Mật khẩu:</strong> <span class="text-muted">Không thay đổi</span>
-        </div>`;
-            }
-
-            previewHtml += `<div class="list-group-item">
-        <strong>Họ tên:</strong> ${formData.get('fullname') || 'Chưa nhập'}
-    </div>`;
-
-            previewHtml += `<div class="list-group-item">
-        <strong>Email:</strong> ${formData.get('email') || 'Chưa nhập'}
-    </div>`;
-
-            previewHtml += `<div class="list-group-item">
-        <strong>Số điện thoại:</strong> ${formData.get('phone') || 'Chưa nhập'}
-    </div>`;
-
-            const statusText = {
-                'ACTIVE': '<span class="badge bg-success">Hoạt động</span>',
-                'PENDING': '<span class="badge bg-warning">Chờ duyệt</span>',
-                'BANNED': '<span class="badge bg-danger">Đã khóa</span>'
-            };
-
-            previewHtml += `<div class="list-group-item">
-        <strong>Trạng thái:</strong> ${statusText[formData.get('status')] || 'Không xác định'}
-    </div>`;
-
-            previewHtml += '</div>';
-
-            document.getElementById('previewContent').innerHTML = previewHtml;
-
-            const modal = new bootstrap.Modal(document.getElementById('previewModal'));
-            modal.show();
-        }
-
-        // Submit form from modal
-        function submitForm() {
-            document.querySelector('form').submit();
-        }
-
-        // Auto hide alerts after 5 seconds
-        setTimeout(function () {
-            $('.alert').fadeOut('slow');
-        }, 5000);
-
-        // Real-time validation
-        document.getElementById('username').addEventListener('input', function () {
-            const value = this.value.trim();
-            if (value.length > 0) {
-                this.classList.remove('is-invalid');
-                this.classList.add('is-valid');
-            } else {
-                this.classList.remove('is-valid');
-            }
-        });
-
-        document.getElementById('email').addEventListener('input', function () {
-            const value = this.value.trim();
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (value === '' || emailRegex.test(value)) {
-                this.classList.remove('is-invalid');
-                if (value !== '') {
-                    this.classList.add('is-valid');
-                } else {
-                    this.classList.remove('is-valid');
-                }
-            } else {
-                this.classList.remove('is-valid');
-                this.classList.add('is-invalid');
-            }
-        });
-
-        document.getElementById('phone').addEventListener('input', function () {
-            const value = this.value.trim();
-            const phoneRegex = /^0\d{9}$/;
-            if (value === '' || phoneRegex.test(value)) {
-                this.classList.remove('is-invalid');
-                if (value !== '' && phoneRegex.test(value)) {
-                    this.classList.add('is-valid');
-                } else {
-                    this.classList.remove('is-valid');
-                }
-            } else {
-                this.classList.remove('is-valid');
-                this.classList.add('is-invalid');
-            }
-        });
-    </script>
-
-    <script th:src="@{/assets/js/admin/script.js}"></script>
-
+            </script>
 </body>
 
 </html>

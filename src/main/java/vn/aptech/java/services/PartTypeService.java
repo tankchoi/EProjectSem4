@@ -30,4 +30,6 @@ public interface PartTypeService {
     void deletePartType(Long id);
 
     List<PartType> searchPartTypes(String name);
+
+    Long countPartsByPartTypeId(Long partTypeId);
 }

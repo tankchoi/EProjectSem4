@@ -12,8 +12,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.java.dtos.CreatePartTypeDTO;
+import vn.aptech.java.dtos.PartTypeWithCountDTO;
 import vn.aptech.java.models.PartType;
 import vn.aptech.java.services.PartTypeService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -43,9 +47,17 @@ public class PartTypeController {
             partTypePage = partTypeService.getAllPartTypes(pageable);
         }
 
+        // Tạo danh sách PartTypeWithCountDTO với số lượng parts
+        List<PartTypeWithCountDTO> partTypesWithCount = partTypePage.getContent().stream()
+                .map(partType -> {
+                    Long partCount = partTypeService.countPartsByPartTypeId(partType.getId());
+                    return new PartTypeWithCountDTO(partType, partCount);
+                })
+                .collect(Collectors.toList());
+
         model.addAttribute("activePage", "partTypes");
         System.out.println("DEBUG: PartType activePage set to: partTypes");
-        model.addAttribute("partTypes", partTypePage.getContent());
+        model.addAttribute("partTypes", partTypesWithCount);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", partTypePage.getTotalPages());
         model.addAttribute("totalElements", partTypePage.getTotalElements());

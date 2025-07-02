@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.aptech.java.dtos.CreatePartTypeDTO;
 import vn.aptech.java.models.PartType;
+import vn.aptech.java.repositories.PartRepository;
 import vn.aptech.java.repositories.PartTypeRepository;
 import vn.aptech.java.services.PartTypeService;
 
@@ -19,6 +20,9 @@ public class PartTypeServiceImpl implements PartTypeService {
 
     @Autowired
     private PartTypeRepository partTypeRepository;
+
+    @Autowired
+    private PartRepository partRepository;
 
     @Override
     public List<PartType> getAllPartTypes() {
@@ -107,5 +111,10 @@ public class PartTypeServiceImpl implements PartTypeService {
     @Override
     public List<PartType> searchPartTypes(String name) {
         return partTypeRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    @Override
+    public Long countPartsByPartTypeId(Long partTypeId) {
+        return (long) partRepository.findByPartTypeId(partTypeId).size();
     }
 }

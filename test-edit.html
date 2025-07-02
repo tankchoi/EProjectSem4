@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test - Chỉnh sửa nhân viên</title>
+    <link rel="stylesheet" href="./test-edit.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Mock navigation styles */
+        .main-container {
+            position: relative;
+        }
+
+        nav {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="page-container">
+            <a href="#" class="back-link">Quay lại chi tiết</a>
+            <h2 class="heading-page">Chỉnh sửa thông tin nhân viên</h2>
+            <p class="item-id">ID: <span>1</span></p>
+            <div class="status-info">
+                <span>ℹ</span>
+                Trạng thái hiện tại:
+                <span class="status-badge status-active">Hoạt động</span>
+            </div>
+
+            <!-- Error Messages -->
+            <div class="alert alert-error" style="display: none;">
+                <span>⚠</span>
+                <span>Lỗi test</span>
+            </div>
+
+            <div class="form-container">
+                <form>
+                    <div class="form-grid">
+                        <div class="input-contain">
+                            <label for="username" class="input-label">
+                                Tên đăng nhập <span class="required">*</span>
+                            </label>
+                            <input type="text" id="username" name="username" class="form-input"
+                                placeholder="Nhập tên đăng nhập" value="admin" />
+                        </div>
+
+                        <div class="input-contain">
+                            <label for="password" class="input-label">Mật khẩu mới</label>
+                            <input type="password" id="password" name="password" class="form-input"
+                                placeholder="Để trống nếu không muốn thay đổi" />
+                            <p class="helper-text">Để trống nếu không muốn thay đổi mật khẩu</p>
+                        </div>
+
+                        <div class="input-contain">
+                            <label for="fullname" class="input-label">
+                                Họ và tên <span class="required">*</span>
+                            </label>
+                            <input type="text" id="fullname" name="fullname" class="form-input"
+                                placeholder="Nhập họ và tên" value="Nguyễn Văn A" />
+                        </div>
+
+                        <div class="input-contain">
+                            <label for="status" class="input-label">Trạng thái</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="ACTIVE" selected>Hoạt động</option>
+                                <option value="BANNED">Đã khóa</option>
+                            </select>
+                        </div>
+
+                        <div class="input-contain">
+                            <label for="email" class="input-label">
+                                Email <span class="required">*</span>
+                            </label>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="Nhập email"
+                                value="admin@example.com" />
+                        </div>
+
+                        <div class="input-contain">
+                            <label for="phone" class="input-label">
+                                Số điện thoại <span class="required">*</span>
+                            </label>
+                            <input type="text" id="phone" name="phone" class="form-input"
+                                placeholder="Nhập số điện thoại (VD: 0123456789)" value="0123456789" />
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button type="submit" class="confirm-btn">Cập nhật</button>
+                        <a href="#" class="cancel-btn">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test error display
+        setTimeout(() => {
+            document.querySelector('.alert').style.display = 'flex';
+            setTimeout(() => {
+                document.querySelector('.alert').style.display = 'none';
+            }, 3000);
+        }, 1000);
+    </script>
+
+</body>
+
+</html>

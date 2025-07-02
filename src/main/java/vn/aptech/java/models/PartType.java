@@ -1,9 +1,12 @@
 package vn.aptech.java.models;
+
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.List;
+
 @Entity
 @Table(name = "PartTypes")
 public class PartType {
@@ -12,6 +15,9 @@ public class PartType {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "partType", fetch = FetchType.LAZY)
+    private List<Part> parts;
 
     @CreationTimestamp
     private Timestamp createdAt;
@@ -59,5 +65,17 @@ public class PartType {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Part> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<Part> parts) {
+        this.parts = parts;
+    }
+
+    public int getPartCount() {
+        return parts != null ? parts.size() : 0;
     }
 }

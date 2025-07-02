@@ -107,7 +107,8 @@
                                         <span class="material-symbols-outlined">visibility</span>
                                         Xem
                                     </a>
-                                    <button th:onclick="'confirmDelete(' + ${invoice.id} + ')'" class="btn-delete"
+                                    <button th:data-invoice-id="${invoice.id}"
+                                        onclick="confirmDelete(this.dataset.invoiceId)" class="btn-delete"
                                         title="Xóa hóa đơn">
                                         <span class="material-symbols-outlined">delete</span>
                                         Xóa

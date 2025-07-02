@@ -41,10 +41,12 @@ public class PartServiceImpl implements PartService {
     }
 
     @Override
-    public Part createPart(String name, Double price, Integer quantity, Long partTypeId, Integer warrantyPeriod,
+    public Part createPart(String name, String description, Double price, Integer quantity, Long partTypeId,
+            Integer warrantyPeriod,
             Long laptopId, String imgUrl) {
         Part part = new Part();
         part.setName(name);
+        part.setDescription(description);
         part.setPrice(price);
         part.setQuantity(quantity);
         part.setWarrantyPeriod(warrantyPeriod);
@@ -79,7 +81,7 @@ public class PartServiceImpl implements PartService {
     }
 
     @Override
-    public Part updatePart(Long id, String name, Double price, Integer quantity, Long partTypeId,
+    public Part updatePart(Long id, String name, String description, Double price, Integer quantity, Long partTypeId,
             Integer warrantyPeriod, Long laptopId, String imgUrl) {
         Optional<Part> existingPartOpt = partRepository.findById(id);
         if (existingPartOpt.isPresent()) {
@@ -87,6 +89,7 @@ public class PartServiceImpl implements PartService {
 
             // Update basic fields
             existingPart.setName(name);
+            existingPart.setDescription(description);
             existingPart.setPrice(price);
             existingPart.setQuantity(quantity);
             existingPart.setWarrantyPeriod(warrantyPeriod);

@@ -1,6 +1,9 @@
 package vn.aptech.java.aspects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.persistence.EntityManager;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -29,6 +32,38 @@ public class AuditAspect {
     @Autowired
     private ObjectMapper objectMapper;
 
+    // Tạo method để serialize entity với độ dài giới hạn
+    private String serializeEntitySafely(Object entity) {
+        try {
+            ObjectMapper safeMapper = new ObjectMapper();
+            safeMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
+            String json = safeMapper.writeValueAsString(entity);
+
+            // Giới hạn độ dài JSON (ví dụ: 10000 ký tự)
+            if (json.length() > 10000) {
+                // Nếu quá dài, chỉ lưu thông tin cơ bản
+                return createBasicEntityInfo(entity);
+            }
+
+            return json;
+        } catch (Exception e) {
+            // Nếu serialize lỗi, tạo thông tin cơ bản
+            return createBasicEntityInfo(entity);
+        }
+    }
+
+    private String createBasicEntityInfo(Object entity) {
+        try {
+            Long id = getEntityId(entity);
+            String entityName = entity.getClass().getSimpleName();
+            return String.format("{\"%s_id\":%d,\"entity_type\":\"%s\"}",
+                    entityName.toLowerCase(), id, entityName);
+        } catch (Exception e) {
+            return "{\"error\":\"Could not serialize entity\"}";
+        }
+    }
+
     @AfterReturning(pointcut = "execution(* vn.aptech.java.services..*.create*(..))", returning = "result")
     public void afterCreate(JoinPoint joinPoint, Object result) throws Exception {
         // Kiểm tra nếu không có user đăng nhập thì bỏ qua audit
@@ -40,7 +75,7 @@ public class AuditAspect {
         Object entity = result;
         Long id = getEntityId(entity);
 
-        String newJson = objectMapper.writeValueAsString(entity);
+        String newJson = serializeEntitySafely(entity);
 
         auditLogService.log(
                 currentUser,
@@ -87,8 +122,8 @@ public class AuditAspect {
                 // Ignore errors when fetching old entity
             }
 
-            String oldJson = oldEntity == null ? null : objectMapper.writeValueAsString(oldEntity);
-            String newJson = objectMapper.writeValueAsString(result);
+            String oldJson = oldEntity == null ? null : serializeEntitySafely(oldEntity);
+            String newJson = serializeEntitySafely(result);
 
             auditLogService.log(
                     currentUser,
@@ -151,7 +186,7 @@ public class AuditAspect {
                 // Lấy entity trước khi xóa để audit
                 Object entityToDelete = entityManager.find(entityClass, id);
                 if (entityToDelete != null) {
-                    String oldJson = objectMapper.writeValueAsString(entityToDelete);
+                    String oldJson = serializeEntitySafely(entityToDelete);
 
                     auditLogService.log(
                             currentUser,
@@ -168,7 +203,7 @@ public class AuditAspect {
                 // Trường hợp argument đầu tiên là entity object
                 System.out.println("Handling entity object (not ID)");
                 Long id = getEntityId(firstArg);
-                String oldJson = objectMapper.writeValueAsString(firstArg);
+                String oldJson = serializeEntitySafely(firstArg);
 
                 auditLogService.log(
                         currentUser,

@@ -83,7 +83,7 @@
             </div>
 
             <div class="table-container">
-                <table id="myTable" class="table-content">
+                <table id="partTypeTable" class="table-content">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -97,15 +97,15 @@
                         <tr th:each="partType : ${partTypes}">
                             <td th:text="${partType.id}">1</td>
                             <td th:text="${partType.name}">CPU</td>
-                            <td>0</td>
+                            <td th:text="${partType.partCount}">0</td>
                             <td th:text="${#dates.format(partType.createdAt, 'dd/MM/yyyy')}">12/01/2025</td>
                             <td>
-                                <a th:href="@{/admin/part-type/edit/{id}(id=${partType.id})}" class="btn-edit">
+                                <a th:href="@{/admin/part-type/{id}/edit(id=${partType.id})}" class="btn-edit">
                                     <span class="material-symbols-outlined"
                                         style="font-size: 16px; margin-right: 4px;">edit</span>
                                     Sửa
                                 </a>
-                                <form th:action="@{/admin/part-type/delete/{id}(id=${partType.id})}" method="post"
+                                <form th:action="@{/admin/part-type/{id}/delete(id=${partType.id})}" method="post"
                                     style="display: inline;"
                                     onsubmit="return confirm('Bạn có chắc chắn muốn xóa loại linh kiện này?')">
                                     <button type="submit" class="btn-delete">
@@ -131,59 +131,34 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#myTable').DataTable({
+            // Kiểm tra nếu DataTable đã được khởi tạo thì destroy trước
+            if ($.fn.DataTable.isDataTable('#partTypeTable')) {
+                $('#partTypeTable').DataTable().destroy();
+            }
+
+            $('#partTypeTable').DataTable({
                 "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json"
+                    "search": "Tìm kiếm:",
+                    "lengthMenu": "Hiển thị _MENU_ dòng",
+                    "info": "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
+                    "paginate": {
+                        "first": "Đầu",
+                        "last": "Cuối",
+                        "next": "Tiếp",
+                        "previous": "Trước"
+                    }
                 },
-                "pageLength": 10
+                "pageLength": 10,
+                "lengthMenu": [10, 20, 30, 40]
             });
         });
     </script>
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
-</body>
-
-</html>
-</table>
-
-
-</div>
-
-
-</div>
-</div>
-
-
-
-<script th:src="@{/assets/js/admin/script.js}"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        new DataTable("#myTable", {
-            paging: true,        // Bật phân trang
-            searching: true,     // Bật tìm kiếm
-            ordering: true,      // Cho phép sắp xếp
-            info: true,          // Hiển thị số dòng đang xem
-            lengthMenu: [10, 20, 30, 40], // Tùy chọn số dòng hiển thị
-            language: {
-                search: "Tìm kiếm:",
-                lengthMenu: "Hiển thị _MENU_ dòng",
-                info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
-                paginate: {
-                    first: "Đầu",
-                    last: "Cuối",
-                    next: "Tiếp",
-                    previous: "Trước"
-                }
-            }
-        });
-    });
-</script>
 </body>
 
 </html>
