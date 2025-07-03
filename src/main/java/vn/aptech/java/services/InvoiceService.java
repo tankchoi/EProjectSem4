@@ -10,6 +10,8 @@ public interface InvoiceService {
 
     Optional<Invoice> getInvoiceById(Long id);
 
+    Optional<Invoice> getInvoiceByRequestId(Long requestId);
+
     Invoice createInvoice(Invoice invoice);
 
     Invoice createInvoice(CreateInvoiceDTO createInvoiceDTO);
@@ -30,4 +32,9 @@ public interface InvoiceService {
      * Tính tổng tiền từ các RequestDetail của một request
      */
     Double calculateTotalPriceFromRequestDetails(Long requestId);
+
+    /**
+     * Tự động cập nhật tổng tiền hóa đơn nếu có
+     */
+    void updateInvoiceTotalIfExists(Long requestId);
 }

@@ -81,43 +81,18 @@ public class AuditAspect {
                 newJson);
     }
 
-    @Around("execution(* vn.aptech.java.services..*.update*(..))")
-    public Object aroundUpdate(ProceedingJoinPoint joinPoint) throws Throwable {
+    @AfterReturning(pointcut = "execution(* vn.aptech.java.services..*.update*(..))", returning = "result")
+    public void afterUpdate(JoinPoint joinPoint, Object result) throws Exception {
         User currentUser = userService.getCurrentUser();
-        if (currentUser == null) {
-            return joinPoint.proceed(); // Bỏ qua audit khi chưa có user đăng nhập
-        }
-
-        Object[] args = joinPoint.getArgs();
-        if (args.length == 0) {
-            return joinPoint.proceed();
-        }
-
-        // Gọi hàm update trước để lấy kết quả
-        Object result = joinPoint.proceed();
-
-        // Chỉ audit nếu có kết quả trả về (là entity)
-        if (result == null) {
-            return result;
+        if (currentUser == null || result == null) {
+            return; // Bỏ qua audit khi chưa có user đăng nhập hoặc không có kết quả
         }
 
         try {
             // Lấy ID từ kết quả trả về (entity đã được update)
             Long id = getEntityId(result);
 
-            // Tìm entity cũ để so sánh (nếu cần)
-            Object oldEntity = null;
-            try {
-                oldEntity = entityManager.find(result.getClass(), id);
-                // Refresh để lấy trạng thái trước khi update
-                if (oldEntity != null) {
-                    entityManager.detach(oldEntity);
-                }
-            } catch (Exception e) {
-                // Ignore errors when fetching old entity
-            }
-
-            String oldJson = oldEntity == null ? null : serializeEntitySafely(oldEntity);
+            // Chỉ log thông tin cơ bản để tránh conflict với transaction
             String newJson = serializeEntitySafely(result);
 
             auditLogService.log(
@@ -125,14 +100,12 @@ public class AuditAspect {
                     result.getClass().getSimpleName(),
                     id,
                     "UPDATE",
-                    oldJson,
+                    null, // Không fetch old entity để tránh transaction conflict
                     newJson);
         } catch (Exception e) {
             // Log the audit error but don't fail the update operation
             System.err.println("Audit logging failed for update operation: " + e.getMessage());
         }
-
-        return result;
     }
 
     @Before("execution(* vn.aptech.java.services..*.delete*(..))")

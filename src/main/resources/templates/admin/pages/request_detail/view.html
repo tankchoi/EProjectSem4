@@ -36,11 +36,11 @@
                     <p>Xem và quản lý thông tin chi tiết yêu cầu sửa chữa laptop</p>
                 </div>
                 <div class="action-buttons">
-                    <a th:href="@{/admin/request-detail}" class="btn-outline-secondary">
+                    <a th:href="@{/admin/request-detail}" class="btn btn-outline-secondary">
                         <span class="material-symbols-outlined">arrow_back</span>
                         Quay lại
                     </a>
-                    <a th:href="@{/admin/request-detail/{id}/edit(id=${requestDetail.id})}" class="btn-warning">
+                    <a th:href="@{/admin/request-detail/{id}/edit(id=${requestDetail.id})}" class="btn btn-warning">
                         <span class="material-symbols-outlined">edit</span>
                         Chỉnh sửa
                     </a>
@@ -159,105 +159,100 @@
                                         <div class="info-item">
                                             <label>Thời gian bảo hành:</label>
                                             <span class="value"
-                                                th:text="${requestDetail.part.warrantyPeriod} + ' tháng'"></span>
+                                                th:text="${requestDetail.part.warrantyPeriod} + ' năm'"></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    th:text="${requestDetail.part.warrantyPeriod} + ' tháng'"></span>
+
+                    <!-- Quantity and Cost Information -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3>
+                                <span class="material-symbols-outlined">calculate</span>
+                                Thông tin Số lượng & Chi phí
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="cost-breakdown">
+                                <div class="cost-item">
+                                    <label>Số lượng cần thiết:</label>
+                                    <span class="value quantity" th:text="${requestDetail.quantity}"></span>
+                                </div>
+                                <div class="cost-item">
+                                    <label>Đơn giá:</label>
+                                    <span class="value"
+                                        th:text="${#numbers.formatDecimal(requestDetail.part.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                                </div>
+                                <div class="cost-item total">
+                                    <label>Thành tiền:</label>
+                                    <span class="value total-amount"
+                                        th:text="${#numbers.formatDecimal(requestDetail.part.price * requestDetail.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timestamps -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3>
+                                <span class="material-symbols-outlined">schedule</span>
+                                Thông tin Thời gian
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Ngày tạo:</label>
+                                    <span class="value"
+                                        th:text="${#dates.format(requestDetail.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Cập nhật lần cuối:</label>
+                                    <span class="value"
+                                        th:text="${#dates.format(requestDetail.updatedAt, 'dd/MM/yyyy HH:mm:ss')}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- /detail-container -->
+            </div> <!-- /content-wrapper -->
+
+            <!-- Action Buttons -->
+            <div class="action-bar">
+                <a th:href="@{/admin/request-detail/{id}/edit(id=${requestDetail.id})}" class="btn btn-warning">
+                    <span class="material-symbols-outlined">edit</span>
+                    Chỉnh sửa
+                </a>
+                <button class="btn btn-danger" onclick="confirmDelete()">
+                    <span class="material-symbols-outlined">delete</span>
+                    Xóa
+                </button>
+                <a th:href="@{/admin/request-detail}" class="btn btn-outline-secondary">
+                    <span class="material-symbols-outlined">list</span>
+                    Danh sách
+                </a>
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div id="deleteModal" class="modal">
+                <div class="modal-content">
+                    <h4>Xác nhận xóa</h4>
+                    <p>Bạn có chắc chắn muốn xóa chi tiết yêu cầu này? Hành động này không thể hoàn tác.</p>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-outline-secondary"
+                            onclick="closeDeleteModal()">Hủy</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteRecord()">Xóa</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-    </div>
 
-    <!-- Quantity and Cost Information -->
-    <div class="detail-card">
-        <div class="card-header">
-            <h3>
-                <span class="material-symbols-outlined">calculate</span>
-                Thông tin Số lượng & Chi phí
-            </h3>
-        </div>
-        <div class="card-content">
-            <div class="cost-breakdown">
-                <div class="cost-item">
-                    <label>Số lượng cần thiết:</label>
-                    <span class="value quantity" th:text="${requestDetail.quantity}"></span>
-                </div>
-                <div class="cost-item">
-                    <label>Đơn giá:</label>
-                    <span class="value"
-                        th:text="${#numbers.formatDecimal(requestDetail.part.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
-                </div>
-                <div class="cost-item total">
-                    <label>Thành tiền:</label>
-                    <span class="value total-amount"
-                        th:text="${#numbers.formatDecimal(requestDetail.part.price * requestDetail.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
-                </div>
-            </div>
-        </div>
     </div>
-
-    <!-- Timestamps -->
-    <div class="detail-card">
-        <div class="card-header">
-            <h3>
-                <span class="material-symbols-outlined">schedule</span>
-                Thông tin Thời gian
-            </h3>
-        </div>
-        <div class="card-content">
-            <div class="info-grid">
-                <div class="info-item">
-                    <label>Ngày tạo:</label>
-                    <span class="value"
-                        th:text="${#dates.format(requestDetail.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></span>
-                </div>
-                <div class="info-item">
-                    <label>Cập nhật lần cuối:</label>
-                    <span class="value"
-                        th:text="${#dates.format(requestDetail.updatedAt, 'dd/MM/yyyy HH:mm:ss')}"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="action-bar">
-        <a th:href="@{/admin/request-detail/{id}/edit(id=${requestDetail.id})}" class="btn btn-warning">
-            <span class="material-symbols-outlined">edit</span>
-            Chỉnh sửa
-        </a>
-        <button class="btn btn-danger" onclick="confirmDelete()">
-            <span class="material-symbols-outlined">delete</span>
-            Xóa
-        </button>
-        <a th:href="@{/admin/request-detail}" class="btn btn-outline-secondary">
-            <span class="material-symbols-outlined">list</span>
-            Danh sách
-        </a>
-    </div>
-    </div>
-    </div>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <h4>Xác nhận xóa</h4>
-            <p>Bạn có chắc chắn muốn xóa chi tiết yêu cầu này? Hành động này không thể hoàn tác.</p>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-outline-secondary" onclick="closeDeleteModal()">Hủy</button>
-                <button type="button" class="btn btn-danger" onclick="deleteRecord()">Xóa</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         function confirmDelete() {
             document.getElementById('deleteModal').style.display = 'flex';

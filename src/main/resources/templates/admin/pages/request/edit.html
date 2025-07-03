@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Chỉnh sửa yêu cầu bảo hành</title>
     <link rel="stylesheet" th:href="@{/assets/css/admin/pages/request/edit.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
@@ -30,6 +33,27 @@
             <div th:if="${errorMessage}" class="alert alert-error">
                 <span class="material-symbols-outlined">error</span>
                 <span th:text="${errorMessage}"></span>
+            </div>
+
+            <!-- Debug Log Panel -->
+            <div id="debugPanel"
+                style="display: none; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin-bottom: 20px; font-family: monospace; font-size: 12px; max-height: 400px; overflow-y: auto;">
+                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0; color: #495057;">🔍 Debug Logs</h4>
+                    <button type="button" id="clearLogs"
+                        style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Clear</button>
+                </div>
+                <div id="debugLogs"
+                    style="background: #ffffff; border: 1px solid #ced4da; border-radius: 4px; padding: 10px; min-height: 200px; white-space: pre-wrap;">
+                </div>
+            </div>
+
+            <!-- Toggle Debug Button -->
+            <div style="margin-bottom: 15px;">
+                <button type="button" id="toggleDebug"
+                    style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                    📊 Show Debug Panel
+                </button>
             </div>
 
             <div class="dashboard-header">
@@ -227,7 +251,80 @@
     </div>
 
     <script>
+        // Debug logging system
+        let debugLogs = [];
+
+        function addDebugLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            debugLogs.push(logEntry);
+
+            // Also log to console
+            console.log(message);
+
+            // Update debug panel if visible
+            updateDebugPanel();
+        }
+
+        function updateDebugPanel() {
+            const debugLogsDiv = document.getElementById('debugLogs');
+            if (debugLogsDiv) {
+                debugLogsDiv.textContent = debugLogs.join('\n');
+                debugLogsDiv.scrollTop = debugLogsDiv.scrollHeight;
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
+            // Force refresh if page loaded from cache (back button)
+            if (performance.navigation.type === 2) {
+                addDebugLog('⚠️ Page loaded from cache (back button), forcing refresh...');
+                location.reload(true);
+                return;
+            }
+
+            // Check if page was loaded with update parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('updated')) {
+                addDebugLog('🔄 Page loaded after update, clearing cache...');
+            }
+
+            // Debug panel controls
+            const toggleButton = document.getElementById('toggleDebug');
+            const debugPanel = document.getElementById('debugPanel');
+            const clearButton = document.getElementById('clearLogs');
+
+            toggleButton.addEventListener('click', function () {
+                if (debugPanel.style.display === 'none') {
+                    debugPanel.style.display = 'block';
+                    toggleButton.textContent = '📊 Hide Debug Panel';
+                    updateDebugPanel();
+                } else {
+                    debugPanel.style.display = 'none';
+                    toggleButton.textContent = '📊 Show Debug Panel';
+                }
+            });
+
+            clearButton.addEventListener('click', function () {
+                debugLogs = [];
+                updateDebugPanel();
+                addDebugLog('Debug logs cleared');
+            });
+
+            addDebugLog('Debug system initialized');
+
+            // Log initial form values
+            addDebugLog('=== INITIAL FORM VALUES ===');
+            addDebugLog(`customerLaptopId: ${document.getElementById('customerLaptopId').value}`);
+            addDebugLog(`fullname: ${document.getElementById('fullname').value}`);
+            addDebugLog(`email: ${document.getElementById('email').value}`);
+            addDebugLog(`phone: ${document.getElementById('phone').value}`);
+            addDebugLog(`address: ${document.getElementById('address').value}`);
+            addDebugLog(`bookingDate: ${document.getElementById('bookingDate').value}`);
+            addDebugLog(`status: ${document.getElementById('status').value}`);
+            addDebugLog(`technicianId: ${document.getElementById('technicianId').value}`);
+            addDebugLog(`description: ${document.getElementById('description').value}`);
+            addDebugLog('========================');
+
             // Auto-hide alerts after 5 seconds
             setTimeout(function () {
                 const alerts = document.querySelectorAll('.alert');
@@ -259,6 +356,30 @@
             });
 
             form.addEventListener('submit', function (e) {
+                // Debug logging for form submission
+                addDebugLog('=== FORM SUBMIT DEBUG ===');
+                addDebugLog(`Form action: ${form.action}`);
+                addDebugLog(`Form method: ${form.method}`);
+
+                // Log all form data
+                const formData = new FormData(form);
+                addDebugLog('Form data:');
+                for (let [key, value] of formData.entries()) {
+                    addDebugLog(`  ${key}: ${value}`);
+                }
+
+                // Log specific field values
+                addDebugLog('--- Individual Field Values ---');
+                addDebugLog(`customerLaptopId: ${document.getElementById('customerLaptopId').value}`);
+                addDebugLog(`fullname: ${document.getElementById('fullname').value}`);
+                addDebugLog(`email: ${document.getElementById('email').value}`);
+                addDebugLog(`phone: ${document.getElementById('phone').value}`);
+                addDebugLog(`address: ${document.getElementById('address').value}`);
+                addDebugLog(`bookingDate: ${document.getElementById('bookingDate').value}`);
+                addDebugLog(`status: ${document.getElementById('status').value}`);
+                addDebugLog(`technicianId: ${document.getElementById('technicianId').value}`);
+                addDebugLog(`description: ${document.getElementById('description').value}`);
+
                 let isValid = true;
                 inputs.forEach(input => {
                     if (!validateField(input)) {
@@ -267,7 +388,26 @@
                 });
 
                 if (!isValid) {
+                    addDebugLog('❌ Form validation failed, preventing submit');
                     e.preventDefault();
+                } else {
+                    addDebugLog('✅ Form validation passed, submitting...');
+                    // Show debug panel automatically when submitting
+                    if (debugPanel.style.display === 'none') {
+                        debugPanel.style.display = 'block';
+                        toggleButton.textContent = '📊 Hide Debug Panel';
+                        updateDebugPanel();
+                    }
+
+                    // Add timestamp to prevent caching
+                    const timestamp = new Date().getTime();
+                    if (form.action.indexOf('?') !== -1) {
+                        form.action += '&_t=' + timestamp;
+                    } else {
+                        form.action += '?_t=' + timestamp;
+                    }
+
+                    addDebugLog('🔄 Form submitted, will redirect to prevent cache...');
                 }
             });
 
@@ -281,14 +421,19 @@
 
                 if (isRequired && !value) {
                     isValid = false;
+                    addDebugLog(`❌ Field ${field.id} is required but empty`);
                 } else if (field.type === 'email' && value && !isValidEmail(value)) {
                     isValid = false;
+                    addDebugLog(`❌ Field ${field.id} has invalid email format: ${value}`);
                 } else if (field.type === 'tel' && value && !isValidPhone(value)) {
                     isValid = false;
+                    addDebugLog(`❌ Field ${field.id} has invalid phone format: ${value}`);
                 }
 
                 if (!isValid) {
                     field.classList.add('error');
+                } else if (value) {
+                    addDebugLog(`✅ Field ${field.id} validated: ${value}`);
                 }
 
                 return isValid;

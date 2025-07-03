@@ -6,10 +6,13 @@ import org.springframework.data.repository.query.Param;
 import vn.aptech.java.models.Invoice;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     List<Invoice> findByStatus(String status);
+
+    Optional<Invoice> findByRequestId(Long requestId);
 
     @Query("SELECT i FROM Invoice i WHERE " +
             "LOWER(i.request.fullname) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +

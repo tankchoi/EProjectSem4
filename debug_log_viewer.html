@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Log Viewer</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 20px;
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .instructions {
+            background: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .log-container {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .timestamp {
+            color: #ffd700;
+        }
+
+        .debug-line {
+            color: #00ff00;
+        }
+
+        .error-line {
+            color: #ff6b6b;
+        }
+
+        .service-line {
+            color: #4ecdc4;
+        }
+
+        .controller-line {
+            color: #45b7d1;
+        }
+
+        .update-button {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .clear-button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .controls {
+            margin-bottom: 15px;
+        }
+
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Debug Log Viewer</h1>
+            <p>Theo dõi logs từ ứng dụng Spring Boot trong real-time</p>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Hướng dẫn sử dụng:</h3>
+            <ol>
+                <li>Đảm bảo ứng dụng Spring Boot đang chạy</li>
+                <li>Mở trang edit request trong tab khác</li>
+                <li>Click "Show Debug Panel" trong form edit</li>
+                <li>Submit form để xem logs</li>
+                <li>Logs sẽ hiển thị cả ở debug panel và trong console của browser</li>
+            </ol>
+        </div>
+
+        <div class="controls">
+            <button class="update-button" onclick="updateLogs()">🔄 Refresh Logs</button>
+            <button class="clear-button" onclick="clearLogs()">🗑️ Clear Logs</button>
+        </div>
+
+        <div class="log-container" id="logContainer">
+            <div class="timestamp">[Loading...]</div>
+            Đang tải logs từ terminal...
+
+            Tìm kiếm các dòng log chứa:
+            - "=== DEBUG UPDATE REQUEST ===" (từ Controller)
+            - "=== SERVICE DEBUG UPDATE REQUEST ===" (từ Service)
+            - "DTO - Fullname:" (dữ liệu từ form)
+            - "Saved request ID:" (kết quả sau khi save)
+            - "Error updating request:" (nếu có lỗi)
+        </div>
+
+        <div class="status info" id="status">
+            ℹ️ Sẵn sàng theo dõi logs. Hãy submit form edit request để xem debug logs xuất hiện.
+        </div>
+    </div>
+
+    <script>
+        let logCount = 0;
+
+        function updateLogs() {
+            const logContainer = document.getElementById('logContainer');
+            const status = document.getElementById('status');
+
+            // Simulate log updates (in real scenario, this would fetch from server)
+            const currentTime = new Date().toLocaleTimeString();
+            logCount++;
+
+            logContainer.innerHTML = `
+<span class="timestamp">[${currentTime}]</span> <span class="debug-line">Log refresh #${logCount}</span>
+
+<span class="controller-line">Các debug logs từ Controller sẽ xuất hiện tại đây khi bạn submit form:</span>
+- === DEBUG UPDATE REQUEST ===
+- Request ID: [ID]
+- DTO - CustomerLaptopId: [value]
+- DTO - Fullname: [value]
+- DTO - Email: [value]
+- Binding errors: [true/false]
+
+<span class="service-line">Các debug logs từ Service sẽ xuất hiện tại đây:</span>
+- === SERVICE DEBUG UPDATE REQUEST ===
+- Service - Request ID: [ID]
+- Found existing request: [ID]
+- Existing fullname: [old value]
+- After setting - fullname: [new value]
+- Saving to database...
+- Saved request ID: [ID]
+
+<span class="error-line">Lưu ý:</span> Để xem logs thực tế, hãy:
+1. Mở terminal đang chạy ứng dụng Spring Boot
+2. Submit form edit request
+3. Xem logs xuất hiện trong terminal
+4. Hoặc xem trong Debug Panel của form edit
+            `;
+
+            status.innerHTML = `✅ Logs đã được refresh lúc ${currentTime}`;
+            status.className = 'status success';
+
+            setTimeout(() => {
+                status.innerHTML = 'ℹ️ Sẵn sàng theo dõi logs. Hãy submit form edit request để xem debug logs xuất hiện.';
+                status.className = 'status info';
+            }, 3000);
+        }
+
+        function clearLogs() {
+            const logContainer = document.getElementById('logContainer');
+            const status = document.getElementById('status');
+
+            logContainer.innerHTML = `
+<span class="timestamp">[${new Date().toLocaleTimeString()}]</span> <span class="debug-line">Logs cleared</span>
+
+Đang chờ logs mới từ form submission...
+            `;
+
+            status.innerHTML = '🗑️ Logs đã được xóa';
+            status.className = 'status success';
+
+            setTimeout(() => {
+                status.innerHTML = 'ℹ️ Sẵn sàng theo dõi logs. Hãy submit form edit request để xem debug logs xuất hiện.';
+                status.className = 'status info';
+            }, 2000);
+        }
+
+        // Auto refresh every 5 seconds
+        setInterval(updateLogs, 5000);
+
+        // Initial load
+        updateLogs();
+    </script>
+</body>
+
+</html>

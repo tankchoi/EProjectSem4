@@ -48,6 +48,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public Optional<Invoice> getInvoiceByRequestId(Long requestId) {
+        return invoiceRepository.findByRequestId(requestId);
+    }
+
+    @Override
     public Invoice createInvoice(Invoice invoice) {
         return invoiceRepository.save(invoice);
     }
@@ -118,5 +123,22 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<Invoice> getInvoicesByTechnician(Long technicianId) {
         return invoiceRepository.findByTechnicianId(technicianId);
+    }
+
+    @Override
+    public void updateInvoiceTotalIfExists(Long requestId) {
+        try {
+            Optional<Invoice> invoiceOpt = getInvoiceByRequestId(requestId);
+            if (invoiceOpt.isPresent()) {
+                Invoice invoice = invoiceOpt.get();
+                Double newTotalPrice = calculateTotalPriceFromRequestDetails(requestId);
+                invoice.setTotalPrice(newTotalPrice);
+                invoiceRepository.save(invoice);
+                System.out.println("Đã cập nhật tổng tiền hóa đơn cho request " + requestId + ": " + newTotalPrice);
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi khi cập nhật hóa đơn cho request " + requestId + ": " + e.getMessage());
+            // Không throw exception để không ảnh hưởng đến luồng chính
+        }
     }
 }

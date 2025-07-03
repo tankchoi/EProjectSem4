@@ -1,5 +1,6 @@
 package vn.aptech.java.controllers.admin;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -124,7 +125,13 @@ public class RequestController {
     }
 
     @GetMapping("/request/{id}/edit")
-    public String edit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+    public String edit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes,
+            HttpServletResponse response) {
+        // Add cache control headers to prevent caching
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
         try {
             Request request = requestService.getRequestByIdOrThrow(id);
             CreateRequestDTO requestDTO = new CreateRequestDTO();
@@ -137,6 +144,7 @@ public class RequestController {
             requestDTO.setBookingDate(request.getBookingDate());
             requestDTO.setStatus(request.getStatus());
             requestDTO.setTechnicianId(request.getTechnician() != null ? request.getTechnician().getId() : null);
+
             model.addAttribute("request", requestDTO);
             model.addAttribute("requestId", id);
             List<CustomerLaptop> customerLaptops = customerLaptopRepository.findAll();
@@ -157,23 +165,6 @@ public class RequestController {
             RedirectAttributes redirectAttributes,
             Model model) {
 
-        // Debug logging
-        System.out.println("=== DEBUG UPDATE REQUEST ===");
-        System.out.println("Request ID: " + id);
-        System.out.println("DTO - CustomerLaptopId: " + createRequestDTO.getCustomerLaptopId());
-        System.out.println("DTO - Fullname: " + createRequestDTO.getFullname());
-        System.out.println("DTO - Email: " + createRequestDTO.getEmail());
-        System.out.println("DTO - Phone: " + createRequestDTO.getPhone());
-        System.out.println("DTO - Address: " + createRequestDTO.getAddress());
-        System.out.println("DTO - Description: " + createRequestDTO.getDescription());
-        System.out.println("DTO - BookingDate: " + createRequestDTO.getBookingDate());
-        System.out.println("DTO - Status: " + createRequestDTO.getStatus());
-        System.out.println("DTO - TechnicianId: " + createRequestDTO.getTechnicianId());
-        System.out.println("Binding errors: " + bindingResult.hasErrors());
-        if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(error -> System.out.println("Error: " + error.getDefaultMessage()));
-        }
-
         // Xử lý technicianId nếu là chuỗi rỗng
         if (createRequestDTO.getTechnicianId() != null && createRequestDTO.getTechnicianId() == 0) {
             createRequestDTO.setTechnicianId(null);
@@ -189,13 +180,12 @@ public class RequestController {
         }
         try {
             Request request = requestService.updateRequest(id, createRequestDTO);
-            System.out.println("Request updated successfully: " + request.getId());
+
             redirectAttributes.addFlashAttribute("successMessage",
                     "Yêu cầu bảo hành '" + request.getFullname() + "' đã được cập nhật thành công!");
+
             return "redirect:/admin/request";
         } catch (Exception e) {
-            System.out.println("Error updating request: " + e.getMessage());
-            e.printStackTrace();
             model.addAttribute("requestId", id);
             model.addAttribute("errorMessage", "Lỗi khi cập nhật yêu cầu: " + e.getMessage());
             List<CustomerLaptop> customerLaptops = customerLaptopRepository.findAll();

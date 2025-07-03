@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import vn.aptech.java.dtos.CreateRequestDTO;
 import vn.aptech.java.models.CustomerLaptop;
@@ -94,6 +95,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public Request updateRequest(Long id, CreateRequestDTO updateRequestDTO) {
         Request existingRequest = getRequestByIdOrThrow(id);
 

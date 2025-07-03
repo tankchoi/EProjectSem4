@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -192,9 +191,7 @@ public class ReceiptController {
     public ResponseEntity<Map<String, Object>> checkInvoiceByRequest(@PathVariable Long requestId) {
         try {
             // Tìm hóa đơn theo request ID
-            Optional<Invoice> invoiceOpt = invoiceService.getAllInvoices().stream()
-                    .filter(invoice -> invoice.getRequest().getId().equals(requestId))
-                    .findFirst();
+            Optional<Invoice> invoiceOpt = invoiceService.getInvoiceByRequestId(requestId);
 
             Map<String, Object> response = new HashMap<>();
             if (invoiceOpt.isPresent()) {

@@ -248,17 +248,6 @@ public class RequestDetailServiceImpl implements RequestDetailService {
      * Tự động cập nhật tổng tiền hóa đơn nếu có
      */
     private void updateInvoiceIfExists(Long requestId) {
-        try {
-            // Tìm hóa đơn theo request ID thông qua InvoiceService
-            // Sử dụng các method có sẵn trong service thay vì truy cập trực tiếp repository
-            Double newTotalPrice = invoiceService.calculateTotalPriceFromRequestDetails(requestId);
-
-            // Tìm invoice theo requestId (cần thêm method này vào InvoiceService)
-            // Tạm thời skip việc cập nhật tự động này để tránh phức tạp
-            System.out.println("Tổng tiền mới cho request " + requestId + ": " + newTotalPrice);
-        } catch (Exception e) {
-            System.err.println("Lỗi khi cập nhật hóa đơn: " + e.getMessage());
-            // Không throw exception để không ảnh hưởng đến luồng chính
-        }
+        invoiceService.updateInvoiceTotalIfExists(requestId);
     }
 }
