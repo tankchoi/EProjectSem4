@@ -9,35 +9,161 @@
 <body>
     <div class="nav-top-side" th:fragment="nav-top">
         <div class="top-left">
-            <div class="menu-toggle"><span class="material-symbols-outlined">menu</span></div>
+            <div class="menu-toggle">
+                <span class="material-symbols-outlined">menu</span>
+            </div>
             <div class="search-contain">
-                <input type="text" name="" id="" placeholder="search anything">
+                <div class="search-wrapper">
+                    <span class="material-symbols-outlined search-icon">search</span>
+                    <input type="text" name="" id="global-search" placeholder="Tìm kiếm...">
+                    <button type="button" class="search-clear" style="display: none;">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
             </div>
         </div>
         <div class="top-right">
-            <div class="dropdown">
+            <!-- Notifications -->
+            <div class="notification-wrapper">
+                <button class="notification-btn" title="Thông báo">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="notification-badge">3</span>
+                </button>
+                <div class="notification-dropdown">
+                    <div class="notification-header">
+                        <h4>Thông báo</h4>
+                        <a href="#" class="mark-all-read">Đánh dấu đã đọc</a>
+                    </div>
+                    <div class="notification-list">
+                        <div class="notification-item unread">
+                            <div class="notification-content">
+                                <p class="notification-title">Yêu cầu bảo hành mới</p>
+                                <p class="notification-text">Khách hàng Nguyễn Văn A vừa gửi yêu cầu bảo hành</p>
+                                <span class="notification-time">5 phút trước</span>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-content">
+                                <p class="notification-title">Hóa đơn đã thanh toán</p>
+                                <p class="notification-text">Hóa đơn #12345 đã được thanh toán thành công</p>
+                                <span class="notification-time">1 giờ trước</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-footer">
+                        <a th:href="@{/admin/notification}" class="view-all">Xem tất cả</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Dropdown -->
+            <div class="dropdown user-dropdown">
                 <div class="dropdown-toggle">
-                    <span class="material-symbols-outlined">account_circle</span>
-                    <span class="dropdown-text"
-                        th:text="${#authentication != null ? #authentication.name : 'Admin'}">Admin</span>
-                    <span class="material-symbols-outlined">arrow_drop_down</span>
+                    <div class="user-avatar">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name"
+                            th:text="${#authentication != null ? #authentication.name : 'Admin'}">Admin</span>
+                        <span class="user-role">Quản trị viên</span>
+                    </div>
+                    <span class="material-symbols-outlined dropdown-arrow">keyboard_arrow_down</span>
                 </div>
                 <ul class="dropdown-menu">
-                    <li><a th:href="@{/admin/profile}"><span class="material-symbols-outlined">person</span>
-                            Tài khoản</a></li>
-                    <li><a th:href="@{/admin/notification}"><span
-                                class="material-symbols-outlined">notifications</span>Thông báo</a></li>
+                    <li>
+                        <a th:href="@{/admin/profile}" class="dropdown-item">
+                            <span class="material-symbols-outlined">person</span>
+                            <span>Tài khoản</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/notification}" class="dropdown-item">
+                            <span class="material-symbols-outlined">settings</span>
+                            <span>Cài đặt</span>
+                        </a>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <a th:href="@{/logout}" class="dropdown-item logout-item"
+                            onclick="return confirm('Bạn có chắc chắn muốn đăng xuất?')">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span>Đăng xuất</span>
+                        </a>
+                    </li>
                 </ul>
-            </div>
-            <div class="logout-contain">
-                <a th:href="@{/logout}" class="logout-link"
-                    onclick="return confirm('Bạn có chắc chắn muốn đăng xuất?')">
-                    <span class="material-symbols-outlined">logout</span>
-                    <span class="logout-text">Đăng xuất</span>
-                </a>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Search functionality
+            const searchInput = document.getElementById('global-search');
+            const searchClear = document.querySelector('.search-clear');
+            const searchWrapper = document.querySelector('.search-wrapper');
+
+            if (searchInput && searchClear) {
+                searchInput.addEventListener('input', function () {
+                    if (this.value.length > 0) {
+                        searchClear.style.display = 'block';
+                    } else {
+                        searchClear.style.display = 'none';
+                    }
+                });
+
+                searchClear.addEventListener('click', function () {
+                    searchInput.value = '';
+                    searchClear.style.display = 'none';
+                    searchInput.focus();
+                });
+
+                // Search animation
+                searchInput.addEventListener('focus', function () {
+                    searchWrapper.classList.add('focused');
+                });
+
+                searchInput.addEventListener('blur', function () {
+                    searchWrapper.classList.remove('focused');
+                });
+            }
+
+            // Notification mark as read
+            const markAllRead = document.querySelector('.mark-all-read');
+            if (markAllRead) {
+                markAllRead.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const unreadItems = document.querySelectorAll('.notification-item.unread');
+                    unreadItems.forEach(item => {
+                        item.classList.remove('unread');
+                    });
+
+                    const badge = document.querySelector('.notification-badge');
+                    if (badge) {
+                        badge.style.display = 'none';
+                    }
+                });
+            }
+
+            // Dropdown click outside to close
+            document.addEventListener('click', function (e) {
+                const dropdowns = document.querySelectorAll('.notification-dropdown, .dropdown-menu');
+                dropdowns.forEach(dropdown => {
+                    if (!dropdown.closest('.notification-wrapper, .user-dropdown').contains(e.target)) {
+                        dropdown.style.opacity = '0';
+                        dropdown.style.visibility = 'hidden';
+                        dropdown.style.transform = 'translateY(-10px)';
+                    }
+                });
+            });
+
+            // Prevent dropdown close when clicking inside
+            document.querySelectorAll('.notification-dropdown, .dropdown-menu').forEach(dropdown => {
+                dropdown.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

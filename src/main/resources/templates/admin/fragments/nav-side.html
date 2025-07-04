@@ -9,89 +9,250 @@
 
 <body>
     <div class="nav-aside" th:fragment="nav-side">
-        <div class="profile-contain">
-            <div class="profile-content">
-                <p>Admin management</p>
+        <!-- Header Section với Logo và Brand -->
+        <div class="sidebar-header">
+            <div class="brand-logo">
+                <div class="logo-icon">
+                    <span class="material-symbols-outlined">laptop_chromebook</span>
+                </div>
+                <div class="brand-text">
+                    <h3 class="brand-title">TechRepair</h3>
+                    <span class="brand-subtitle">Admin Panel</span>
+                </div>
             </div>
         </div>
-        <div class="menu">
-            <h4 class="heading-menu">CHUNG</h4>
-            <div class="menu-item" th:classappend="${activePage == 'homepage'} ? 'active'">
-                <a th:href="@{/admin/homepage}">
-                    <span class="material-symbols-outlined">grid_view</span>
-                    <span class="menu-item-icon">Trang chủ</span>
-                </a>
+
+        <!-- Navigation Menu -->
+        <div class="sidebar-menu">
+            <!-- Dashboard Section -->
+            <div class="menu-section">
+                <h4 class="section-title">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </h4>
+                <div class="menu-item" th:classappend="${activePage == 'homepage'} ? 'active'">
+                    <a th:href="@{/admin/homepage}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">grid_view</span>
+                        <span class="menu-text">Trang chủ</span>
+                        <span class="menu-badge" th:if="${activePage == 'homepage'}"></span>
+                    </a>
+                </div>
             </div>
-            <h4 class="heading-menu">Quản lý</h4>
-            <div class="menu-item" th:classappend="${activePage == 'model'} ? 'active'">
-                <a th:href="@{/admin/model}">
-                    <span class="material-symbols-outlined">view_in_ar</span>
-                    <span class="menu-item-icon">Model laptop</span>
-                </a>
+
+            <!-- Management Section -->
+            <div class="menu-section">
+                <h4 class="section-title">
+                    <span class="material-symbols-outlined">business_center</span>
+                    Quản lý sản phẩm
+                </h4>
+                <div class="menu-item" th:classappend="${activePage == 'model'} ? 'active'">
+                    <a th:href="@{/admin/model}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">view_in_ar</span>
+                        <span class="menu-text">Model laptop</span>
+                        <span class="menu-badge" th:if="${activePage == 'model'}"></span>
+                    </a>
+                </div>
+                <div class="menu-item" th:classappend="${activePage == 'laptop'} ? 'active'">
+                    <a th:href="@{/admin/laptop}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">computer</span>
+                        <span class="menu-text">Laptop</span>
+                        <span class="menu-badge" th:if="${activePage == 'laptop'}"></span>
+                    </a>
+                </div>
+                <div class="menu-item" th:classappend="${activePage == 'partTypes'} ? 'active'">
+                    <a th:href="@{/admin/part-type}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">manufacturing</span>
+                        <span class="menu-text">Kiểu linh kiện</span>
+                        <span class="menu-badge" th:if="${activePage == 'partTypes'}"></span>
+                    </a>
+                </div>
+                <div class="menu-item" th:classappend="${activePage == 'parts'} ? 'active'">
+                    <a th:href="@{/admin/part}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">construction</span>
+                        <span class="menu-text">Linh kiện</span>
+                        <span class="menu-badge" th:if="${activePage == 'parts'}"></span>
+                    </a>
+                </div>
             </div>
-            <div class="menu-item" th:classappend="${activePage == 'laptop'} ? 'active'">
-                <a th:href="@{/admin/laptop}">
-                    <span class="material-symbols-outlined">computer</span>
-                    <span class="menu-item-icon">Laptop</span>
-                </a>
+
+            <!-- Service Management -->
+            <div class="menu-section">
+                <h4 class="section-title">
+                    <span class="material-symbols-outlined">build</span>
+                    Quản lý dịch vụ
+                </h4>
+                <div class="menu-item" th:classappend="${activePage == 'request'} ? 'active'">
+                    <a th:href="@{/admin/request}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">assignment_add</span>
+                        <span class="menu-text">Yêu cầu sửa chữa</span>
+                        <span class="menu-badge" th:if="${activePage == 'request'}"></span>
+                    </a>
+                </div>
+                <div class="menu-item" th:classappend="${activePage == 'requestDetail'} ? 'active'">
+                    <a th:href="@{/admin/request-detail}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">build_circle</span>
+                        <span class="menu-text">Chi tiết yêu cầu</span>
+                        <span class="menu-badge" th:if="${activePage == 'requestDetail'}"></span>
+                    </a>
+                </div>
+                <div class="menu-item" th:classappend="${activePage == 'receipt'} ? 'active'">
+                    <a th:href="@{/admin/receipt}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">receipt_long</span>
+                        <span class="menu-text">Hóa đơn</span>
+                        <span class="menu-badge" th:if="${activePage == 'receipt'}"></span>
+                    </a>
+                </div>
             </div>
-            <div class="menu-item" th:classappend="${activePage == 'partTypes'} ? 'active'">
-                <a th:href="@{/admin/part-type}">
-                    <span class="material-symbols-outlined">manufacturing</span>
-                    <span class="menu-item-icon">Kiểu linh kiện</span>
-                </a>
+
+            <!-- User Management -->
+            <div class="menu-section">
+                <h4 class="section-title">
+                    <span class="material-symbols-outlined">people</span>
+                    Quản lý người dùng
+                </h4>
+                <div class="menu-item" th:classappend="${activePage == 'customer'} ? 'active'">
+                    <a th:href="@{/admin/customer}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">group</span>
+                        <span class="menu-text">Khách hàng</span>
+                        <span class="menu-badge" th:if="${activePage == 'customer'}"></span>
+                    </a>
+                </div>
+                <div class="menu-item" th:classappend="${activePage == 'staff'} ? 'active'">
+                    <a th:href="@{/admin/staff}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">badge</span>
+                        <span class="menu-text">Nhân viên</span>
+                        <span class="menu-badge" th:if="${activePage == 'staff'}"></span>
+                    </a>
+                </div>
             </div>
-            <div class="menu-item" th:classappend="${activePage == 'parts'} ? 'active'">
-                <a th:href="@{/admin/part}">
-                    <span class="material-symbols-outlined">construction</span>
-                    <span class="menu-item-icon">Linh kiện</span>
-                </a>
-            </div>
-            <div class="menu-item" th:classappend="${activePage == 'request'} ? 'active'">
-                <a th:href="@{/admin/request}">
-                    <span class="material-symbols-outlined">assignment_add</span>
-                    <span class="menu-item-icon">Yêu cầu sửa chữa</span>
-                </a>
-            </div>
-            <div class="menu-item" th:classappend="${activePage == 'requestDetail'} ? 'active'">
-                <a th:href="@{/admin/request-detail}">
-                    <span class="material-symbols-outlined">build_circle</span>
-                    <span class="menu-item-icon">Chi tiết yêu cầu</span>
-                </a>
-            </div>
-            <div class="menu-item" th:classappend="${activePage == 'receipt'} ? 'active'">
-                <a th:href="@{/admin/receipt}">
-                    <span class="material-symbols-outlined">credit_card</span>
-                    <span class="menu-item-icon">Hóa đơn</span>
-                </a>
-            </div>
-            <div class="menu-item" th:classappend="${activePage == 'customer'} ? 'active'">
-                <a th:href="@{/admin/customer}">
-                    <span class="material-symbols-outlined">group</span>
-                    <span class="menu-item-icon">Khách hàng</span>
-                </a>
-            </div>
-            <div class="menu-item" th:classappend="${activePage == 'staff'} ? 'active'">
-                <a th:href="@{/admin/staff}">
-                    <span class="material-symbols-outlined">badge</span>
-                    <span class="menu-item-icon">Nhân viên</span>
-                </a>
-            </div>
-            <h4 class="heading-menu">Tài khoản</h4>
-            <div class="menu-item" th:classappend="${activePage == 'profile'} ? 'active'">
-                <a th:href="@{/admin/profile}">
+
+            <!-- Account Section -->
+            <div class="menu-section">
+                <h4 class="section-title">
                     <span class="material-symbols-outlined">account_circle</span>
-                    <span class="menu-item-icon">Thông tin cá nhân</span>
-                </a>
+                    Tài khoản
+                </h4>
+                <div class="menu-item" th:classappend="${activePage == 'profile'} ? 'active'">
+                    <a th:href="@{/admin/profile}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">person</span>
+                        <span class="menu-text">Thông tin cá nhân</span>
+                        <span class="menu-badge" th:if="${activePage == 'profile'}"></span>
+                    </a>
+                </div>
+                <div class="menu-item" th:classappend="${activePage == 'notification'} ? 'active'">
+                    <a th:href="@{/admin/notification}" class="menu-link">
+                        <span class="menu-icon material-symbols-outlined">notifications</span>
+                        <span class="menu-text">Thông báo</span>
+                        <span class="notification-count">3</span>
+                        <span class="menu-badge" th:if="${activePage == 'notification'}"></span>
+                    </a>
+                </div>
             </div>
-            <div class="menu-item" th:classappend="${activePage == 'notification'} ? 'active'">
-                <a th:href="@{/admin/notification}">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <span class="menu-item-icon">Thông báo</span>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="sidebar-footer">
+            <div class="footer-content">
+                <div class="admin-info">
+                    <div class="admin-avatar">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </div>
+                    <div class="admin-details">
+                        <span class="admin-name"
+                            th:text="${#authentication != null ? #authentication.name : 'Admin'}">Admin</span>
+                        <span class="admin-status">Online</span>
+                    </div>
+                </div>
+                <a href="#" class="footer-action" title="Settings">
+                    <span class="material-symbols-outlined">settings</span>
                 </a>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navAside = document.querySelector('.nav-aside');
+            const menuToggle = document.querySelector('.menu-toggle');
+
+            // Mobile menu toggle
+            if (menuToggle && navAside) {
+                menuToggle.addEventListener('click', function () {
+                    navAside.classList.toggle('mobile-open');
+
+                    // Update menu toggle icon
+                    const icon = this.querySelector('.material-symbols-outlined');
+                    if (navAside.classList.contains('mobile-open')) {
+                        icon.textContent = 'close';
+                    } else {
+                        icon.textContent = 'menu';
+                    }
+                });
+            }
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function (e) {
+                if (window.innerWidth <= 1024 && navAside && navAside.classList.contains('mobile-open')) {
+                    if (!navAside.contains(e.target) && !menuToggle.contains(e.target)) {
+                        navAside.classList.remove('mobile-open');
+                        if (menuToggle) {
+                            const icon = menuToggle.querySelector('.material-symbols-outlined');
+                            if (icon) icon.textContent = 'menu';
+                        }
+                    }
+                }
+            });
+
+            // Close sidebar on window resize
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 1024 && navAside) {
+                    navAside.classList.remove('mobile-open');
+                    if (menuToggle) {
+                        const icon = menuToggle.querySelector('.material-symbols-outlined');
+                        if (icon) icon.textContent = 'menu';
+                    }
+                }
+            });
+
+            // Add smooth scroll for menu sections
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    // Add loading state
+                    const menuItem = this.closest('.menu-item');
+                    if (menuItem && !menuItem.classList.contains('active')) {
+                        navAside.classList.add('loading');
+
+                        // Remove loading state after navigation
+                        setTimeout(() => {
+                            navAside.classList.remove('loading');
+                        }, 500);
+                    }
+                });
+            });
+
+            // Add notification animation
+            const notificationCount = document.querySelector('.notification-count');
+            if (notificationCount) {
+                setInterval(() => {
+                    notificationCount.style.animation = 'none';
+                    setTimeout(() => {
+                        notificationCount.style.animation = 'pulse 2s infinite';
+                    }, 10);
+                }, 5000);
+            }
+
+            // Settings action
+            const settingsAction = document.querySelector('.footer-action');
+            if (settingsAction) {
+                settingsAction.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    // Add settings functionality here
+                    console.log('Settings clicked');
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

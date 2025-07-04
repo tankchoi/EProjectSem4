@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 </head>
 
-<body>
+<body class="preload">
     <div class="main-container">
         <div th:replace="admin/fragments/nav-side :: nav-side"></div>
         <div th:replace="admin/fragments/nav-top :: nav-top"></div>
@@ -47,16 +47,6 @@
                         Thêm Hóa đơn
                     </a>
                 </div>
-            </div>
-
-            <!-- Alert messages -->
-            <div th:if="${success}" class="alert alert-success">
-                <span class="material-symbols-outlined">check_circle</span>
-                <span th:text="${success}"></span>
-            </div>
-            <div th:if="${error}" class="alert alert-error">
-                <span class="material-symbols-outlined">error</span>
-                <span th:text="${error}"></span>
             </div>
 
             <div class="table-container">
@@ -132,8 +122,14 @@
     <script th:src="@{/assets/js/admin/script.js}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Remove preload class first to show content
+            document.body.classList.remove('preload');
+
             // Kiểm tra nếu có dữ liệu thì mới khởi tạo DataTable
-            if (document.querySelector('#myTable tbody tr:not(.empty-row)')) {
+            const tableRows = document.querySelectorAll('#myTable tbody tr:not(.empty-row)');
+
+            if (tableRows.length > 0) {
+                console.log('Initializing DataTable with', tableRows.length, 'rows');
                 new DataTable("#myTable", {
                     paging: true,
                     searching: true,
@@ -158,8 +154,13 @@
                     },
                     columnDefs: [
                         { orderable: false, targets: [7] } // Không sắp xếp cột thao tác
-                    ]
+                    ],
+                    initComplete: function () {
+                        console.log('DataTable initialized successfully');
+                    }
                 });
+            } else {
+                console.log('No data in table, skipping DataTable initialization');
             }
         });
 

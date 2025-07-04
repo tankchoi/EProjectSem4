@@ -118,24 +118,39 @@
                                 Hình ảnh laptop
                             </label>
 
+                            <!-- Current Image Display -->
+                            <div th:if="${laptop.imgUrl}" class="current-image"
+                                style="margin-bottom: 1rem; padding: 1rem; border: 2px dashed #e2e8f0; border-radius: 8px; background: #f7fafc;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <img th:src="${laptop.imgUrl}" alt="Current laptop image"
+                                        style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div>
+                                        <p style="margin: 0; font-weight: 500; color: #2d3748;">Ảnh hiện tại</p>
+                                        <p style="margin: 0; font-size: 0.875rem; color: #718096;">Để trống các trường
+                                            bên dưới để giữ ảnh này</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Tab selection -->
                             <div style="margin-bottom: 1rem;">
                                 <button type="button" id="urlTab" class="tab-btn active" onclick="showTab('url')">
                                     <span class="material-symbols-outlined">link</span>
-                                    Nhập URL
+                                    Nhập URL mới
                                 </button>
                                 <button type="button" id="fileTab" class="tab-btn" onclick="showTab('file')">
                                     <span class="material-symbols-outlined">upload</span>
-                                    Upload file
+                                    Upload file mới
                                 </button>
                             </div>
 
                             <!-- URL Input -->
                             <div id="urlInput" class="tab-content">
-                                <input type="url" name="imageUrl" th:value="${laptop.imgUrl}" id="imageUrl"
+                                <input type="url" name="imageUrl" id="imageUrl"
                                     placeholder="https://example.com/image.jpg">
                                 <small style="color: #718096; display: block; margin-top: 0.25rem;">
-                                    Nhập URL trực tiếp đến hình ảnh (tối đa 255 ký tự)
+                                    Nhập URL trực tiếp đến hình ảnh mới (tối đa 255 ký tự) - Để trống để giữ ảnh hiện
+                                    tại
                                 </small>
                             </div>
 
@@ -143,7 +158,7 @@
                             <div id="fileInput" class="tab-content" style="display: none;">
                                 <input type="file" name="imageFile" id="imageFile" accept="image/*">
                                 <small style="color: #718096; display: block; margin-top: 0.25rem;">
-                                    Chấp nhận: JPG, PNG, GIF, BMP, WEBP (tối đa 5MB)
+                                    Chấp nhận: JPG, PNG, GIF, BMP, WEBP (tối đa 5MB) - Để trống để giữ ảnh hiện tại
                                 </small>
                             </div>
 
@@ -242,12 +257,10 @@
             document.getElementById('imagePreview').style.display = 'none';
         }
 
-        // Initialize with URL tab active if there's existing URL
+        // Initialize with URL tab active and show current image if exists
         document.addEventListener('DOMContentLoaded', function () {
-            const existingUrl = document.getElementById('imageUrl').value;
-            if (existingUrl) {
-                showImagePreview(existingUrl);
-            }
+            // Don't populate the URL input with existing URL anymore
+            // The current image is shown in a separate display area
         });
     </script>
 

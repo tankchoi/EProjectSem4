@@ -14,6 +14,25 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <style>
+        /* Ensure table content is visible from the start */
+        .table-content {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .table-content tbody tr {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        /* Preload override for table content */
+        body.preload .table-content,
+        body.preload .table-content tbody tr {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    </style>
 </head>
 
 <body class="preload">
@@ -59,8 +78,8 @@
 
             <!-- Form tìm kiếm -->
             <div class="search-container">
-                <form action="/admin/request-detail/search" method="get" class="search-form">
-                    <input type="text" name="keyword" th:value="${keyword}"
+                <form action="/admin/request-detail" method="get" class="search-form">
+                    <input type="text" name="search" th:value="${search}"
                         placeholder="Tìm kiếm theo tên khách hàng, mô tả yêu cầu, tên linh kiện..."
                         class="search-input">
                     <button type="submit" class="btn-search">
@@ -172,30 +191,53 @@
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script>
+    <script th:inline="javascript">
         let deleteId = null;
+
+        // Debug: Check data availability
+        console.log('Page loaded');
+        /*[+ var requestDetailsCount = [[${#lists.size(requestDetails)}]]; +]*/
+        console.log('Request details count:', requestDetailsCount);
 
         // Initialize DataTable
         $(document).ready(function () {
-            $('#myTable').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json"
-                },
-                "pageLength": 10,
-                "lengthChange": false,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                "order": [[0, "desc"]],
-                "columnDefs": [
-                    { "orderable": false, "targets": -1 }
-                ]
-            });
-
-            // Remove preload class after page loads
+            // Remove preload class first to show content
             $('body').removeClass('preload');
+
+            // Force show table content
+            $('.table-content').css('visibility', 'visible').css('opacity', '1');
+            $('.table-content tbody tr').css('visibility', 'visible').css('opacity', '1');
+
+            // Check if table has data before initializing DataTable
+            const tableRows = $('#myTable tbody tr');
+            console.log('Table rows found:', tableRows.length);
+
+            if (tableRows.length > 0) {
+                console.log('Initializing DataTable...');
+                $('#myTable').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json"
+                    },
+                    "pageLength": 10,
+                    "lengthChange": false,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                    "order": [[0, "desc"]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": -1 }
+                    ],
+                    "initComplete": function () {
+                        console.log('DataTable initialized successfully');
+                        // Ensure content is visible after DataTable init
+                        $('.table-content tbody tr').css('visibility', 'visible').css('opacity', '1');
+                    }
+                });
+            } else {
+                console.log('No data in table, skipping DataTable initialization');
+            }
         });
 
         function deleteRequestDetail(id) {

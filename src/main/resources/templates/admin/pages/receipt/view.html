@@ -3,13 +3,208 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết Hóa đơn</title>
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/laptop/index.css}">
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/receipt/receipt.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/receipt/index.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for receipt view */
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .dashboard-title {
+            color: white;
+        }
+
+        .dashboard-title h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .add-btn {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .add-btn .btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid white;
+        }
+
+        .add-btn .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #64748b;
+            min-width: 120px;
+        }
+
+        .detail-value {
+            color: #1e293b;
+            font-weight: 400;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .receipt-total {
+            color: #059669;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .status-paid {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-unpaid {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin: 2rem 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+                margin: 1rem;
+            }
+
+            .detail-card {
+                padding: 1.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                margin: 1.5rem 1rem;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -19,163 +214,164 @@
         <div class="page-container">
             <div class="page-header">
                 <div class="header-content">
-                    <h1>Admin /</h1>
-                    <h1>Quản lý Hóa đơn</h1>
-                </div>
-            </div>
-            <div class="dashboard-header">
-                <div class="dashboard-title">
-                    <h1>Chi tiết Hóa đơn #<span th:text="${invoice.id}"></span></h1>
-                    <div class="flex gap-2">
-                        <a th:href="@{/admin/receipt/edit/{id}(id=${invoice.id})}"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Chỉnh sửa
-                        </a>
-                        <a th:href="@{/admin/receipt}"
-                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                            Quay lại
-                        </a>
-                    </div>
+                    <span class="material-symbols-outlined">receipt_long</span>
+                    <h1>Admin / Quản lý Hóa đơn</h1>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Chi tiết Hóa đơn #<span th:text="${invoice.id}"></span></h1>
+                </div>
+                <div class="add-btn">
+                    <a th:href="@{/admin/receipt/edit/{id}(id=${invoice.id})}" class="btn btn-primary">
+                        <span class="material-symbols-outlined">edit</span>
+                        Chỉnh sửa
+                    </a>
+                    <a th:href="@{/admin/receipt}" class="btn btn-secondary">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Quay lại
+                    </a>
+                </div>
+            </div>
+
+            <div class="detail-grid">
                 <!-- Thông tin hóa đơn -->
-                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
-                    <h2 class="text-xl font-bold mb-4 text-gray-800">Thông tin Hóa đơn</h2>
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Mã hóa đơn:</span>
-                            <span th:text="'#' + ${invoice.id}" class="text-gray-800">#1</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Tổng tiền:</span>
-                            <span
-                                th:text="${#numbers.formatDecimal(invoice.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"
-                                class="text-green-600 font-bold">1,000,000 VNĐ</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Trạng thái:</span>
-                            <span th:if="${invoice.status == 'PAID'}"
-                                class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Đã thanh
-                                toán</span>
-                            <span th:if="${invoice.status == 'UNPAID'}"
-                                class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Chưa thanh
-                                toán</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Ngày tạo:</span>
-                            <span th:text="${#dates.format(invoice.createdAt, 'dd/MM/yyyy HH:mm')}"
-                                class="text-gray-800">12/01/2025 10:30</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Cập nhật lần cuối:</span>
-                            <span th:text="${#dates.format(invoice.updatedAt, 'dd/MM/yyyy HH:mm')}"
-                                class="text-gray-800">12/01/2025 10:30</span>
-                        </div>
+                <div class="detail-card">
+                    <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #1e293b;">Thông tin Hóa
+                        đơn</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Mã hóa đơn:</span>
+                        <span class="detail-value" th:text="'#' + ${invoice.id}">#1</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Tổng tiền:</span>
+                        <span class="detail-value receipt-total"
+                            th:text="${#numbers.formatDecimal(invoice.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">1,000,000
+                            VNĐ</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Trạng thái:</span>
+                        <span class="detail-value">
+                            <span th:if="${invoice.status == 'PAID'}" class="status-badge status-paid">
+                                <span class="material-symbols-outlined" style="font-size: 0.875rem;">check_circle</span>
+                                Đã thanh toán
+                            </span>
+                            <span th:if="${invoice.status == 'UNPAID'}" class="status-badge status-unpaid">
+                                <span class="material-symbols-outlined" style="font-size: 0.875rem;">schedule</span>
+                                Chưa thanh toán
+                            </span>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Ngày tạo:</span>
+                        <span class="detail-value"
+                            th:text="${#dates.format(invoice.createdAt, 'dd/MM/yyyy HH:mm')}">12/01/2025 10:30</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Cập nhật lần cuối:</span>
+                        <span class="detail-value"
+                            th:text="${#dates.format(invoice.updatedAt, 'dd/MM/yyyy HH:mm')}">12/01/2025 10:30</span>
                     </div>
                 </div>
 
                 <!-- Thông tin yêu cầu bảo hành -->
-                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
-                    <h2 class="text-xl font-bold mb-4 text-gray-800">Thông tin Yêu cầu Bảo hành</h2>
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Mã yêu cầu:</span>
-                            <span th:text="'#' + ${invoice.request.id}" class="text-gray-800">#1</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Ngày đặt lịch:</span>
-                            <span th:text="${#dates.format(invoice.request.bookingDate, 'dd/MM/yyyy')}"
-                                class="text-gray-800">12/01/2025</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Trạng thái yêu cầu:</span>
-                            <span th:if="${invoice.request.status == 'PENDING'}"
-                                class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Đang
-                                chờ</span>
-                            <span th:if="${invoice.request.status == 'APPROVED'}"
-                                class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Đã
-                                duyệt</span>
-                            <span th:if="${invoice.request.status == 'REJECTED'}"
-                                class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Từ chối</span>
-                        </div>
-                        <div class="col-span-2">
-                            <span class="font-medium text-gray-600">Mô tả sự cố:</span>
-                            <p th:text="${invoice.request.description}" class="text-gray-800 mt-1 break-words">Mô tả sự
-                                cố chi tiết...</p>
-                        </div>
+                <div class="detail-card">
+                    <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #1e293b;">Thông tin Yêu
+                        cầu Bảo hành</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Mã yêu cầu:</span>
+                        <span class="detail-value" th:text="'#' + ${invoice.request.id}">#1</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Ngày đặt lịch:</span>
+                        <span class="detail-value"
+                            th:text="${#dates.format(invoice.request.bookingDate, 'dd/MM/yyyy')}">12/01/2025</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Trạng thái yêu cầu:</span>
+                        <span class="detail-value">
+                            <span th:if="${invoice.request.status == 'PENDING'}" class="status-badge status-pending">
+                                <span class="material-symbols-outlined" style="font-size: 0.875rem;">schedule</span>
+                                Đang chờ
+                            </span>
+                            <span th:if="${invoice.request.status == 'APPROVED'}" class="status-badge status-approved">
+                                <span class="material-symbols-outlined" style="font-size: 0.875rem;">check_circle</span>
+                                Đã duyệt
+                            </span>
+                            <span th:if="${invoice.request.status == 'REJECTED'}" class="status-badge status-rejected">
+                                <span class="material-symbols-outlined" style="font-size: 0.875rem;">cancel</span>
+                                Từ chối
+                            </span>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Mô tả sự cố:</span>
+                        <span class="detail-value" th:text="${invoice.request.description}">Mô tả sự cố chi
+                            tiết...</span>
                     </div>
                 </div>
 
                 <!-- Thông tin khách hàng -->
-                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
-                    <h2 class="text-xl font-bold mb-4 text-gray-800">Thông tin Khách hàng</h2>
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Họ và tên:</span>
-                            <span th:text="${invoice.request.fullname}" class="text-gray-800">Tên khách hàng</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Email:</span>
-                            <span th:text="${invoice.request.email}" class="text-gray-800">email@example.com</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Số điện thoại:</span>
-                            <span th:text="${invoice.request.phone}" class="text-gray-800">0123456789</span>
-                        </div>
-                        <div class="col-span-2">
-                            <span class="font-medium text-gray-600">Địa chỉ:</span>
-                            <p th:text="${invoice.request.address}" class="text-gray-800 mt-1 break-words">Địa chỉ khách
-                                hàng</p>
-                        </div>
+                <div class="detail-card">
+                    <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #1e293b;">Thông tin
+                        Khách hàng</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Họ và tên:</span>
+                        <span class="detail-value" th:text="${invoice.request.fullname}">Tên khách hàng</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value" th:text="${invoice.request.email}">email@example.com</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Số điện thoại:</span>
+                        <span class="detail-value" th:text="${invoice.request.phone}">0123456789</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Địa chỉ:</span>
+                        <span class="detail-value" th:text="${invoice.request.address}">Địa chỉ khách hàng</span>
                     </div>
                 </div>
 
                 <!-- Thông tin thiết bị -->
-                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
-                    <h2 class="text-xl font-bold mb-4 text-gray-800">Thông tin Thiết bị</h2>
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Tên laptop:</span>
-                            <span th:text="${invoice.request.customerLaptop.laptop.name}" class="text-gray-800">Tên
-                                laptop</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Hãng:</span>
-                            <span th:text="${invoice.request.customerLaptop.laptop.brand}"
-                                class="text-gray-800">Hãng</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Model:</span>
-                            <span th:text="${invoice.request.customerLaptop.laptop.model}"
-                                class="text-gray-800">Model</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Serial Number:</span>
-                            <span th:text="${invoice.request.customerLaptop.serialNumber}"
-                                class="text-gray-800">Serial</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Ngày mua:</span>
-                            <span th:text="${#dates.format(invoice.request.customerLaptop.purchaseDate, 'dd/MM/yyyy')}"
-                                class="text-gray-800">Ngày mua</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-600">Kỹ thuật viên:</span>
-                            <span
-                                th:text="${invoice.request.technician != null ? invoice.request.technician.fullname : 'Chưa phân công'}"
-                                class="text-gray-800">Kỹ thuật viên</span>
-                        </div>
+                <div class="detail-card">
+                    <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #1e293b;">Thông tin
+                        Thiết bị</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Tên laptop:</span>
+                        <span class="detail-value" th:text="${invoice.request.customerLaptop.laptop.name}">Tên
+                            laptop</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Model:</span>
+                        <span class="detail-value"
+                            th:text="${invoice.request.customerLaptop.laptop.model.name}">Model</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Serial Number:</span>
+                        <span class="detail-value"
+                            th:text="${invoice.request.customerLaptop.serialNumber}">Serial</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Ngày mua:</span>
+                        <span class="detail-value"
+                            th:text="${#dates.format(invoice.request.customerLaptop.purchaseDate, 'dd/MM/yyyy')}">Ngày
+                            mua</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Kỹ thuật viên:</span>
+                        <span class="detail-value"
+                            th:text="${invoice.request.technician != null ? invoice.request.technician.fullname : 'Chưa phân công'}">Kỹ
+                            thuật viên</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Nút in hóa đơn -->
-            <div class="mt-6 text-center">
-                <button onclick="window.print()"
-                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded">
-                    <span class="material-symbols-outlined inline mr-2">print</span>
+            <!-- Action buttons -->
+            <div class="action-buttons">
+                <button onclick="window.print()" class="btn btn-success">
+                    <span class="material-symbols-outlined">print</span>
                     In Hóa đơn
                 </button>
             </div>
@@ -183,6 +379,10 @@
     </div>
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
+    <script>
+        // Add any specific JavaScript for receipt view if needed
+        console.log('Receipt view loaded successfully');
+    </script>
 </body>
 
 </html>

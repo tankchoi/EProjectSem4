@@ -133,30 +133,31 @@ public class LaptopController {
             RedirectAttributes redirectAttributes,
             Model model) {
 
-        System.out.println("=== UPDATE LAPTOP DEBUG ===");
-        System.out.println("ID: " + id);
-        System.out.println("DTO Name: " + createLaptopDTO.getName());
-        System.out.println("DTO ModelId: " + createLaptopDTO.getModelId());
-        System.out.println("DTO WarrantyPeriod: " + createLaptopDTO.getWarrantyPeriod());
-        System.out.println("DTO ImgUrl: " + createLaptopDTO.getImgUrl());
-        System.out.println("Has errors: " + bindingResult.hasErrors());
-        if (bindingResult.hasErrors()) {
-            System.out.println("Validation errors: " + bindingResult.getAllErrors());
-        }
-
         // Handle image upload or URL
         try {
+            // Get existing laptop to preserve old image if no new image provided
+            Optional<Laptop> existingLaptopOpt = laptopService.getLaptopById(id);
+            if (existingLaptopOpt.isEmpty()) {
+                model.addAttribute("error", "Không tìm thấy laptop để cập nhật!");
+                model.addAttribute("activePage", "laptop");
+                model.addAttribute("laptopId", id);
+                model.addAttribute("models", modelService.getAllModels());
+                return "admin/pages/laptop/update";
+            }
+
+            Laptop existingLaptop = existingLaptopOpt.get();
+            String finalImgUrl = existingLaptop.getImgUrl(); // Keep existing image by default
+
             if (imageFile != null && !imageFile.isEmpty()) {
+                // New file uploaded
                 if (fileUploadService.isValidImageFile(imageFile)) {
                     // Delete old image if it was uploaded before
-                    Optional<Laptop> existingLaptop = laptopService.getLaptopById(id);
-                    if (existingLaptop.isPresent() && existingLaptop.get().getImgUrl() != null &&
-                            existingLaptop.get().getImgUrl().startsWith("/images/")) {
-                        fileUploadService.deleteFile(existingLaptop.get().getImgUrl());
+                    if (existingLaptop.getImgUrl() != null && existingLaptop.getImgUrl().startsWith("/images/")) {
+                        fileUploadService.deleteFile(existingLaptop.getImgUrl());
                     }
 
                     String imagePath = fileUploadService.saveFile(imageFile, "laptops");
-                    createLaptopDTO.setImgUrl(imagePath);
+                    finalImgUrl = imagePath;
                 } else {
                     model.addAttribute("error",
                             "File không hợp lệ. Chỉ chấp nhận các file ảnh (jpg, png, gif, bmp, webp).");
@@ -166,10 +167,11 @@ public class LaptopController {
                     return "admin/pages/laptop/update";
                 }
             } else if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                // New URL provided
                 if (fileUploadService.isValidImageUrl(imageUrl)) {
                     // Validate and truncate URL if necessary for database compatibility
                     String validatedUrl = fileUploadService.validateAndTruncateUrl(imageUrl);
-                    createLaptopDTO.setImgUrl(validatedUrl);
+                    finalImgUrl = validatedUrl;
                 } else {
                     model.addAttribute("error", "URL ảnh không hợp lệ hoặc quá dài (tối đa 255 ký tự).");
                     model.addAttribute("activePage", "laptop");
@@ -178,6 +180,11 @@ public class LaptopController {
                     return "admin/pages/laptop/update";
                 }
             }
+            // If no new image provided (both imageFile and imageUrl are empty), keep
+            // existing image
+
+            // Set the final image URL to DTO
+            createLaptopDTO.setImgUrl(finalImgUrl);
         } catch (Exception e) {
             model.addAttribute("error", "Lỗi khi xử lý ảnh: " + e.getMessage());
             model.addAttribute("activePage", "laptop");
@@ -196,15 +203,11 @@ public class LaptopController {
         try {
             Laptop updatedLaptop = laptopService.updateLaptop(id, createLaptopDTO);
             if (updatedLaptop != null) {
-                System.out.println("Update successful!");
                 redirectAttributes.addFlashAttribute("success", "Cập nhật laptop thành công!");
             } else {
-                System.out.println("Update failed - laptop not found!");
                 redirectAttributes.addFlashAttribute("error", "Không tìm thấy laptop để cập nhật!");
             }
         } catch (Exception e) {
-            System.out.println("Update exception: " + e.getMessage());
-            e.printStackTrace();
             model.addAttribute("activePage", "laptop");
             model.addAttribute("laptopId", id);
             model.addAttribute("models", modelService.getAllModels());
