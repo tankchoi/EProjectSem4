@@ -17,10 +17,6 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailService customUserDetailService;
     @Bean
-    BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((auth) -> auth

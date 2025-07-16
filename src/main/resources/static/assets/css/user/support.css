@@ -1,0 +1,92 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.home {
+    display: flex;
+    align-items: center;           
+    min-height: 50vh;
+    padding: 0 20px;               
+    background: url('banner.jpg') no-repeat center center;
+    background-size: cover;        
+    position: relative;
+    z-index: 1;                    
+    margin-top: 70px;              
+}
+
+.home .content{
+    font-size: 22px;
+    color: #fff;
+    height: 250px;
+    line-height: 1.5;
+}
+
+.service {
+    padding: 20px 20px;
+    background-color: #fff;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
+
+.service-title {
+    font-size: 32px;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.service-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.service-box {
+    background-color: #f9f9f9;
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+.service-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.service-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+.service-box h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.service-box p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.service-box a {
+    color: #0066b3;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: auto; 
+}
+
+.service-box a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Hóa đơn</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/receipt/create.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Quản lý Hóa đơn</h1>
+                </div>
+            </div>
+
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Thêm Hóa đơn mới</h1>
+                </div>
+                <a th:href="@{/admin/receipt}" class="back-btn">
+                    Quay lại
+                </a>
+            </div>
+
+            <!-- Alert messages -->
+            <div th:if="${success}" class="alert alert-success">
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-error">
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="form-container">
+                <form th:action="@{/admin/receipt/create}" th:object="${invoice}" method="post">
+                    <div class="form-group">
+                        <label class="form-label" for="requestId">
+                            Yêu cầu bảo hành <span class="required">*</span>
+                        </label>
+                        <select name="requestId" id="requestId" class="form-select" required>
+                            <option value="">-- Chọn yêu cầu bảo hành --</option>
+                            <option th:each="request : ${requests}" th:value="${request.id}"
+                                th:text="${'#' + request.id + ' - ' + request.fullname + ' (' + request.customerLaptop.laptop.name + ')'}"
+                                th:selected="${request.id == invoice.requestId}">
+                                Yêu cầu bảo hành
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('requestId')}" class="error-message">
+                            <span th:errors="*{requestId}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="totalPrice">
+                            Tổng tiền (VNĐ) <span class="required">*</span>
+                            <span class="form-note">(Tự động tính từ chi tiết linh kiện)</span>
+                        </label>
+                        <input name="totalPrice" th:value="${invoice.totalPrice}" type="number" step="1000" min="0"
+                            id="totalPrice" class="form-input" placeholder="Chọn yêu cầu để tự động tính tổng tiền"
+                            readonly required>
+                        <div id="totalPriceInfo" class="form-info">
+                            <span class="material-symbols-outlined">info</span>
+                            <span>Tổng tiền sẽ được tính tự động dựa trên các linh kiện trong yêu cầu bảo hành</span>
+                        </div>
+                        <div th:if="${#fields.hasErrors('totalPrice')}" class="error-message">
+                            <span th:errors="*{totalPrice}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="status">
+                            Trạng thái thanh toán <span class="required">*</span>
+                        </label>
+                        <select name="status" id="status" class="form-select" required>
+                            <option value="">-- Chọn trạng thái --</option>
+                            <option value="UNPAID" th:selected="${invoice.status == 'UNPAID'}">Chưa thanh toán</option>
+                            <option value="PAID" th:selected="${invoice.status == 'PAID'}">Đã thanh toán</option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('status')}" class="error-message">
+                            <span th:errors="*{status}"></span>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary">
+                            Tạo Hóa đơn
+                        </button>
+                        <a th:href="@{/admin/receipt}" class="btn-secondary">
+                            Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/assets/js/admin/script.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Form enhancement
+            const form = document.querySelector('form');
+            const submitBtn = document.querySelector('.btn-primary');
+            const inputs = document.querySelectorAll('.form-input, .form-select');
+
+            // Add loading state to submit button
+            form.addEventListener('submit', function () {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>⏳</span> Đang tạo hóa đơn...';
+            });
+
+            // Real-time validation feedback
+            inputs.forEach(input => {
+                input.addEventListener('blur', function () {
+                    validateField(this);
+                });
+
+                input.addEventListener('input', function () {
+                    if (this.classList.contains('error')) {
+                        this.classList.remove('error');
+                        const errorDiv = this.parentElement.querySelector('.error-message');
+                        if (errorDiv) {
+                            errorDiv.style.opacity = '0.5';
+                        }
+                    }
+                });
+
+                // Focus enhancement
+                input.addEventListener('focus', function () {
+                    this.parentElement.style.transform = 'scale(1.01)';
+                    this.parentElement.style.zIndex = '10';
+                });
+
+                input.addEventListener('blur', function () {
+                    this.parentElement.style.transform = 'scale(1)';
+                    this.parentElement.style.zIndex = 'auto';
+                });
+            });
+
+            // Price formatting
+            const priceInput = document.getElementById('totalPrice');
+            if (priceInput) {
+                priceInput.addEventListener('input', function () {
+                    let value = this.value.replace(/\D/g, '');
+                    if (value) {
+                        // Format with thousand separators
+                        value = parseInt(value).toLocaleString('vi-VN');
+                        this.setAttribute('data-formatted', value);
+                    }
+                });
+
+                priceInput.addEventListener('blur', function () {
+                    if (this.getAttribute('data-formatted')) {
+                        const tooltip = document.createElement('div');
+                        tooltip.textContent = this.getAttribute('data-formatted') + ' VNĐ';
+                        tooltip.style.cssText = `
+                            position: absolute;
+                            background: #374151;
+                            color: white;
+                            padding: 0.5rem;
+                            border-radius: 4px;
+                            font-size: 0.75rem;
+                            margin-top: 0.25rem;
+                            z-index: 1000;
+                        `;
+                        this.parentElement.style.position = 'relative';
+                        this.parentElement.appendChild(tooltip);
+
+                        setTimeout(() => {
+                            if (tooltip.parentNode) {
+                                tooltip.parentNode.removeChild(tooltip);
+                            }
+                        }, 2000);
+                    }
+                });
+            }
+
+            // Request selection enhancement và auto-calculate total price
+            const requestSelect = document.getElementById('requestId');
+            const totalPriceInput = document.getElementById('totalPrice');
+
+            if (requestSelect && totalPriceInput) {
+                requestSelect.addEventListener('change', function () {
+                    if (this.value) {
+                        // Add visual feedback for selected request
+                        this.style.borderColor = '#10b981';
+                        this.style.backgroundColor = '#f0f9ff';
+
+                        // Show loading state
+                        totalPriceInput.value = '';
+                        totalPriceInput.placeholder = 'Đang tính toán...';
+                        totalPriceInput.style.backgroundColor = '#f9f9f9';
+
+                        // Fetch calculated total price from server
+                        fetch(`/admin/receipt/calculate-total/${this.value}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.totalPrice !== undefined) {
+                                    totalPriceInput.value = data.totalPrice;
+                                    totalPriceInput.placeholder = 'Tổng tiền tự động tính';
+                                    totalPriceInput.style.backgroundColor = '#f0fdf4';
+                                    totalPriceInput.style.borderColor = '#10b981';
+
+                                    // Show success message
+                                    const infoDiv = document.getElementById('totalPriceInfo');
+                                    if (infoDiv) {
+                                        infoDiv.innerHTML = `
+                                            <span class="material-symbols-outlined">check_circle</span>
+                                            <span>Đã tính tổng từ ${data.requestDetailsCount} linh kiện: ${new Intl.NumberFormat('vi-VN').format(data.totalPrice)} VNĐ</span>
+                                        `;
+                                        infoDiv.style.color = '#059669';
+                                    }
+                                } else if (data.error) {
+                                    totalPriceInput.value = 0;
+                                    totalPriceInput.placeholder = 'Lỗi tính toán';
+                                    totalPriceInput.style.backgroundColor = '#fef2f2';
+                                    totalPriceInput.style.borderColor = '#ef4444';
+
+                                    const infoDiv = document.getElementById('totalPriceInfo');
+                                    if (infoDiv) {
+                                        infoDiv.innerHTML = `
+                                            <span class="material-symbols-outlined">error</span>
+                                            <span>${data.error}</span>
+                                        `;
+                                        infoDiv.style.color = '#dc2626';
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error calculating total price:', error);
+                                totalPriceInput.value = 0;
+                                totalPriceInput.placeholder = 'Lỗi kết nối';
+                                totalPriceInput.style.backgroundColor = '#fef2f2';
+                                totalPriceInput.style.borderColor = '#ef4444';
+
+                                const infoDiv = document.getElementById('totalPriceInfo');
+                                if (infoDiv) {
+                                    infoDiv.innerHTML = `
+                                        <span class="material-symbols-outlined">error</span>
+                                        <span>Không thể tính tổng tiền. Vui lòng thử lại.</span>
+                                    `;
+                                    infoDiv.style.color = '#dc2626';
+                                }
+                            });
+                    } else {
+                        this.style.borderColor = '#e2e8f0';
+                        this.style.backgroundColor = 'white';
+                        totalPriceInput.value = '';
+                        totalPriceInput.placeholder = 'Chọn yêu cầu để tự động tính tổng tiền';
+                        totalPriceInput.style.backgroundColor = 'white';
+                        totalPriceInput.style.borderColor = '#e2e8f0';
+
+                        const infoDiv = document.getElementById('totalPriceInfo');
+                        if (infoDiv) {
+                            infoDiv.innerHTML = `
+                                <span class="material-symbols-outlined">info</span>
+                                <span>Tổng tiền sẽ được tính tự động dựa trên các linh kiện trong yêu cầu bảo hành</span>
+                            `;
+                            infoDiv.style.color = '#6b7280';
+                        }
+                    }
+                });
+            }
+
+            // Status selection enhancement
+            const statusSelect = document.getElementById('status');
+            if (statusSelect) {
+                statusSelect.addEventListener('change', function () {
+                    const formGroup = this.parentElement;
+                    const indicator = formGroup.querySelector('.status-indicator');
+
+                    if (indicator) {
+                        indicator.remove();
+                    }
+
+                    if (this.value) {
+                        const newIndicator = document.createElement('div');
+                        newIndicator.className = `status-indicator status-${this.value.toLowerCase()}`;
+                        newIndicator.textContent = this.options[this.selectedIndex].text;
+                        newIndicator.style.marginTop = '0.5rem';
+                        formGroup.appendChild(newIndicator);
+                    }
+                });
+            }
+
+            // Form validation
+            function validateField(field) {
+                const value = field.value.trim();
+                const formGroup = field.parentElement;
+
+                formGroup.classList.remove('has-error', 'has-success');
+
+                if (field.required && !value) {
+                    formGroup.classList.add('has-error');
+                    field.classList.add('error');
+                } else if (value) {
+                    formGroup.classList.add('has-success');
+                    field.classList.remove('error');
+                }
+            }
+
+            // Auto-hide alerts
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.transition = 'all 0.5s ease';
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-20px)';
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.parentNode.removeChild(alert);
+                        }
+                    }, 500);
+                }, 5000);
+            });
+
+            // Form submit validation
+            form.addEventListener('submit', function (e) {
+                let isValid = true;
+
+                inputs.forEach(input => {
+                    if (input.required && !input.value.trim()) {
+                        validateField(input);
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>💾</span> Tạo Hóa đơn';
+
+                    // Scroll to first error
+                    const firstError = document.querySelector('.has-error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

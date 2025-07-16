@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm linh kiện</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/part/create.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+            color: white !important;
+            border-color: #3b82f6 !important;
+        }
+
+        .tab-content {
+            margin-top: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin</h1>
+                    <span class="material-symbols-outlined" style="color: #64748b; margin: 0 8px;">chevron_right</span>
+                    <h1>Quản lý linh kiện</h1>
+                </div>
+            </div>
+
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Thêm linh kiện mới</h1>
+                </div>
+            </div>
+
+            <!-- Thông báo -->
+            <div th:if="${success}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="page-content">
+                <div class="form-header">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    <h2>Thông tin linh kiện</h2>
+                </div>
+
+                <form th:action="@{/admin/part/create}" method="POST" enctype="multipart/form-data"
+                    class="form-content">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="name" class="required">
+                                <span class="material-symbols-outlined">construction</span>
+                                Tên linh kiện
+                            </label>
+                            <input type="text" name="name" id="name" placeholder="Nhập tên linh kiện" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="partType" class="required">
+                                <span class="material-symbols-outlined">category</span>
+                                Loại linh kiện
+                            </label>
+                            <select name="partType" id="partType" required>
+                                <option value="" disabled selected>Chọn loại linh kiện</option>
+                                <option th:each="partType : ${partTypes}" th:value="${partType.id}"
+                                    th:text="${partType.name}"></option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="laptop">
+                                <span class="material-symbols-outlined">laptop</span>
+                                Laptop liên quan
+                            </label>
+                            <select name="laptop" id="laptop">
+                                <option value="">Chọn laptop (không bắt buộc)</option>
+                                <option th:each="laptop : ${laptops}" th:value="${laptop.id}" th:text="${laptop.name}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="price" class="required">
+                                <span class="material-symbols-outlined">payments</span>
+                                Giá (VNĐ)
+                            </label>
+                            <input type="number" name="price" id="price" placeholder="Nhập giá" min="0" step="1000"
+                                required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="quantity" class="required">
+                                <span class="material-symbols-outlined">inventory</span>
+                                Số lượng
+                            </label>
+                            <input type="number" name="quantity" id="quantity" placeholder="Nhập số lượng" min="0"
+                                required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="warrantyPeriod" class="required">
+                                <span class="material-symbols-outlined">verified</span>
+                                Thời hạn bảo hành
+                            </label>
+                            <select name="warrantyPeriod" id="warrantyPeriod" required>
+                                <option value="" disabled selected>Chọn thời hạn bảo hành</option>
+                                <option value="1">1 năm</option>
+                                <option value="2">2 năm</option>
+                                <option value="3">3 năm</option>
+                                <option value="4">4 năm</option>
+                                <option value="5">5 năm</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label>
+                                <span class="material-symbols-outlined">description</span>
+                                Mô tả
+                            </label>
+                            <textarea name="description" id="description"
+                                placeholder="Nhập mô tả chi tiết về linh kiện (không bắt buộc)" rows="4"></textarea>
+                        </div>
+
+                        <div class="image-upload-section">
+                            <span class="material-symbols-outlined">image</span>
+                            <h3>Hình ảnh linh kiện</h3>
+                            <p>Chọn hình ảnh để hiển thị cho linh kiện</p>
+
+                            <!-- Tab buttons -->
+                            <div style="display: flex; gap: 8px; margin: 1rem 0; justify-content: center;">
+                                <button type="button" id="urlTab" class="btn btn-secondary tab-btn active"
+                                    onclick="showTab('url')">
+                                    <span class="material-symbols-outlined">link</span>
+                                    URL
+                                </button>
+                                <button type="button" id="fileTab" class="btn btn-secondary tab-btn"
+                                    onclick="showTab('file')">
+                                    <span class="material-symbols-outlined">upload</span>
+                                    Upload
+                                </button>
+                            </div>
+
+                            <!-- URL Input -->
+                            <div id="urlInput" class="tab-content">
+                                <input type="url" name="imageUrl" id="imageUrl"
+                                    placeholder="https://example.com/image.jpg" style="margin-bottom: 0;">
+                                <small style="color: #6b7280; font-size: 12px;">Nhập URL trực tiếp đến hình ảnh</small>
+                            </div>
+
+                            <!-- File Upload -->
+                            <div id="fileInput" class="tab-content" style="display: none;">
+                                <input type="file" name="imageFile" id="imageFile" accept="image/*"
+                                    style="margin-bottom: 0;">
+                                <small style="color: #6b7280; font-size: 12px;">JPG, PNG, GIF, BMP, WEBP (tối đa
+                                    5MB)</small>
+                            </div>
+
+                            <!-- Preview -->
+                            <div id="imagePreview" style="display: none; margin-top: 1rem;">
+                                <img id="previewImg" src="" alt="Preview" class="image-preview">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined">add</span>
+                            Thêm linh kiện
+                        </button>
+                        <a href="/admin/part" class="btn btn-secondary">
+                            <span class="material-symbols-outlined">close</span>
+                            Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/assets/js/admin/script.js}"></script>
+    <script>
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.getElementById('urlInput').style.display = 'none';
+            document.getElementById('fileInput').style.display = 'none';
+
+            // Remove active class from all tabs
+            document.getElementById('urlTab').classList.remove('active');
+            document.getElementById('fileTab').classList.remove('active');
+
+            // Show selected tab content and mark tab as active
+            if (tabName === 'url') {
+                document.getElementById('urlInput').style.display = 'block';
+                document.getElementById('urlTab').classList.add('active');
+                document.getElementById('imageFile').value = ''; // Clear file input
+            } else if (tabName === 'file') {
+                document.getElementById('fileInput').style.display = 'block';
+                document.getElementById('fileTab').classList.add('active');
+                document.getElementById('imageUrl').value = ''; // Clear URL input
+            }
+
+            // Hide preview when switching tabs
+            document.getElementById('imagePreview').style.display = 'none';
+        }
+
+        // Image preview functionality
+        document.getElementById('imageUrl').addEventListener('input', function () {
+            const url = this.value.trim();
+            if (url) {
+                showImagePreview(url);
+            } else {
+                hideImagePreview();
+            }
+        });
+
+        document.getElementById('imageFile').addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                // Validate file size
+                if (file.size > 5 * 1024 * 1024) { // 5MB
+                    alert('File quá lớn. Vui lòng chọn file nhỏ hơn 5MB.');
+                    this.value = '';
+                    hideImagePreview();
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    showImagePreview(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                hideImagePreview();
+            }
+        });
+
+        function showImagePreview(src) {
+            document.getElementById('previewImg').src = src;
+            document.getElementById('imagePreview').style.display = 'block';
+        }
+
+        function hideImagePreview() {
+            document.getElementById('imagePreview').style.display = 'none';
+        }
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const name = document.getElementById('name').value.trim();
+            const partType = document.getElementById('partType').value;
+            const price = document.getElementById('price').value;
+            const quantity = document.getElementById('quantity').value;
+            const warrantyPeriod = document.getElementById('warrantyPeriod').value;
+
+            if (!name || !partType || !price || !quantity || !warrantyPeriod) {
+                e.preventDefault();
+                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+                return;
+            }
+
+            if (parseFloat(price) < 0) {
+                e.preventDefault();
+                alert('Giá không được âm!');
+                return;
+            }
+
+            if (parseInt(quantity) < 0) {
+                e.preventDefault();
+                alert('Số lượng không được âm!');
+                return;
+            }
+        });
+    </script>
+
+
+</body>
+
+
+</html>

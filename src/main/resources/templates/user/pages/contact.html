@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/assets/css/user/contact.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/user/footer.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/header.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+</head>
+<body>
+	<div th:replace="user/fragments/header :: header"></div>
+    <div class="container">
+		<main class="row">
+			<section class="col left">
+				<div class="contactTitle">
+					<h2>Contact Us</h2>
+				</div>
+
+				<div class="contactInfo">
+					<div class="iconGroup">
+						<div class="icon">
+							<i class="fa-solid fa-phone"></i>
+						</div>
+						<div class="details">
+							<span>Phone</span>
+							<span>+00 110 111 00</span>
+						</div>
+					</div>
+
+					<div class="iconGroup">
+						<div class="icon">
+							<i class="fa-solid fa-envelope"></i>
+						</div>
+						<div class="details">
+							<span>Email</span>
+							<span>name.tutorial@gmail.com</span>
+						</div>
+					</div>
+
+					<div class="iconGroup">
+						<div class="icon">
+							<i class="fa-solid fa-location-dot"></i>
+						</div>
+						<div class="details">
+							<span>Location</span>
+							<span>X Street, Y Road, San Fransisco</span>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="socialMedia">
+					<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+					<a href="#"><i class="fa-brands fa-twitter"></i></a>
+					<a href="#"><i class="fa-brands fa-instagram"></i></a>
+					<a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+				</div>
+			</section>
+
+			<section class="col right">
+				<form class="messageForm">
+					<div class="inputGroup fullWidth">
+						<input type="text" name="" placeholder="Full Name" required>
+					</div>
+
+					<div class="inputGroup fullWidth">
+						<input type="email" name="" placeholder="Email" required>
+					</div>
+
+					<div class="inputGroup fullWidth">
+						<textarea placeholder="Say Something" required></textarea>
+					</div>
+
+					<div class="inputGroup fullWidth">
+						<button>Send Message</button>
+					</div>
+
+				</form>
+			</section>
+		</main>
+	</div>
+	<div th:replace="user/fragments/footer :: footer"></div>
+</body>
+</html>

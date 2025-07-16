@@ -1,0 +1,133 @@
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	text-decoration: none;
+}
+
+footer {
+	width: 100%;
+	background: #111;
+	color: #fff;
+	position: relative;
+	padding-top: 20px;
+}
+
+footer .content {
+	max-width: 1350px;
+	margin: auto;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+footer .content p,
+footer .content a {
+	color: #fff;
+}
+
+footer .content .box {
+	flex: 1 1 250px;
+	margin: 10px;
+}
+
+footer .content .topic {
+	font-size: 20px;
+	font-weight: 400;
+	color: #fff;
+	text-decoration: underline;
+	margin-bottom: 10px;
+}
+
+footer .content .lower {
+	line-height: 1.5;
+}
+
+footer .content .lower i {
+	padding-right: 10px;
+}
+
+footer .content .middle a {
+	display: block;
+	line-height: 32px;
+}
+
+footer .content .right input[type="text"],
+footer .content .right input[type="submit"] {
+	width: 100%;
+	border-radius: 5px;
+	border: 2px solid #222;
+	padding: 10px;
+	font-size: 16px;
+	margin-top: 10px;
+}
+
+footer .content .right input[type="text"] {
+	background: #000;
+	color: #d9d9d9;
+}
+
+footer .content .right input[type="submit"] {
+	background: #b0b0b0;
+	color: #000;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+}
+
+footer .content .right input[type="submit"]:hover {
+	background: none;
+	color: #b0b0b0;
+}
+
+footer .content .media-icons a {
+	font-size: 16px;
+	height: 45px;
+	width: 45px;
+	display: inline-block;
+	text-align: center;
+	line-height: 43px;
+	border-radius: 5px;
+	border: 2px solid #222;
+	margin: 10px 5px 0 0;
+	transition: all 0.3s ease;
+}
+
+footer .content .media-icons a:hover {
+	border-color: #b0b0b0;
+}
+
+footer .bottom {
+	text-align: center;
+	color: #d9d9d9;
+	padding: 10px;
+	border-top: 1px solid #333;
+	margin-top: 10px;
+	font-size: 14px;
+}
+
+footer .bottom a {
+	color: #b0b0b0;
+	transition: color 0.3s ease;
+}
+
+footer .bottom a:hover {
+	color: #fff;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+	footer .content {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	footer .content .box {
+		width: 100%;
+		max-width: 500px;
+	}
+}

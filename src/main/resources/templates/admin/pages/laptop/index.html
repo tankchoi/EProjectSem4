@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý laptop</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/laptop/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <span class="material-symbols-outlined">laptop</span>
+                    <h1>Admin / Quản lý laptop</h1>
+                </div>
+            </div>
+
+            <!-- Flash Messages -->
+            <div th:if="${success}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>
+                        <span class="material-symbols-outlined"
+                            style="vertical-align: middle; margin-right: 8px;">computer</span>
+                        Danh sách laptop
+                    </h1>
+                    <p th:if="${totalElements != null}">
+                        Tổng số: <span th:text="${totalElements}">0</span> laptop
+                    </p>
+                </div>
+                <div class="add-btn">
+                    <a th:href="@{/admin/laptop/create}">
+                        <span class="material-symbols-outlined">add</span>
+                        Thêm laptop mới
+                    </a>
+                </div>
+            </div>
+
+            <!-- Thông báo -->
+            <div th:if="${success}" class="alert alert-success">
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-error">
+                <span th:text="${error}"></span>
+            </div>
+
+            <!-- Form tìm kiếm -->
+            <div class="search-container">
+                <form th:action="@{/admin/laptop/search}" method="get" class="search-form">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm laptop..."
+                        class="search-input">
+                    <button type="submit" class="btn-search">
+                        <span class="material-symbols-outlined"
+                            style="font-size: 18px; margin-right: 4px;">search</span>
+                        Tìm kiếm
+                    </button>
+                    <a th:href="@{/admin/laptop}" class="btn-reset">
+                        <span class="material-symbols-outlined"
+                            style="font-size: 18px; margin-right: 4px;">refresh</span>
+                        Hiện tất cả
+                    </a>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <table id="myTable" class="table-content">
+                    <thead>
+                        <tr>
+                            <th>Mã</th>
+                            <th>Ảnh</th>
+                            <th>Tên Laptop</th>
+                            <th>Model</th>
+                            <th>Bảo hành</th>
+                            <th>Ngày tạo</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="laptop : ${laptops}">
+                            <td th:text="${laptop.id}">1</td>
+                            <td>
+                                <img th:src="${laptop.imgUrl != null ? laptop.imgUrl : '/assets/images/default-laptop.jpg'}"
+                                    alt="Laptop image">
+                            </td>
+                            <td th:text="${laptop.name}">Dell</td>
+                            <td th:text="${laptop.model != null ? laptop.model.name : 'N/A'}">12e3</td>
+                            <td th:text="${laptop.warrantyPeriod + ' năm'}">3 năm</td>
+                            <td th:text="${#dates.format(laptop.createdAt, 'dd/MM/yyyy')}">12/01/2025</td>
+                            <td>
+                                <a th:href="@{'/admin/laptop/edit/' + ${laptop.id}}" class="btn-edit">
+                                    <span class="material-symbols-outlined"
+                                        style="font-size: 16px; margin-right: 4px;">edit</span>
+                                    Sửa
+                                </a>
+                                <form th:action="@{'/admin/laptop/delete/' + ${laptop.id}}" method="post"
+                                    style="display: inline;"
+                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa laptop này?')">
+                                    <button type="submit" class="btn-delete">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size: 16px; margin-right: 4px;">delete</span>
+                                        Xóa
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(laptops)}">
+                            <td colspan="7" style="text-align: center; padding: 2rem; color: #718096;">
+                                <span class="material-symbols-outlined"
+                                    style="font-size: 2rem; margin-bottom: 0.5rem; display: block;">laptop</span>
+                                <span th:if="${keyword}">Không tìm thấy laptop nào với từ khóa "<strong
+                                        th:text="${keyword}"></strong>"</span>
+                                <span th:unless="${keyword}">Chưa có laptop nào trong hệ thống</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json"
+                },
+                "pageLength": 10
+            });
+        });
+    </script>
+
+    <script th:src="@{/assets/js/admin/script.js}"></script>
+</body>
+
+</html>

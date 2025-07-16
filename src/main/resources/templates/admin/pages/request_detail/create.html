@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Chi tiết Yêu cầu</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/request_detail/create.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="preload">
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <span class="material-symbols-outlined">settings</span>
+                    <h1>Admin / Thêm Chi tiết Yêu cầu</h1>
+                </div>
+            </div>
+
+            <!-- Flash Messages -->
+            <div th:if="${successMessage}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span th:text="${successMessage}"></span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
+                <span th:text="${errorMessage}"></span>
+            </div>
+
+            <!-- Form Container -->
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>
+                        <span class="material-symbols-outlined">add_circle</span>
+                        Thêm Chi tiết Yêu cầu mới
+                    </h2>
+                    <div class="form-actions-top">
+                        <a th:href="@{/admin/request-detail}" class="btn btn-outline">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                            Quay lại
+                        </a>
+                    </div>
+                </div>
+
+                <form th:action="@{/admin/request-detail/create}" method="post" th:object="${createRequestDetailDTO}"
+                    class="form-content">
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="material-symbols-outlined">assignment</span>
+                            Thông tin Yêu cầu
+                        </h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required">Yêu cầu sửa chữa</label>
+                                <div class="select-wrapper">
+                                    <select th:field="*{requestId}" required>
+                                        <option value="">Chọn yêu cầu sửa chữa</option>
+                                        <option th:each="request : ${requests}" th:value="${request.id}"
+                                            th:text="${'#' + request.id + ' - ' + request.fullname + ' (' + request.description + ')'}">
+                                        </option>
+                                    </select>
+                                    <span class="material-symbols-outlined">expand_more</span>
+                                </div>
+                                <span class="error-message" th:if="${#fields.hasErrors('requestId')}"
+                                    th:errors="*{requestId}"></span>
+                            </div>
+                        </div>
+
+                        <!-- Request Info Display -->
+                        <div id="requestInfo" class="request-info" style="display: none;">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Khách hàng:</label>
+                                    <span id="customerName"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Email:</label>
+                                    <span id="customerEmail"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Số điện thoại:</label>
+                                    <span id="customerPhone"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Mô tả:</label>
+                                    <span id="requestDescription"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Trạng thái:</label>
+                                    <span id="requestStatus" class="status-badge"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="material-symbols-outlined">build</span>
+                            Thông tin Linh kiện
+                        </h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Loại linh kiện</label>
+                                <div class="select-wrapper">
+                                    <select id="partTypeFilter">
+                                        <option value="">Tất cả loại linh kiện</option>
+                                        <option th:each="partType : ${partTypes}" th:value="${partType.id}"
+                                            th:text="${partType.name}">
+                                        </option>
+                                    </select>
+                                    <span class="material-symbols-outlined">expand_more</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label required">Linh kiện</label>
+                                <div class="select-wrapper">
+                                    <select th:field="*{partId}" required>
+                                        <option value="">Chọn linh kiện</option>
+                                        <option th:each="part : ${parts}" th:value="${part.id}"
+                                            th:data-type="${part.partType.id}" th:data-price="${part.price}"
+                                            th:data-stock="${part.quantity}"
+                                            th:text="${part.name + ' - ' + #numbers.formatDecimal(part.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ (Tồn: ' + part.quantity + ')'}">
+                                        </option>
+                                    </select>
+                                    <span class="material-symbols-outlined">expand_more</span>
+                                </div>
+                                <span class="error-message" th:if="${#fields.hasErrors('partId')}"
+                                    th:errors="*{partId}"></span>
+                            </div>
+                        </div>
+
+                        <!-- Part Info Display -->
+                        <div id="partInfo" class="part-info" style="display: none;">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Đơn giá:</label>
+                                    <span id="partPrice"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Tồn kho:</label>
+                                    <span id="partStock"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Loại:</label>
+                                    <span id="partTypeName"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required">Số lượng</label>
+                                <div class="input-group">
+                                    <span class="material-icons">layers</span>
+                                    <input type="number" th:field="*{quantity}" min="1" required
+                                        placeholder="Nhập số lượng cần thiết" id="quantityInput">
+                                </div>
+                                <div id="stockWarning" class="stock-warning" style="display: none;">
+                                    <span class="material-icons">warning</span>
+                                    <span id="stockWarningText"></span>
+                                </div>
+                                <span class="error-message" th:if="${#fields.hasErrors('quantity')}"
+                                    th:errors="*{quantity}"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Thành tiền</label>
+                                <div class="input-group">
+                                    <span class="material-icons">attach_money</span>
+                                    <input type="text" id="totalAmount" readonly placeholder="Tự động tính toán">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="window.history.back()">
+                            <span class="material-icons">cancel</span>
+                            Hủy
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <span class="material-icons">save</span>
+                            Lưu
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // Request data for quick access
+        const requestsData = {};
+        const partsData = {};
+        let isValidForm = true;
+
+        // Initialize data
+        document.addEventListener('DOMContentLoaded', function () {
+            // Populate requests data
+            /*[[${requests}]]*/[].forEach(request => {
+            requestsData[request.id] = request;
+        });
+
+            // Populate parts data
+            /*[[${parts}]]*/[].forEach(part => {
+            partsData[part.id] = part;
+        });
+
+            // Setup event listeners
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Request selection
+            document.querySelector('[name="requestId"]').addEventListener('change', function () {
+                const requestId = this.value;
+                if (requestId && requestsData[requestId]) {
+                    showRequestInfo(requestsData[requestId]);
+                } else {
+                    hideRequestInfo();
+                }
+            });
+
+            // Part type filter
+            document.getElementById('partTypeFilter').addEventListener('change', function () {
+                filterPartsByType(this.value);
+            });
+
+            // Part selection
+            document.querySelector('[name="partId"]').addEventListener('change', function () {
+                const partId = this.value;
+                if (partId && partsData[partId]) {
+                    showPartInfo(partsData[partId]);
+                    calculateTotal();
+                    validateQuantity();
+                } else {
+                    hidePartInfo();
+                    document.getElementById('totalAmount').value = '';
+                    hideStockWarning();
+                }
+            });
+
+            // Quantity change
+            document.querySelector('[name="quantity"]').addEventListener('input', function () {
+                calculateTotal();
+                validateQuantity();
+            });
+
+            // Form submission
+            document.querySelector('form').addEventListener('submit', function (e) {
+                if (!isValidForm) {
+                    e.preventDefault();
+                    showAlert('Vui lòng kiểm tra lại số lượng linh kiện!', 'error');
+                    document.querySelector('[name="quantity"]').focus();
+                    return false;
+                }
+            });
+        }
+
+        function showRequestInfo(request) {
+            document.getElementById('customerName').textContent = request.fullname;
+            document.getElementById('customerEmail').textContent = request.email;
+            document.getElementById('customerPhone').textContent = request.phone;
+            document.getElementById('requestDescription').textContent = request.description;
+
+            const statusBadge = document.getElementById('requestStatus');
+            statusBadge.textContent = getStatusText(request.status);
+            statusBadge.className = `status-badge status-${request.status.toLowerCase()}`;
+
+            document.getElementById('requestInfo').style.display = 'block';
+        }
+
+        function hideRequestInfo() {
+            document.getElementById('requestInfo').style.display = 'none';
+        }
+
+        function showPartInfo(part) {
+            document.getElementById('partPrice').textContent = formatPrice(part.price) + ' VNĐ';
+            document.getElementById('partStock').textContent = part.quantity;
+            document.getElementById('partTypeName').textContent = part.partType.name;
+            document.getElementById('partInfo').style.display = 'block';
+        }
+
+        function hidePartInfo() {
+            document.getElementById('partInfo').style.display = 'none';
+        }
+
+        function filterPartsByType(typeId) {
+            const partSelect = document.querySelector('[name="partId"]');
+            const options = partSelect.querySelectorAll('option');
+
+            options.forEach(option => {
+                if (option.value === '') {
+                    option.style.display = 'block';
+                    return;
+                }
+
+                const optionType = option.getAttribute('data-type');
+                if (!typeId || optionType === typeId) {
+                    option.style.display = 'block';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+
+            // Reset part selection if current part doesn't match filter
+            if (typeId && partSelect.value) {
+                const currentOption = partSelect.querySelector(`option[value="${partSelect.value}"]`);
+                if (currentOption && currentOption.getAttribute('data-type') !== typeId) {
+                    partSelect.value = '';
+                    hidePartInfo();
+                    document.getElementById('totalAmount').value = '';
+                    hideStockWarning();
+                }
+            }
+        }
+
+        function calculateTotal() {
+            const partSelect = document.querySelector('[name="partId"]');
+            const quantityInput = document.querySelector('[name="quantity"]');
+
+            if (partSelect.value && quantityInput.value) {
+                const selectedOption = partSelect.querySelector(`option[value="${partSelect.value}"]`);
+                const price = parseFloat(selectedOption.getAttribute('data-price'));
+                const quantity = parseInt(quantityInput.value);
+
+                if (!isNaN(price) && !isNaN(quantity)) {
+                    const total = price * quantity;
+                    document.getElementById('totalAmount').value = formatPrice(total) + ' VNĐ';
+                }
+            }
+        }
+
+        function validateQuantity() {
+            const partSelect = document.querySelector('[name="partId"]');
+            const quantityInput = document.querySelector('[name="quantity"]');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (!partSelect.value || !quantityInput.value) {
+                hideStockWarning();
+                isValidForm = true;
+                updateSubmitButton(true);
+                return true;
+            }
+
+            const selectedOption = partSelect.querySelector(`option[value="${partSelect.value}"]`);
+            const stock = parseInt(selectedOption.getAttribute('data-stock'));
+            const quantity = parseInt(quantityInput.value);
+
+            if (quantity > stock) {
+                showStockWarning(quantity, stock);
+                isValidForm = false;
+                updateSubmitButton(false);
+                quantityInput.setCustomValidity(`Số lượng không được vượt quá tồn kho (còn lại: ${stock})`);
+                return false;
+            } else {
+                hideStockWarning();
+                isValidForm = true;
+                updateSubmitButton(true);
+                quantityInput.setCustomValidity('');
+                return true;
+            }
+        }
+
+        function showStockWarning(requested, available) {
+            const warningDiv = document.getElementById('stockWarning');
+            const warningText = document.getElementById('stockWarningText');
+
+            warningText.textContent = `Số lượng yêu cầu (${requested}) vượt quá tồn kho có sẵn (${available})`;
+            warningDiv.style.display = 'flex';
+        }
+
+        function hideStockWarning() {
+            const warningDiv = document.getElementById('stockWarning');
+            if (warningDiv) {
+                warningDiv.style.display = 'none';
+            }
+        }
+
+        function updateSubmitButton(isValid) {
+            const submitBtn = document.getElementById('submitBtn');
+            if (isValid) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('btn-disabled');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('btn-disabled');
+            }
+        }
+
+        function showAlert(message, type) {
+            // Create alert element
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `
+                <span class="material-icons">${type === 'error' ? 'error' : 'check_circle'}</span>
+                <span>${message}</span>
+            `;
+
+            // Insert at top of content area
+            const contentArea = document.querySelector('.content-area');
+            const pageHeader = document.querySelector('.page-header');
+            contentArea.insertBefore(alert, pageHeader.nextSibling);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.parentNode.removeChild(alert);
+                }
+            }, 5000);
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN').format(price);
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'PENDING': 'Chờ xử lý',
+                'APPROVED': 'Đã duyệt',
+                'IN_PROGRESS': 'Đang sửa chữa',
+                'COMPLETED': 'Hoàn thành',
+                'REJECTED': 'Từ chối'
+            };
+            return statusMap[status] || status;
+        }
+    </script>
+</body>
+
+</html>

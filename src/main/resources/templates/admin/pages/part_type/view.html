@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết loại linh kiện</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/assets/css/admin/pages/part_type/view.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+</head>
+
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Admin /</h1>
+                    <h1>Chi tiết loại linh kiện</h1>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h1 class="h3 mb-0 text-gray-800">
+                                    <i class="fas fa-info-circle me-2"></i>Chi tiết loại linh kiện
+                                </h1>
+                                <p class="text-muted mb-0">Thông tin chi tiết về loại linh kiện #<span
+                                        th:text="${partType.id}"></span></p>
+                            </div>
+                            <div>
+                                <a href="/admin/part-type" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                                </a>
+                                <a th:href="@{/admin/part-type/{id}/edit(id=${partType.id})}"
+                                    class="btn btn-warning ms-2">
+                                    <i class="fas fa-edit me-2"></i>Chỉnh sửa
+                                </a>
+                                <button type="button" class="btn btn-info ms-2" onclick="window.print()">
+                                    <i class="fas fa-print me-2"></i>In
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Alert Messages -->
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show"
+                            role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span th:text="${successMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show"
+                            role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <!-- Part Type Information -->
+                        <div class="row">
+                            <!-- Basic Info -->
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-info-circle me-2"></i>Thông tin cơ bản
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-4"><strong>ID:</strong></div>
+                                            <div class="col-sm-8" th:text="${partType.id}"></div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-4"><strong>Tên loại linh kiện:</strong></div>
+                                            <div class="col-sm-8">
+                                                <span class="badge bg-primary fs-6" th:text="${partType.name}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-4"><strong>Ngày tạo:</strong></div>
+                                            <div class="col-sm-8"
+                                                th:text="${#dates.format(partType.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3" th:if="${partType.updatedAt}">
+                                            <div class="col-sm-4"><strong>Cập nhật lần cuối:</strong></div>
+                                            <div class="col-sm-8"
+                                                th:text="${#dates.format(partType.updatedAt, 'dd/MM/yyyy HH:mm')}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Actions Card -->
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-secondary text-white">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-cogs me-2"></i>Thao tác
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-grid gap-2">
+                                            <a href="/admin/part-type" class="btn btn-outline-secondary">
+                                                <i class="fas fa-list me-2"></i>Danh sách loại linh kiện
+                                            </a>
+                                            <a th:href="@{/admin/part-type/{id}/edit(id=${partType.id})}"
+                                                class="btn btn-outline-warning">
+                                                <i class="fas fa-edit me-2"></i>Chỉnh sửa
+                                            </a>
+                                            <a href="/admin/part-type/create" class="btn btn-outline-success">
+                                                <i class="fas fa-plus me-2"></i>Tạo loại linh kiện mới
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal">
+                                                <i class="fas fa-trash me-2"></i>Xóa
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Related Parts (if any) -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-list me-2"></i>Linh kiện thuộc loại này
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            Đây sẽ là danh sách các linh kiện thuộc loại "<strong
+                                                th:text="${partType.name}"></strong>"
+                                            <br>
+                                            <small>Tính năng này có thể được phát triển trong tương lai để hiển thị các
+                                                linh kiện liên quan.</small>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <a th:href="@{/admin/part(partType=${partType.id})}"
+                                                class="btn btn-primary">
+                                                <i class="fas fa-external-link-alt me-2"></i>Xem linh kiện thuộc loại
+                                                này
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa loại linh kiện <strong th:text="${partType.name}"></strong> không?</p>
+                    <p class="text-danger"><strong>Lưu ý:</strong> Thao tác này không thể hoàn tác!</p>
+                    <p class="text-warning"><small>Nếu có linh kiện thuộc loại này, việc xóa có thể gây lỗi hệ
+                            thống.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form th:action="@{/admin/part-type/{id}/delete(id=${partType.id})}" method="post"
+                        style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        @media print {
+
+            .btn,
+            .modal,
+            .card-header .btn,
+            .no-print {
+                display: none !important;
+            }
+
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

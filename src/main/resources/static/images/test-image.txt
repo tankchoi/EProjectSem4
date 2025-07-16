@@ -1,0 +1,2 @@
+Đây là file demo để test upload
+Test image file for upload functionality

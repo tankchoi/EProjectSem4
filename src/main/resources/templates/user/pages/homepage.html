@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống bảo hành laptop - Laptop Care</title>
+    <link rel="stylesheet" th:href="@{/assets/css/user/homepage.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/header.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/footer.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div th:replace="user/fragments/header :: header"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Chào mừng đến với Laptop Care</h1>
+                <p>Hệ thống bảo hành laptop chuyên nghiệp, nhanh chóng và đáng tin cậy</p>
+                <div class="hero-actions">
+                    <a href="/user/check_warranty" class="btn btn-primary">
+                        <span class="material-symbols-outlined">verified</span>
+                        Kiểm tra bảo hành
+                    </a>
+                    <a href="/user/schedule_warranty" class="btn btn-secondary">
+                        <span class="material-symbols-outlined">schedule</span>
+                        Đặt lịch bảo hành
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="/assets/images/admin/laptop-hero.jpg" alt="Laptop Care Service" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Dịch vụ của chúng tôi</h2>
+                <p>Cung cấp các dịch vụ bảo hành laptop chất lượng cao</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <h3>Kiểm tra bảo hành</h3>
+                    <p>Tra cứu thông tin bảo hành laptop của bạn một cách nhanh chóng và chính xác</p>
+                    <a href="/user/check_warranty" class="feature-link">
+                        Kiểm tra ngay
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                    </div>
+                    <h3>Đặt lịch bảo hành</h3>
+                    <p>Đặt lịch hẹn sửa chữa, bảo hành laptop tại cửa hàng gần nhất</p>
+                    <a href="/user/schedule_warranty" class="feature-link">
+                        Đặt lịch
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span class="material-symbols-outlined">history</span>
+                    </div>
+                    <h3>Lịch sử bảo hành</h3>
+                    <p>Xem lại toàn bộ lịch sử bảo hành và sửa chữa của thiết bị</p>
+                    <a href="/user/history" class="feature-link">
+                        Xem lịch sử
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span class="material-symbols-outlined">build</span>
+                    </div>
+                    <h3>Tìm linh kiện</h3>
+                    <p>Tìm kiếm và đặt mua linh kiện thay thế chính hãng</p>
+                    <a href="/user/search_parts" class="feature-link">
+                        Tìm linh kiện
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span class="material-symbols-outlined">contact_support</span>
+                    </div>
+                    <h3>Hỗ trợ khách hàng</h3>
+                    <p>Liên hệ với đội ngũ hỗ trợ chuyên nghiệp 24/7</p>
+                    <a href="/user/support" class="feature-link">
+                        Liên hệ hỗ trợ
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span class="material-symbols-outlined">info</span>
+                    </div>
+                    <h3>Thông tin</h3>
+                    <p>Cập nhật thông tin cá nhân và thiết bị của bạn</p>
+                    <a href="/user/information" class="feature-link">
+                        Cập nhật thông tin
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Laptop đã sửa chữa</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5,000+</div>
+                    <div class="stat-label">Khách hàng hài lòng</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Hỗ trợ khách hàng</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">99%</div>
+                    <div class="stat-label">Tỷ lệ thành công</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div th:replace="user/fragments/footer :: footer"></div>
+
+    <script th:src="@{/assets/js/user/homepage.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Đăng nhập vào hệ thống quản lý bảo hành laptop TechRepair">
+    <meta name="keywords" content="laptop, bảo hành, quản lý, admin, đăng nhập">
+    <meta name="author" content="TechRepair">
+    <title>Đăng nhập - TechRepair Admin</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/login/index.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body>
+    <div class="login-container">
+        <!-- Background with animated patterns -->
+        <div class="background-wrapper">
+            <div class="background-gradient"></div>
+            <div class="background-pattern"></div>
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+                <div class="shape shape-4"></div>
+            </div>
+        </div>
+
+        <!-- Main login content -->
+        <div class="login-content">
+            <!-- Brand Header -->
+            <div class="brand-header">
+                <div class="brand-logo">
+                    <div class="logo-icon">
+                        <span class="material-symbols-outlined">laptop_chromebook</span>
+                    </div>
+                    <div class="brand-text">
+                        <h1 class="brand-title">TechRepair</h1>
+                        <span class="brand-subtitle">Admin Dashboard</span>
+                    </div>
+                </div>
+                <p class="welcome-text">Đăng nhập vào hệ thống quản lý bảo hành laptop</p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="login-form-container">
+                <!-- Alert Messages -->
+                <div th:if="${successMessage}" class="alert alert-success">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    <span th:text="${successMessage}"></span>
+                </div>
+
+                <div th:if="${errorMessage}" class="alert alert-error">
+                    <span class="material-symbols-outlined">error</span>
+                    <span th:text="${errorMessage}"></span>
+                </div>
+
+                <form class="login-form" method="POST" th:action="@{/admin/login}">
+                    <!-- Username Field -->
+                    <div class="form-group">
+                        <label for="username" class="form-label">Tên đăng nhập</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">
+                                <span class="material-symbols-outlined">person</span>
+                            </span>
+                            <input type="text" name="username" id="username" class="form-input"
+                                placeholder="Nhập tên đăng nhập" autocomplete="username" required>
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <label for="password" class="form-label">Mật khẩu</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">
+                                <span class="material-symbols-outlined">lock</span>
+                            </span>
+                            <input type="password" name="password" id="password" class="form-input"
+                                placeholder="Nhập mật khẩu" autocomplete="current-password" required>
+                            <button type="button" class="password-toggle" title="Hiện/ẩn mật khẩu">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember" class="checkbox-input">
+                            <span class="checkbox-custom"></span>
+                            <span class="checkbox-text">Ghi nhớ đăng nhập</span>
+                        </label>
+                        <a href="#" class="forgot-password">Quên mật khẩu?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="login-button">
+                        <span class="button-text">Đăng nhập</span>
+                        <span class="button-loading" style="display: none;">
+                            <span class="loading-spinner"></span>
+                            <span>Đang đăng nhập...</span>
+                        </span>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="divider">
+                        <span class="divider-text">hoặc</span>
+                    </div>
+
+                    <!-- Customer Login Link -->
+                    <div class="alternative-login">
+                        <p class="alt-text">Bạn là khách hàng?</p>
+                        <a href="/client/login" class="customer-link">
+                            <span class="material-symbols-outlined">person_outline</span>
+                            <span>Đăng nhập khách hàng</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            <p>&copy; 2024 TechRepair. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Password toggle functionality
+            const passwordInput = document.getElementById('password');
+            const passwordToggle = document.querySelector('.password-toggle');
+
+            if (passwordToggle && passwordInput) {
+                passwordToggle.addEventListener('click', function () {
+                    const type = passwordInput.type === 'password' ? 'text' : 'password';
+                    passwordInput.type = type;
+
+                    const icon = this.querySelector('.material-symbols-outlined');
+                    icon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+
+                    // Add click animation
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            }
+
+            // Enhanced form submission with loading state
+            const loginForm = document.querySelector('.login-form');
+            const submitButton = document.querySelector('.login-button');
+            const buttonText = document.querySelector('.button-text');
+            const buttonLoading = document.querySelector('.button-loading');
+
+            if (loginForm && submitButton) {
+                loginForm.addEventListener('submit', function (e) {
+                    // Add loading state
+                    submitButton.disabled = true;
+                    submitButton.classList.add('loading');
+                    buttonText.style.display = 'none';
+                    buttonLoading.style.display = 'flex';
+
+                    // Add haptic feedback simulation
+                    submitButton.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        submitButton.style.transform = '';
+                    }, 150);
+
+                    // Re-enable after 5 seconds as fallback
+                    setTimeout(() => {
+                        submitButton.disabled = false;
+                        submitButton.classList.remove('loading');
+                        buttonText.style.display = 'block';
+                        buttonLoading.style.display = 'none';
+                    }, 5000);
+                });
+            }
+
+            // Enhanced input focus animations
+            const inputs = document.querySelectorAll('.form-input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function () {
+                    this.closest('.input-wrapper').classList.add('focused');
+
+                    // Add focus sound effect simulation
+                    this.style.transform = 'translateY(-2px)';
+                });
+
+                input.addEventListener('blur', function () {
+                    if (!this.value) {
+                        this.closest('.input-wrapper').classList.remove('focused');
+                    }
+                    this.style.transform = '';
+                });
+
+                // Typing animation
+                input.addEventListener('input', function () {
+                    if (this.value) {
+                        this.closest('.input-wrapper').classList.add('focused');
+                    }
+                });
+
+                // Check initial value
+                if (input.value) {
+                    input.closest('.input-wrapper').classList.add('focused');
+                }
+            });
+
+            // Checkbox animation
+            const checkbox = document.querySelector('.checkbox-input');
+            if (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    const custom = document.querySelector('.checkbox-custom');
+                    custom.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        custom.style.transform = '';
+                    }, 150);
+                });
+            }
+
+            // Staggered animation reveal for form elements
+            const formElements = document.querySelectorAll('.form-group, .form-options, .login-button, .alternative-login');
+            formElements.forEach((element, index) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    element.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, 200 + (index * 200));
+            });
+
+            // Add parallax effect to floating shapes
+            document.addEventListener('mousemove', function (e) {
+                const shapes = document.querySelectorAll('.shape');
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+
+                shapes.forEach((shape, index) => {
+                    const speed = (index + 1) * 0.5;
+                    const xMove = (x - 0.5) * speed * 20;
+                    const yMove = (y - 0.5) * speed * 20;
+
+                    shape.style.transform = `translate(${xMove}px, ${yMove}px)`;
+                });
+            });
+
+            // Auto-hide alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-20px)';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+
+</html>

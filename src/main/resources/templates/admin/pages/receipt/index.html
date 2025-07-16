@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Hóa đơn</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/receipt/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+</head>
+
+<body class="preload">
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                    <h1>Admin / Quản lý Hóa đơn</h1>
+                </div>
+            </div>
+
+            <!-- Flash Messages -->
+            <div th:if="${success}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Danh sách Hóa đơn</h1>
+                </div>
+                <div class="add-btn">
+                    <a th:href="@{/admin/receipt/create}">
+                        <span class="material-symbols-outlined">add</span>
+                        Thêm Hóa đơn
+                    </a>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="myTable" class="table-content">
+                    <thead>
+                        <tr>
+                            <th>Mã HĐ</th>
+                            <th>Khách hàng</th>
+                            <th>Thiết bị</th>
+                            <th>Kỹ thuật viên</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="invoice : ${invoices}">
+                            <td th:text="${invoice.id}">1</td>
+                            <td th:text="${invoice.request.fullname}">Tên khách hàng</td>
+                            <td th:text="${invoice.request.customerLaptop.laptop.name}">Tên laptop</td>
+                            <td
+                                th:text="${invoice.request.technician != null ? invoice.request.technician.fullname : 'Chưa phân công'}">
+                                Kỹ thuật viên</td>
+                            <td class="receipt-total"
+                                th:text="${#numbers.formatDecimal(invoice.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                                1,000,000 VNĐ</td>
+                            <td>
+                                <span th:if="${invoice.status == 'PAID'}" class="status-badge status-paid">
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    Đã thanh toán
+                                </span>
+                                <span th:if="${invoice.status == 'UNPAID'}" class="status-badge status-unpaid">
+                                    <span class="material-symbols-outlined">schedule</span>
+                                    Chưa thanh toán
+                                </span>
+                            </td>
+                            <td th:text="${#dates.format(invoice.createdAt, 'dd/MM/yyyy HH:mm')}">12/01/2025</td>
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <a th:href="@{/admin/receipt/edit/{id}(id=${invoice.id})}" class="btn-edit"
+                                        title="Chỉnh sửa hóa đơn">
+                                        <span class="material-symbols-outlined">edit</span>
+                                        Sửa
+                                    </a>
+                                    <a th:href="@{/admin/receipt/view/{id}(id=${invoice.id})}" class="btn-view"
+                                        title="Xem chi tiết">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                        Xem
+                                    </a>
+                                    <button th:data-invoice-id="${invoice.id}"
+                                        onclick="confirmDelete(this.dataset.invoiceId)" class="btn-delete"
+                                        title="Xóa hóa đơn">
+                                        <span class="material-symbols-outlined">delete</span>
+                                        Xóa
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Empty state -->
+                <div th:if="${#lists.isEmpty(invoices)}" class="empty-state">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                    <h3>Chưa có hóa đơn nào</h3>
+                    <p>Hệ thống chưa có hóa đơn nào. Hãy tạo hóa đơn đầu tiên!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/assets/js/admin/script.js}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Remove preload class first to show content
+            document.body.classList.remove('preload');
+
+            // Kiểm tra nếu có dữ liệu thì mới khởi tạo DataTable
+            const tableRows = document.querySelectorAll('#myTable tbody tr:not(.empty-row)');
+
+            if (tableRows.length > 0) {
+                console.log('Initializing DataTable with', tableRows.length, 'rows');
+                new DataTable("#myTable", {
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+                    info: true,
+                    lengthMenu: [10, 25, 50, 100],
+                    pageLength: 10,
+                    language: {
+                        search: "Tìm kiếm:",
+                        lengthMenu: "Hiển thị _MENU_ dòng",
+                        info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
+                        infoEmpty: "Hiển thị 0 đến 0 của 0 dòng",
+                        infoFiltered: "(được lọc từ _MAX_ dòng)",
+                        paginate: {
+                            first: "Đầu",
+                            last: "Cuối",
+                            next: "Tiếp",
+                            previous: "Trước"
+                        },
+                        emptyTable: "Không có dữ liệu trong bảng",
+                        zeroRecords: "Không tìm thấy dòng nào phù hợp"
+                    },
+                    columnDefs: [
+                        { orderable: false, targets: [7] } // Không sắp xếp cột thao tác
+                    ],
+                    initComplete: function () {
+                        console.log('DataTable initialized successfully');
+                    }
+                });
+            } else {
+                console.log('No data in table, skipping DataTable initialization');
+            }
+        });
+
+        function confirmDelete(invoiceId) {
+            if (confirm('Bạn có chắc chắn muốn xóa hóa đơn này? Hành động này không thể hoàn tác.')) {
+                window.location.href = '/admin/receipt/delete/' + invoiceId;
+            }
+        }
+    </script>
+</body>
+
+</html>

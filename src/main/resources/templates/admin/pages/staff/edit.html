@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh sửa nhân viên</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/staff/edit.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <a th:href="@{/admin/staff/{id}(id=${staff.id})}" class="back-link">Quay lại chi tiết</a>
+            <h2 class="heading-page">Chỉnh sửa thông tin nhân viên</h2>
+            <p class="item-id">ID: <span th:text="${staff.id}">1</span></p>
+            <div class="status-info">
+                <span>ℹ</span>
+                Trạng thái hiện tại:
+                <span
+                    th:class="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE} ? 'status-badge status-active' : 'status-badge status-banned'"
+                    th:text="${staff.status == T(vn.aptech.java.models.User.Status).ACTIVE} ? 'Hoạt động' : 'Đã khóa'">
+                    Trạng thái
+                </span>
+            </div>
+
+            <!-- Error Messages -->
+            <div th:if="${error}" class="alert alert-error">
+                <span>⚠</span>
+                <span th:text="${error}"></span>
+            </div>
+            <div class="form-container">
+                <form th:action="@{/admin/staff/{id}/edit(id=${staff.id})}" method="POST" th:object="${updateStaffDTO}">
+                    <div class="form-grid">
+                        <div class="input-contain">
+                            <label for="username" class="input-label">
+                                Tên đăng nhập <span class="required">*</span>
+                            </label>
+                            <input type="text" id="username" name="username" th:field="*{username}"
+                                th:class="${#fields.hasErrors('username')} ? 'form-input input-error' : 'form-input'"
+                                placeholder="Nhập tên đăng nhập" />
+                            <div th:if="${#fields.hasErrors('username')}"
+                                th:each="error : ${#fields.errors('username')}" class="error-text" th:text="${error}">
+                            </div>
+                        </div>
+
+                        <div class="input-contain">
+                            <label for="password" class="input-label">Mật khẩu mới</label>
+                            <input type="password" id="password" name="password" th:field="*{password}"
+                                th:class="${#fields.hasErrors('password')} ? 'form-input input-error' : 'form-input'"
+                                placeholder="Để trống nếu không muốn thay đổi" />
+                            <div th:if="${#fields.hasErrors('password')}"
+                                th:each="error : ${#fields.errors('password')}" class="error-text" th:text="${error}">
+                            </div>
+                            <p class="helper-text">Để trống nếu không muốn thay đổi mật khẩu</p>
+                        </div>
+
+                        <div class="input-contain">
+                            <label for="fullname" class="input-label">
+                                Họ và tên <span class="required">*</span>
+                            </label>
+                            <input type="text" id="fullname" name="fullname" th:field="*{fullname}"
+                                th:class="${#fields.hasErrors('fullname')} ? 'form-input input-error' : 'form-input'"
+                                placeholder="Nhập họ và tên" />
+                            <div th:if="${#fields.hasErrors('fullname')}"
+                                th:each="error : ${#fields.errors('fullname')}" class="error-text" th:text="${error}">
+                            </div>
+                        </div>
+
+                        <div class="input-contain">
+                            <label for="status" class="input-label">Trạng thái</label>
+                            <select name="status" id="status" th:field="*{status}" class="form-select">
+                                <option th:value="${T(vn.aptech.java.models.User.Status).ACTIVE}" th:text="'Hoạt động'">
+                                    Hoạt động</option>
+                                <option th:value="${T(vn.aptech.java.models.User.Status).BANNED}" th:text="'Đã khóa'">Đã
+                                    khóa</option>
+                            </select>
+                        </div>
+
+                        <div class="input-contain">
+                            <label for="email" class="input-label">
+                                Email <span class="required">*</span>
+                            </label>
+                            <input type="email" id="email" name="email" th:field="*{email}"
+                                th:class="${#fields.hasErrors('email')} ? 'form-input input-error' : 'form-input'"
+                                placeholder="Nhập email" />
+                            <div th:if="${#fields.hasErrors('email')}" th:each="error : ${#fields.errors('email')}"
+                                class="error-text" th:text="${error}"></div>
+                        </div>
+
+                        <div class="input-contain">
+                            <label for="phone" class="input-label">
+                                Số điện thoại <span class="required">*</span>
+                            </label>
+                            <input type="text" id="phone" name="phone" th:field="*{phone}"
+                                th:class="${#fields.hasErrors('phone')} ? 'form-input input-error' : 'form-input'"
+                                placeholder="Nhập số điện thoại (VD: 0123456789)" />
+                            <div th:if="${#fields.hasErrors('phone')}" th:each="error : ${#fields.errors('phone')}"
+                                class="error-text" th:text="${error}"></div>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button type="submit" class="confirm-btn">Cập nhật</button>
+                        <a th:href="@{/admin/staff/{id}(id=${staff.id})}" class="cancel-btn">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/assets/js/admin/script.js}"></script>
+    <script>
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function (alert) {
+                setTimeout(function () {
+                    alert.style.opacity = '0';
+                    setTimeout(function () {
+                        alert.style.display = 'none';
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
+
+</body>
+
+</html>

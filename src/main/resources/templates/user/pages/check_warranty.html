@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/assets/css/user/check_warranty.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/footer.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/header.css}">
+    <link rel="stylesheet" type="text/css"
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+
+<body>
+    <div th:replace="user/fragments/header :: header"></div>
+    <div class="warranty-container">
+        <div class="warranty-header">
+            <h2>Check Laptop Warranty</h2>
+        </div>
+
+        <div class="input-group">
+            <input type="text" placeholder="Enter Serial Number">
+            <button>Check Warranty</button>
+        </div>
+
+        <div class="warranty-header">
+            <h2>Check Results</h2>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Serial Number</th>
+                    <th>Product Name</th>
+                    <th>Warranty Start</th>
+                    <th>Warranty End</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-label="Serial Number">LPT12345678</td>
+                    <td data-label="Product Name">Lenovo IdeaPad 3</td>
+                    <td data-label="Warranty Start">2024-06-01</td>
+                    <td data-label="Warranty End">2025-06-01</td>
+                    <td data-label="Status">Active</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="user/fragments/footer :: footer"></div>
+</body>
+
+</html>

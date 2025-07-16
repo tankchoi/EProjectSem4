@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/assets/css/user/support.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/footer.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/header.css}">
+    <link rel="stylesheet" type="text/css"
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+<body>
+    <div th:replace="user/fragments/header :: header"></div>
+    <section class="home">
+        <div class="content">
+            <h2>Welcome to Laptop Technical <br> Support System</h2>
+            <span>Book warranty, Check warranty period, Check warranty history</span>
+        </div>
+    </section>
+    <div class="service">
+        <h2 class="service-title">Select one of our services</h2>
+        <div class="service-container">
+            <div class="service-box">
+                <i class="fa-solid fa-award service-icon"></i>
+                <h3>Schedule device warranty</h3>
+                <p>Protect your device by scheduling a warranty. Extend or upgrade your warranty today!
+                </p>
+                <a href="#">Extend warranty ></a>
+            </div>
+            <div class="service-box">
+                <i class="fa-solid fa-computer service-icon"></i>
+                <h3>Search for parts</h3>
+                <p>Find genuine parts quickly and efficiently using our comprehensive parts lookup tool.</p>
+                <a href="#">Search parts ></a>
+            </div>
+            <div class="service-box">
+                <i class="fa-solid fa-screwdriver-wrench service-icon"></i>
+                <h3>View warranty history</h3>
+                <p>Track the repair status of your device easily with our user-friendly repair status tool.</p>
+                <a href="#">Track repair status ></a>
+            </div>
+            <div class="service-box">
+                <i class="fa-solid fa-clipboard service-icon"></i>
+                <h3>Check warranty period</h3>
+                <p>You can register your device or update the warranty date.</p>
+                <a href="#">Register now ></a>
+            </div>
+
+        </div>
+    </div>
+    <div th:replace="user/fragments/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý loại linh kiện</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/part_type/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+        <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+        <div class="page-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <span class="material-symbols-outlined">category</span>
+                    <h1>Admin / Quản lý loại linh kiện</h1>
+                </div>
+            </div>
+
+            <!-- Flash Messages -->
+            <div th:if="${success}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
+                <span th:text="${error}"></span>
+            </div>
+            <div th:if="${successMessage}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span th:text="${successMessage}"></span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
+                <span th:text="${errorMessage}"></span>
+            </div>
+
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>
+                        <span class="material-symbols-outlined"
+                            style="vertical-align: middle; margin-right: 8px;">inventory_2</span>
+                        Danh sách loại linh kiện
+                    </h1>
+                    <p th:if="${totalElements != null}">
+                        Tổng số: <span th:text="${totalElements}">0</span> loại linh kiện
+                    </p>
+                </div>
+                <div class="add-btn">
+                    <a href="/admin/part-type/create">
+                        <span class="material-symbols-outlined">add</span>
+                        Thêm loại linh kiện
+                    </a>
+                </div>
+            </div>
+
+            <!-- Form tìm kiếm -->
+            <div class="search-container">
+                <form action="/admin/part-type" method="get" class="search-form">
+                    <input type="text" name="search" th:value="${search}" placeholder="Tìm kiếm loại linh kiện..."
+                        class="search-input">
+                    <button type="submit" class="btn-search">
+                        <span class="material-symbols-outlined"
+                            style="font-size: 18px; margin-right: 4px;">search</span>
+                        Tìm kiếm
+                    </button>
+                    <a href="/admin/part-type" class="btn-reset">
+                        <span class="material-symbols-outlined"
+                            style="font-size: 18px; margin-right: 4px;">refresh</span>
+                        Hiện tất cả
+                    </a>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <table id="partTypeTable" class="table-content">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên loại linh kiện</th>
+                            <th>Số lượng linh kiện</th>
+                            <th>Ngày tạo</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="partType : ${partTypes}">
+                            <td th:text="${partType.id}">1</td>
+                            <td th:text="${partType.name}">CPU</td>
+                            <td th:text="${partType.partCount}">0</td>
+                            <td th:text="${#dates.format(partType.createdAt, 'dd/MM/yyyy')}">12/01/2025</td>
+                            <td>
+                                <a th:href="@{/admin/part-type/{id}/edit(id=${partType.id})}" class="btn-edit">
+                                    <span class="material-symbols-outlined"
+                                        style="font-size: 16px; margin-right: 4px;">edit</span>
+                                    Sửa
+                                </a>
+                                <form th:action="@{/admin/part-type/{id}/delete(id=${partType.id})}" method="post"
+                                    style="display: inline;"
+                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa loại linh kiện này?')">
+                                    <button type="submit" class="btn-delete">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size: 16px; margin-right: 4px;">delete</span>
+                                        Xóa
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(partTypes)}">
+                            <td colspan="5" style="text-align: center; padding: 2rem; color: #718096;">
+                                <span class="material-symbols-outlined"
+                                    style="font-size: 2rem; margin-bottom: 0.5rem; display: block;">category</span>
+                                <span th:if="${search}">Không tìm thấy loại linh kiện nào với từ khóa "<strong
+                                        th:text="${search}"></strong>"</span>
+                                <span th:unless="${search}">Chưa có loại linh kiện nào trong hệ thống</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Kiểm tra nếu DataTable đã được khởi tạo thì destroy trước
+            if ($.fn.DataTable.isDataTable('#partTypeTable')) {
+                $('#partTypeTable').DataTable().destroy();
+            }
+
+            $('#partTypeTable').DataTable({
+                "language": {
+                    "search": "Tìm kiếm:",
+                    "lengthMenu": "Hiển thị _MENU_ dòng",
+                    "info": "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
+                    "paginate": {
+                        "first": "Đầu",
+                        "last": "Cuối",
+                        "next": "Tiếp",
+                        "previous": "Trước"
+                    }
+                },
+                "pageLength": 10,
+                "lengthMenu": [10, 20, 30, 40]
+            });
+        });
+    </script>
+
+    <script th:src="@{/assets/js/admin/script.js}"></script>
+</body>
+
+</html>
