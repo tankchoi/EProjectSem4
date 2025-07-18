@@ -88,8 +88,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Tên loại linh kiện</th>
-                            <th>Số lượng linh kiện</th>
                             <th>Ngày tạo</th>
+                            <th>Cập nhật</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -97,15 +97,15 @@
                         <tr th:each="partType : ${partTypes}">
                             <td th:text="${partType.id}">1</td>
                             <td th:text="${partType.name}">CPU</td>
-                            <td th:text="${partType.partCount}">0</td>
                             <td th:text="${#dates.format(partType.createdAt, 'dd/MM/yyyy')}">12/01/2025</td>
+                            <td th:text="${#dates.format(partType.updatedAt, 'dd/MM/yyyy')}">15/01/2025</td>
                             <td>
-                                <a th:href="@{/admin/part-type/{id}/edit(id=${partType.id})}" class="btn-edit">
+                                <a th:href="@{/admin/part-type/edit/{id}(id=${partType.id})}" class="btn-edit">
                                     <span class="material-symbols-outlined"
                                         style="font-size: 16px; margin-right: 4px;">edit</span>
                                     Sửa
                                 </a>
-                                <form th:action="@{/admin/part-type/{id}/delete(id=${partType.id})}" method="post"
+                                <form th:action="@{/admin/part-type/delete/{id}(id=${partType.id})}" method="post"
                                     style="display: inline;"
                                     onsubmit="return confirm('Bạn có chắc chắn muốn xóa loại linh kiện này?')">
                                     <button type="submit" class="btn-delete">

@@ -35,13 +35,13 @@
                 </div>
 
                 <div class="form-content">
-                    <form th:action="@{/admin/part-type/{id}(id=${partTypeId})}" th:object="${partType}" method="post">
+                    <form th:action="@{/admin/part-type/update}" th:object="${partType}" method="post">
 
                         <!-- Thông báo lỗi -->
                         <div th:if="${errorMessage}" class="alert alert-error">
                             <span th:text="${errorMessage}"></span>
                         </div>
-
+                        <input type="hidden" th:field="*{id}" />
                         <div class="input-content">
                             <label for="name">
                                 <span class="material-symbols-outlined">category</span>

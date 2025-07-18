@@ -12,11 +12,11 @@ import vn.aptech.java.services.ModelService;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/model")
 public class ModelController {
     @Autowired
     private ModelService modelService;
-    @GetMapping("/model")
+    @GetMapping()
     public String index(Model model,
                         @RequestParam(value = "search", required = false) String search) {
         model.addAttribute("activePage", "model");
@@ -24,13 +24,13 @@ public class ModelController {
         model.addAttribute("search", search);
         return "admin/pages/model/index";
     }
-    @GetMapping("/model/create")
+    @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("activePage", "model");
         model.addAttribute("model", new vn.aptech.java.dtos.CreateModelDTO());
         return "admin/pages/model/create";
     }
-    @PostMapping("/model/create")
+    @PostMapping("/create")
     public String store(@Valid @ModelAttribute("model") vn.aptech.java.dtos.CreateModelDTO createModelDTO,
                         BindingResult bindingResult,
                         RedirectAttributes redirectAttributes,
@@ -50,7 +50,7 @@ public class ModelController {
         }
         return "redirect:/admin/model";
     }
-    @GetMapping("/model/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String edit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<vn.aptech.java.models.Model> modelEntityOpt = modelService.getModelById(id);
         if (modelEntityOpt.isPresent()) {
@@ -62,7 +62,7 @@ public class ModelController {
             return "redirect:/admin/model";
         }
     }
-    @PostMapping("/model/update")
+    @PostMapping("/update")
     public String update(@Valid @ModelAttribute("model") vn.aptech.java.dtos.UpdateModelDTO updateModelDTO,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes,
@@ -82,7 +82,7 @@ public class ModelController {
         }
         return "redirect:/admin/model";
     }
-    @PostMapping("/model/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             modelService.deleteModel(id);

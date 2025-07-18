@@ -34,7 +34,7 @@
                     <h2>Thông tin loại linh kiện</h2>
                 </div>
                 <div class="form-content">
-                    <form th:action="@{/admin/part-type}" th:object="${partType}" method="post">
+                    <form th:action="@{/admin/part-type/create}" th:object="${partType}" method="post">
 
                         <!-- Thông báo lỗi -->
                         <div th:if="${errorMessage}" class="alert alert-error">
