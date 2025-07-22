@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cập nhật thông tin laptop</title>
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/laptop/create.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+    <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+    <style>
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            border: 2px solid #e2e8f0;
+            background: #f7fafc;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #4a5568;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .tab-content {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+<div class="main-container">
+    <div th:replace="admin/fragments/nav-side :: nav-side"></div>
+    <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="header-content">
+                <h1>Admin /</h1>
+                <h1>Cập nhật laptop</h1>
+            </div>
+        </div>
+
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h1>Cập nhật laptop</h1>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="form-header">
+                <span class="material-symbols-outlined">edit</span>
+                <h2>Chỉnh sửa thông tin laptop</h2>
+            </div>
+
+<!--            <div th:if="${error}" class="alert alert-error">-->
+<!--                <span class="material-symbols-outlined">error</span>-->
+<!--                <span th:text="${error}"></span>-->
+<!--            </div>-->
+            <div class="form-content">
+                <form th:action="@{'/admin/laptop/update'}" th:object="${laptop}" method="POST"
+                      enctype="multipart/form-data">
+                    <input type="hidden" name="id" th:value="${laptop.id}">
+                    <div class="input-content">
+                        <label for="name">
+                            <span class="material-symbols-outlined">laptop</span>
+                            Tên laptop
+                        </label>
+                        <input type="text" name="name" th:value="${laptop.name}" id="name"
+                               placeholder="Nhập tên laptop" required>
+                        <div th:if="${#fields.hasErrors('name')}" class="error-message">
+                            <span th:errors="*{name}"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-content">
+                        <label for="modelId">
+                            <span class="material-symbols-outlined">memory</span>
+                            Model laptop
+                        </label>
+                        <select name="modelId" id="modelId" required>
+                            <option value="" disabled>Chọn model laptop</option>
+                            <option th:each="model : ${models}" th:value="${model.id}" th:text="${model.name}"
+                                    th:selected="${model.id == laptop.modelId}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('modelId')}" class="error-message">
+                            <span th:errors="*{modelId}"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-content">
+                        <label for="warrantyPeriod">
+                            <span class="material-symbols-outlined">verified</span>
+                            Thời hạn bảo hành (tháng)
+                        </label>
+                        <input type="number" name="warrantyPeriod" id="warrantyPeriod" th:value="${laptop.warrantyPeriod}"
+                               placeholder="Nhập số tháng bảo hành" min="1" required>
+                        <div th:if="${#fields.hasErrors('warrantyPeriod')}" class="error-message">
+                            <span th:errors="*{warrantyPeriod}"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-content">
+                        <label for="imageMethod">
+                            <span class="material-symbols-outlined">image</span>
+                            Hình ảnh laptop
+                        </label>
+
+                        <!-- Current Image Display -->
+                        <div th:if="${laptop.imgUrl}" class="current-image"
+                             style="margin-bottom: 1rem; padding: 1rem; border: 2px dashed #e2e8f0; border-radius: 8px; background: #f7fafc;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <img th:src="${laptop.imgUrl}" alt="Current laptop image"
+                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                <div>
+                                    <p style="margin: 0; font-weight: 500; color: #2d3748;">Ảnh hiện tại</p>
+                                    <p style="margin: 0; font-size: 0.875rem; color: #718096;">Để trống các trường
+                                        bên dưới để giữ ảnh này</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab selection -->
+                        <div style="margin-bottom: 1rem;">
+                            <button type="button" id="urlTab" class="tab-btn active" onclick="showTab('url')">
+                                <span class="material-symbols-outlined">link</span>
+                                Nhập URL mới
+                            </button>
+                            <button type="button" id="fileTab" class="tab-btn" onclick="showTab('file')">
+                                <span class="material-symbols-outlined">upload</span>
+                                Upload file mới
+                            </button>
+                        </div>
+
+                        <!-- URL Input -->
+                        <div id="urlInput" class="tab-content">
+                            <input type="url" name="imgUrl"  id="imageUrl"
+                                   placeholder="https://example.com/image.jpg">
+                            <small style="color: #718096; display: block; margin-top: 0.25rem;">
+                                Nhập URL trực tiếp đến hình ảnh (tối đa 255 ký tự)
+                            </small>
+                        </div>
+
+                        <!-- File Upload -->
+                        <div id="fileInput" class="tab-content" style="display: none;">
+                            <input type="file" name="imgFile" id="imageFile" accept="image/*">
+                            <small style="color: #718096; display: block; margin-top: 0.25rem;">
+                                Chấp nhận: JPG, PNG, GIF, BMP, WEBP (tối đa 5MB)
+                            </small>
+                        </div>
+
+                        <!-- Preview -->
+                        <div id="imagePreview" class="image-preview" style="display: none;">
+                            <img id="previewImg" src="" alt="Preview">
+                        </div>
+
+                        <div th:if="${#fields.hasErrors('imgUrl')}" class="error-message">
+                            <span th:errors="*{imgUrl}"></span>
+                        </div>
+                        <div th:if="${#fields.hasErrors('imgFile')}" class="error-message">
+                            <span th:errors="*{imgFile}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="confirm-btn">
+                            <span class="material-symbols-outlined">save</span>
+                            Cập nhật
+                        </button>
+                        <a th:href="@{/admin/laptop}" class="back-btn">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                            Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/assets/js/admin/script.js}"></script>
+<script>
+    // Tab functionality
+    function showTab(tabName) {
+        // Hide all tab contents
+        document.getElementById('urlInput').style.display = 'none';
+        document.getElementById('fileInput').style.display = 'none';
+
+        // Remove active class from all tabs
+        document.getElementById('urlTab').classList.remove('active');
+        document.getElementById('fileTab').classList.remove('active');
+
+        // Show selected tab content and mark tab as active
+        if (tabName === 'url') {
+            document.getElementById('urlInput').style.display = 'block';
+            document.getElementById('urlTab').classList.add('active');
+            document.getElementById('imageFile').value = ''; // Clear file input
+        } else if (tabName === 'file') {
+            document.getElementById('fileInput').style.display = 'block';
+            document.getElementById('fileTab').classList.add('active');
+            document.getElementById('imageUrl').value = ''; // Clear URL input
+        }
+
+        // Hide preview when switching tabs
+        document.getElementById('imagePreview').style.display = 'none';
+    }
+
+    // Image preview functionality
+    document.getElementById('imageUrl').addEventListener('input', function () {
+        const url = this.value.trim();
+
+        // Check URL length
+        if (url.length > 255) {
+            this.style.borderColor = '#e53e3e';
+            hideImagePreview();
+            return;
+        } else {
+            this.style.borderColor = '#e2e8f0';
+        }
+
+        if (url) {
+            showImagePreview(url);
+        } else {
+            hideImagePreview();
+        }
+    });
+
+    document.getElementById('imageFile').addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                showImagePreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            hideImagePreview();
+        }
+    });
+
+    function showImagePreview(src) {
+        document.getElementById('previewImg').src = src;
+        document.getElementById('imagePreview').style.display = 'block';
+    }
+
+    function hideImagePreview() {
+        document.getElementById('imagePreview').style.display = 'none';
+    }
+
+    // Initialize with URL tab active and show current image if exists
+    document.addEventListener('DOMContentLoaded', function () {
+        // Don't populate the URL input with existing URL anymore
+        // The current image is shown in a separate display area
+    });
+</script>
+
+</body>
+
+</html>

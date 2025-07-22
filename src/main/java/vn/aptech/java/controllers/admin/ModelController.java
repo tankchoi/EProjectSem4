@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import vn.aptech.java.dtos.UpdateModelDTO;
 import vn.aptech.java.services.ModelService;
 
 import java.util.Optional;
@@ -18,10 +19,10 @@ public class ModelController {
     private ModelService modelService;
     @GetMapping()
     public String index(Model model,
-                        @RequestParam(value = "search", required = false) String search) {
+                        @RequestParam(value = "keyword", required = false) String keyword) {
         model.addAttribute("activePage", "model");
-        model.addAttribute("models", modelService.filterModels(search));
-        model.addAttribute("search", search);
+        model.addAttribute("models", modelService.getModels(keyword));
+        model.addAttribute("keyword", keyword);
         return "admin/pages/model/index";
     }
     @GetMapping("/create")
@@ -37,6 +38,7 @@ public class ModelController {
                         Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("activePage", "model");
+            model.addAttribute("model", createModelDTO);
             return "admin/pages/model/create";
         }
         try {
@@ -52,15 +54,24 @@ public class ModelController {
     }
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<vn.aptech.java.models.Model> modelEntityOpt = modelService.getModelById(id);
-        if (modelEntityOpt.isPresent()) {
-            model.addAttribute("activePage", "model");
-            model.addAttribute("model", modelEntityOpt.get());
-            return "admin/pages/model/update";
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Model không tồn tại");
+        try{
+            Optional<vn.aptech.java.models.Model> modelEntityOpt = modelService.getModelById(id);
+            if (modelEntityOpt.isPresent()) {
+                UpdateModelDTO updateModelDTO = new UpdateModelDTO();
+                updateModelDTO.setId(modelEntityOpt.get().getId());
+                updateModelDTO.setName(modelEntityOpt.get().getName());
+                model.addAttribute("activePage", "model");
+                model.addAttribute("model", updateModelDTO);
+                return "admin/pages/model/edit";
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Model không tồn tại");
+                return "redirect:/admin/model";
+            }
+        }catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi lấy thông tin model: " + e.getMessage());
             return "redirect:/admin/model";
         }
+
     }
     @PostMapping("/update")
     public String update(@Valid @ModelAttribute("model") vn.aptech.java.dtos.UpdateModelDTO updateModelDTO,
@@ -69,7 +80,8 @@ public class ModelController {
                          Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("activePage", "model");
-            return "admin/pages/model/update";
+            model.addAttribute("model", updateModelDTO);
+            return "admin/pages/model/edit";
         }
         try {
             modelService.updateModel(updateModelDTO);
@@ -78,7 +90,7 @@ public class ModelController {
             model.addAttribute("activePage", "model");
             model.addAttribute("error", "Có lỗi xảy ra khi cập nhật model: " + e.getMessage());
             model.addAttribute("model", updateModelDTO);
-            return "admin/pages/model/update";
+            return "admin/pages/model/edit";
         }
         return "redirect:/admin/model";
     }

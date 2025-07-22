@@ -18,11 +18,11 @@ public class ModelServiceImpl implements ModelService {
     private ModelRepository modelRepository;
 
     @Override
-    public List<Model> filterModels(String name) {
-        if (name == null || name.isEmpty()) {
+    public List<Model> getModels(String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
             return modelRepository.findAll();
         } else {
-            return modelRepository.findByNameContainingIgnoreCase(name);
+            return modelRepository.findByNameContainingIgnoreCase(keyword);
         }
     }
 

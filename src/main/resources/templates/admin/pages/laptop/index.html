@@ -66,7 +66,7 @@
 
             <!-- Form tìm kiếm -->
             <div class="search-container">
-                <form th:action="@{/admin/laptop/search}" method="get" class="search-form">
+                <form th:action="@{/admin/laptop}" method="get" class="search-form">
                     <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm laptop..."
                         class="search-input">
                     <button type="submit" class="btn-search">
@@ -104,7 +104,7 @@
                             </td>
                             <td th:text="${laptop.name}">Dell</td>
                             <td th:text="${laptop.model != null ? laptop.model.name : 'N/A'}">12e3</td>
-                            <td th:text="${laptop.warrantyPeriod + ' năm'}">3 năm</td>
+                            <td th:text="${laptop.warrantyPeriod + ' tháng'}">3 năm</td>
                             <td th:text="${#dates.format(laptop.createdAt, 'dd/MM/yyyy')}">12/01/2025</td>
                             <td>
                                 <a th:href="@{'/admin/laptop/edit/' + ${laptop.id}}" class="btn-edit">

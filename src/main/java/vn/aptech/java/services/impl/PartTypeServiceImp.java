@@ -15,11 +15,11 @@ public class PartTypeServiceImp implements PartTypeService {
     @Autowired
     private PartTypeRepository partTypeRepository;
     @Override
-    public List<PartType> filterPartType(String name) {
-        if (name == null || name.isEmpty()) {
+    public List<PartType> getPartType(String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
             return partTypeRepository.findAll();
         } else {
-            return partTypeRepository.findByNameContainingIgnoreCase(name);
+            return partTypeRepository.findByNameContainingIgnoreCase(keyword);
         }
     }
 

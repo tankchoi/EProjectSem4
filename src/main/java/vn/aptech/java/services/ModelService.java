@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ModelService {
-    List<Model> filterModels(String name);
+    List<Model> getModels(String keyword);
     Optional<Model> getModelById(Long id);
     Model createModel(CreateModelDTO createModelDTO);
     Model updateModel(UpdateModelDTO updateModelDTO);

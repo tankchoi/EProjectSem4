@@ -68,16 +68,10 @@
             <div class="input-content">
               <label for="warrantyPeriod">
                 <span class="material-symbols-outlined">verified</span>
-                Thời hạn bảo hành
+                Thời hạn bảo hành (tháng)
               </label>
-              <select name="warrantyPeriod" id="warrantyPeriod" required>
-                <option value="" disabled selected>Chọn thời hạn bảo hành</option>
-                <option value="1" th:selected="${laptop.warrantyPeriod == 1}">1 năm</option>
-                <option value="2" th:selected="${laptop.warrantyPeriod == 2}">2 năm</option>
-                <option value="3" th:selected="${laptop.warrantyPeriod == 3}">3 năm</option>
-                <option value="4" th:selected="${laptop.warrantyPeriod == 4}">4 năm</option>
-                <option value="5" th:selected="${laptop.warrantyPeriod == 5}">5 năm</option>
-              </select>
+              <input type="number" name="warrantyPeriod" id="warrantyPeriod" th:value="${laptop.warrantyPeriod}" 
+                     placeholder="Nhập số tháng bảo hành" min="1" required>
               <div th:if="${#fields.hasErrors('warrantyPeriod')}" class="error-message">
                 <span th:errors="*{warrantyPeriod}"></span>
               </div>
@@ -103,7 +97,7 @@
 
               <!-- URL Input -->
               <div id="urlInput" class="tab-content">
-                <input type="url" name="imageUrl" th:value="${laptop.imgUrl}" id="imageUrl"
+                <input type="url" name="imgUrl" th:value="${laptop.imgUrl}" id="imageUrl"
                   placeholder="https://example.com/image.jpg">
                 <small style="color: #718096; display: block; margin-top: 0.25rem;">
                   Nhập URL trực tiếp đến hình ảnh (tối đa 255 ký tự)
@@ -112,7 +106,7 @@
 
               <!-- File Upload -->
               <div id="fileInput" class="tab-content" style="display: none;">
-                <input type="file" name="imageFile" id="imageFile" accept="image/*">
+                <input type="file" name="imgFile" id="imageFile" accept="image/*">
                 <small style="color: #718096; display: block; margin-top: 0.25rem;">
                   Chấp nhận: JPG, PNG, GIF, BMP, WEBP (tối đa 5MB)
                 </small>
@@ -125,6 +119,12 @@
 
               <div th:if="${#fields.hasErrors('imgUrl')}" class="error-message">
                 <span th:errors="*{imgUrl}"></span>
+              </div>
+              <div th:if="${#fields.hasErrors('imgFile')}" class="error-message">
+                <span th:errors="*{imgFile}"></span>
+              </div>
+              <div th:if="${#fields.hasErrors('imageProvided')}" class="error-message">
+                <span th:errors="*{imageProvided}"></span>
               </div>
             </div>
 

@@ -21,10 +21,10 @@ public class PartTypeController {
     private PartTypeService partTypeService;
     @GetMapping()
     public String index(Model model,
-                        @RequestParam(value = "search", required = false) String search) {
+                        @RequestParam(value = "keyword", required = false) String keyword) {
         model.addAttribute("activePage", "partTypes");
-        model.addAttribute("search", search);
-        model.addAttribute("partTypes", partTypeService.filterPartType(search));
+        model.addAttribute("search", keyword);
+        model.addAttribute("partTypes", partTypeService.getPartType(keyword));
         return "admin/pages/part_type/index";
     }
     @GetMapping("/create")
@@ -40,6 +40,7 @@ public class PartTypeController {
                         Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("activePage", "partTypes");
+            model.addAttribute("partType", createPartTypeDTO);
             return "admin/pages/part_type/create";
         }
         try {
@@ -61,12 +62,15 @@ public class PartTypeController {
                 redirectAttributes.addFlashAttribute("error", "Không tìm thấy loại linh kiện!");
                 return "redirect:/admin/part-type";
             }else{
-                model.addAttribute("partType", partTypeOpt.get());
+                UpdatePartTypeDTO updatePartTypeDTO = new UpdatePartTypeDTO();
+                updatePartTypeDTO.setId(partTypeOpt.get().getId());
+                updatePartTypeDTO.setName(partTypeOpt.get().getName());
+                model.addAttribute("partType", updatePartTypeDTO);
                 model.addAttribute("activePage", "partTypes");
             }
             return "admin/pages/part_type/edit";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Không tìm thấy loại linh kiện!");
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi lấy thông tin loại linh kiện: " + e.getMessage());
             return "redirect:/admin/part-type";
         }
     }
@@ -77,6 +81,7 @@ public class PartTypeController {
                          Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("activePage", "partTypes");
+            model.addAttribute("partType", updatePartTypeDTO);
             return "admin/pages/part_type/edit";
         }
         try {
