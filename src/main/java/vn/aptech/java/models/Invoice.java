@@ -2,6 +2,8 @@ package vn.aptech.java.models;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Timestamp;
 @Entity
@@ -13,6 +15,7 @@ public class Invoice {
 
     @OneToOne
     @JoinColumn(name = "requestId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Request request;
 
     private Double totalPrice;

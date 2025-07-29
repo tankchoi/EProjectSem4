@@ -2,6 +2,8 @@ package vn.aptech.java.models;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Timestamp;
 @Entity
@@ -13,10 +15,12 @@ public class Part {
 
     @ManyToOne
     @JoinColumn(name = "partTypeId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private PartType partType;
 
     @ManyToOne
-    @JoinColumn(name = "laptopId", nullable = false)
+    @JoinColumn(name = "laptopId", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Laptop laptop;
 
     private String name;

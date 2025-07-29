@@ -24,7 +24,7 @@ public class PartTypeController {
                         @RequestParam(value = "keyword", required = false) String keyword) {
         model.addAttribute("activePage", "partTypes");
         model.addAttribute("search", keyword);
-        model.addAttribute("partTypes", partTypeService.getPartType(keyword));
+        model.addAttribute("partTypes", partTypeService.getPartTypes(keyword));
         return "admin/pages/part_type/index";
     }
     @GetMapping("/create")

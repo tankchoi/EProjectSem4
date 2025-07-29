@@ -26,7 +26,7 @@ public class LaptopServiceImpl implements LaptopService {
         if(keyword == null || keyword.isEmpty()) {
             return laptopRepository.findAll();
         } else {
-            return laptopRepository.searchLaptopByKeyword(keyword);
+            return laptopRepository.searchLaptopsByKeyword(keyword);
         }
     }
 

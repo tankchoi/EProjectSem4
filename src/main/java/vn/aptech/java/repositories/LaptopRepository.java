@@ -8,13 +8,13 @@ import vn.aptech.java.models.Laptop;
 import java.util.List;
 
 public interface LaptopRepository extends JpaRepository<Laptop, Long> {
-    @Query("""
-    SELECT l FROM Laptop l
-    JOIN l.model m
+    @Query(value = """
+    SELECT l.* FROM laptops l
+    JOIN models m ON l.model_id = m.id
     WHERE LOWER(l.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
        OR LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
-       OR STR(l.warrantyPeriod) LIKE %:keyword%
-""")
-    List<Laptop> searchLaptopByKeyword(@Param("keyword") String keyword);
-    List<Laptop> findByModelId(Long id);
+       OR CAST(l.warranty_period AS CHAR) LIKE CONCAT('%', :keyword, '%')
+    """, nativeQuery = true)
+    List<Laptop> searchLaptopsByKeyword(@Param("keyword") String keyword);
+
 }

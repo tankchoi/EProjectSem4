@@ -15,7 +15,7 @@ public class PartTypeServiceImp implements PartTypeService {
     @Autowired
     private PartTypeRepository partTypeRepository;
     @Override
-    public List<PartType> getPartType(String keyword) {
+    public List<PartType> getPartTypes(String keyword) {
         if (keyword == null || keyword.isEmpty()) {
             return partTypeRepository.findAll();
         } else {

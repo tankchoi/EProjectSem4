@@ -13,6 +13,8 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
@@ -54,14 +56,6 @@
                         Thêm laptop mới
                     </a>
                 </div>
-            </div>
-
-            <!-- Thông báo -->
-            <div th:if="${success}" class="alert alert-success">
-                <span th:text="${success}"></span>
-            </div>
-            <div th:if="${error}" class="alert alert-error">
-                <span th:text="${error}"></span>
             </div>
 
             <!-- Form tìm kiếm -->

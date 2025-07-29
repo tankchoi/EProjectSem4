@@ -2,6 +2,8 @@ package vn.aptech.java.models;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -15,6 +17,7 @@ public class Request {
 
     @ManyToOne
     @JoinColumn(name = "customerLaptopId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private CustomerLaptop customerLaptop;
 
     private String fullname;
@@ -28,6 +31,7 @@ public class Request {
 
     @ManyToOne
     @JoinColumn(name = "technicianId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User technician;
 
     @CreationTimestamp

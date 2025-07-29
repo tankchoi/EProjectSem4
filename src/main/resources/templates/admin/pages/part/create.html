@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         .tab-btn {
             transition: all 0.3s ease;
@@ -24,6 +26,32 @@
 
         .tab-content {
             margin-top: 12px;
+        }
+
+        /* Select2 custom styling */
+        .select2-container {
+            width: 100% !important;
+        }
+        
+        .select2-selection {
+            height: 40px !important;
+            border-radius: 6px !important;
+            border: 1px solid #d1d5db !important;
+            padding: 6px 8px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        
+        .select2-selection__arrow {
+            height: 40px !important;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: normal !important;
+        }
+        
+        .select2-results__option {
+            padding: 8px 12px !important;
         }
     </style>
 </head>
@@ -64,14 +92,17 @@
                 </div>
 
                 <form th:action="@{/admin/part/create}" method="POST" enctype="multipart/form-data"
-                    class="form-content">
+                    class="form-content" th:object="${part}">
                     <div class="form-grid">
                         <div class="input-group">
                             <label for="name" class="required">
                                 <span class="material-symbols-outlined">construction</span>
                                 Tên linh kiện
                             </label>
-                            <input type="text" name="name" id="name" placeholder="Nhập tên linh kiện" required>
+                            <input type="text" th:field="*{name}"  id="name" placeholder="Nhập tên linh kiện" required>
+                            <div th:if="${#fields.hasErrors('name')}" class="error-message">
+                                <span th:errors="*{name}"></span>
+                            </div>
                         </div>
 
                         <div class="input-group">
@@ -79,11 +110,14 @@
                                 <span class="material-symbols-outlined">category</span>
                                 Loại linh kiện
                             </label>
-                            <select name="partType" id="partType" required>
+                            <select th:field="*{partTypeId}" id="partType" class="select2-autocomplete" required>
                                 <option value="" disabled selected>Chọn loại linh kiện</option>
                                 <option th:each="partType : ${partTypes}" th:value="${partType.id}"
                                     th:text="${partType.name}"></option>
                             </select>
+                            <div th:if="${#fields.hasErrors('partTypeId')}" class="error-message">
+                                <span th:errors="*{partTypeId}"></span>
+                            </div>
                         </div>
 
                         <div class="input-group">
@@ -91,11 +125,14 @@
                                 <span class="material-symbols-outlined">laptop</span>
                                 Laptop liên quan
                             </label>
-                            <select name="laptop" id="laptop">
+                            <select th:field="*{laptopId}" id="laptop" class="select2-autocomplete">
                                 <option value="">Chọn laptop (không bắt buộc)</option>
                                 <option th:each="laptop : ${laptops}" th:value="${laptop.id}" th:text="${laptop.name}">
                                 </option>
                             </select>
+                            <div th:if="${#fields.hasErrors('laptopId')}" class="error-message">
+                                <span th:errors="*{laptopId}"></span>
+                            </div>
                         </div>
 
                         <div class="input-group">
@@ -103,8 +140,11 @@
                                 <span class="material-symbols-outlined">payments</span>
                                 Giá (VNĐ)
                             </label>
-                            <input type="number" name="price" id="price" placeholder="Nhập giá" min="0" step="1000"
+                            <input type="number" th:field="*{price}" id="price" placeholder="Nhập giá" min="0" step="1000"
                                 required>
+                            <div th:if="${#fields.hasErrors('price')}" class="error-message">
+                                <span th:errors="*{price}"></span>
+                            </div>
                         </div>
 
                         <div class="input-group">
@@ -112,8 +152,11 @@
                                 <span class="material-symbols-outlined">inventory</span>
                                 Số lượng
                             </label>
-                            <input type="number" name="quantity" id="quantity" placeholder="Nhập số lượng" min="0"
+                            <input type="number" th:field="*{quantity}" id="quantity" placeholder="Nhập số lượng" min="0"
                                 required>
+                            <div th:if="${#fields.hasErrors('quantity')}" class="error-message">
+                                <span th:errors="*{quantity}"></span>
+                            </div>
                         </div>
 
                         <div class="input-group">
@@ -121,24 +164,21 @@
                                 <span class="material-symbols-outlined">verified</span>
                                 Thời hạn bảo hành
                             </label>
-                            <select name="warrantyPeriod" id="warrantyPeriod" required>
-                                <option value="" disabled selected>Chọn thời hạn bảo hành</option>
-                                <option value="1">1 năm</option>
-                                <option value="2">2 năm</option>
-                                <option value="3">3 năm</option>
-                                <option value="4">4 năm</option>
-                                <option value="5">5 năm</option>
-                            </select>
+                            <input type="number"  id="warrantyPeriod" th:field="*{warrantyPeriod}"
+                                   placeholder="Nhập số tháng bảo hành" min="1" required>
+                            <div th:if="${#fields.hasErrors('warrantyPeriod')}" class="error-message">
+                                <span th:errors="*{warrantyPeriod}"></span>
+                            </div>
                         </div>
 
-                        <div class="input-group full-width">
-                            <label>
-                                <span class="material-symbols-outlined">description</span>
-                                Mô tả
-                            </label>
-                            <textarea name="description" id="description"
-                                placeholder="Nhập mô tả chi tiết về linh kiện (không bắt buộc)" rows="4"></textarea>
-                        </div>
+<!--                        <div class="input-group full-width">-->
+<!--                            <label>-->
+<!--                                <span class="material-symbols-outlined">description</span>-->
+<!--                                Mô tả-->
+<!--                            </label>-->
+<!--                            <textarea name="description" id="description"-->
+<!--                                placeholder="Nhập mô tả chi tiết về linh kiện (không bắt buộc)" rows="4"></textarea>-->
+<!--                        </div>-->
 
                         <div class="image-upload-section">
                             <span class="material-symbols-outlined">image</span>
@@ -161,14 +201,14 @@
 
                             <!-- URL Input -->
                             <div id="urlInput" class="tab-content">
-                                <input type="url" name="imageUrl" id="imageUrl"
+                                <input type="url" th:field="*{imgUrl}" id="imageUrl"
                                     placeholder="https://example.com/image.jpg" style="margin-bottom: 0;">
                                 <small style="color: #6b7280; font-size: 12px;">Nhập URL trực tiếp đến hình ảnh</small>
                             </div>
 
                             <!-- File Upload -->
                             <div id="fileInput" class="tab-content" style="display: none;">
-                                <input type="file" name="imageFile" id="imageFile" accept="image/*"
+                                <input type="file" th:field="*{imgFile}" id="imageFile" accept="image/*"
                                     style="margin-bottom: 0;">
                                 <small style="color: #6b7280; font-size: 12px;">JPG, PNG, GIF, BMP, WEBP (tối đa
                                     5MB)</small>
@@ -177,6 +217,15 @@
                             <!-- Preview -->
                             <div id="imagePreview" style="display: none; margin-top: 1rem;">
                                 <img id="previewImg" src="" alt="Preview" class="image-preview">
+                            </div>
+                            <div th:if="${#fields.hasErrors('imgUrl')}" class="error-message">
+                                <span th:errors="*{imgUrl}"></span>
+                            </div>
+                            <div th:if="${#fields.hasErrors('imgFile')}" class="error-message">
+                                <span th:errors="*{imgFile}"></span>
+                            </div>
+                            <div th:if="${#fields.hasErrors('imageProvided')}" class="error-message">
+                                <span th:errors="*{imageProvided}"></span>
                             </div>
                         </div>
                     </div>
@@ -196,8 +245,46 @@
         </div>
     </div>
 
+    <!-- jQuery (required for Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script th:src="@{/assets/js/admin/script.js}"></script>
     <script>
+        $(document).ready(function() {
+            // Initialize Select2 on our select elements
+            $('.select2-autocomplete').select2({
+                placeholder: function() {
+                    return $(this).data('placeholder') || $(this).find('option:first').text();
+                },
+                allowClear: true,
+                width: '100%',
+                language: {
+                    noResults: function() {
+                        return "Không tìm thấy kết quả";
+                    },
+                    searching: function() {
+                        return "Đang tìm kiếm...";
+                    }
+                }
+            });
+            
+            // Handle form submission to ensure Select2 values are properly included
+            $('form').on('submit', function() {
+                $('.select2-autocomplete').each(function() {
+                    const select = $(this);
+                    const value = select.val();
+                    
+                    // Set the hidden input value for Thymeleaf binding
+                    if (select.attr('id') === 'partType') {
+                        $('input[name="partTypeId"]').val(value);
+                    } else if (select.attr('id') === 'laptop') {
+                        $('input[name="laptopId"]').val(value);
+                    }
+                });
+            });
+        });
+
         // Tab functionality
         function showTab(tabName) {
             // Hide all tab contents

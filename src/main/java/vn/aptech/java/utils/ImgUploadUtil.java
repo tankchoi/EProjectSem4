@@ -65,11 +65,19 @@ public class ImgUploadUtil {
         if (filename == null || filename.isEmpty()) {
             return false;
         }
-
-        Path filePath = Paths.get(directory, filename);
+        if (filename.startsWith("/")) {
+            filename = filename.substring(1);
+        }
+        Path filePath;
+        if (filename.startsWith(directory)) {
+            filePath = Paths.get(filename);
+        } else {
+            filePath = Paths.get(directory, filename);
+        }
         try {
             return Files.deleteIfExists(filePath);
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
     }

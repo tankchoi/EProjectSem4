@@ -101,22 +101,32 @@ public class LaptopController {
     public String update(@Valid @ModelAttribute("laptop") UpdateLaptopDTO updateLaptopDTO,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes,
-                         Model model){
-        if( bindingResult.hasErrors()) {
+                         Model model) {
+        if (bindingResult.hasErrors()) {
             model.addAttribute("activePage", "laptop");
             model.addAttribute("models", modelService.getModels(null));
             model.addAttribute("laptop", updateLaptopDTO);
             return "admin/pages/laptop/edit";
         }
+
         try {
             Optional<Laptop> existingLaptopOpt = laptopService.getLaptopById(updateLaptopDTO.getId());
-            if(updateLaptopDTO.getImgUrl() == null || updateLaptopDTO.getImgUrl().isEmpty()) {
-                if (existingLaptopOpt.isPresent() && existingLaptopOpt.get().getImgUrl() != null) {
-                    updateLaptopDTO.setImgUrl(existingLaptopOpt.get().getImgUrl());
+            String oldImgUrl = existingLaptopOpt.map(Laptop::getImgUrl).orElse(null);
+            if ((updateLaptopDTO.getImgUrl() == null || updateLaptopDTO.getImgUrl().isEmpty())
+                    && (updateLaptopDTO.getImgFile() == null || updateLaptopDTO.getImgFile().isEmpty())) {
+                if (oldImgUrl != null) {
+                    updateLaptopDTO.setImgUrl(oldImgUrl);
                 }
             }
-            if(updateLaptopDTO.getImgFile() != null && !updateLaptopDTO.getImgFile().isEmpty()) {
-                if(!ImgUploadUtil.isValidImageFormat(updateLaptopDTO.getImgFile())){
+            if (updateLaptopDTO.getImgUrl() != null && !updateLaptopDTO.getImgUrl().isEmpty()
+                    && (updateLaptopDTO.getImgFile() == null || updateLaptopDTO.getImgFile().isEmpty())) {
+                if (oldImgUrl != null && !oldImgUrl.equals(updateLaptopDTO.getImgUrl())
+                        && !oldImgUrl.startsWith("http")) {
+                    ImgUploadUtil.deleteFile(oldImgUrl);
+                }
+            }
+            if (updateLaptopDTO.getImgFile() != null && !updateLaptopDTO.getImgFile().isEmpty()) {
+                if (!ImgUploadUtil.isValidImageFormat(updateLaptopDTO.getImgFile())) {
                     model.addAttribute("activePage", "laptop");
                     bindingResult.rejectValue("imgFile", "imgFile.invalidType",
                             "Định dạng ảnh không hợp lệ. Vui lòng tải lên ảnh có định dạng jpg, jpeg, png hoặc webp.");
@@ -124,15 +134,15 @@ public class LaptopController {
                     model.addAttribute("laptop", updateLaptopDTO);
                     return "admin/pages/laptop/edit";
                 }
-                if (existingLaptopOpt.isPresent() && existingLaptopOpt.get().getImgUrl() != null) {
-                    if (!existingLaptopOpt.get().getImgUrl().startsWith("http")) {
-                        ImgUploadUtil.deleteFile(existingLaptopOpt.get().getImgUrl());
-                    }
+                if (oldImgUrl != null && !oldImgUrl.startsWith("http")) {
+                    ImgUploadUtil.deleteFile(oldImgUrl);
                 }
                 updateLaptopDTO.setImgUrl(ImgUploadUtil.saveFile(updateLaptopDTO.getImgFile(), "laptops"));
             }
+
             laptopService.updateLaptop(updateLaptopDTO);
             redirectAttributes.addFlashAttribute("success", "Cập nhật laptop thành công!");
+
         } catch (Exception e) {
             model.addAttribute("activePage", "laptop");
             model.addAttribute("error", "Có lỗi xảy ra khi cập nhật laptop: " + e.getMessage());
@@ -140,8 +150,10 @@ public class LaptopController {
             model.addAttribute("laptop", updateLaptopDTO);
             return "admin/pages/laptop/edit";
         }
+
         return "redirect:/admin/laptop";
     }
+
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
