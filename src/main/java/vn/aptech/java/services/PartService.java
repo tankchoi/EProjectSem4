@@ -13,4 +13,6 @@ public interface PartService {
     Part createPart(CreatePartDTO createPartDTO);
     Part updatePart(UpdatePartDTO updatePartDTO);
     void deletePart(Long id);
+
+    List<Part> searchByName(String keyword);
 }

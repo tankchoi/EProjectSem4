@@ -19,4 +19,8 @@ public interface PartRepository extends JpaRepository<Part, Long> {
        OR CAST(p.warranty_period AS CHAR) LIKE CONCAT('%', :keyword, '%')
     """, nativeQuery = true)
     List<Part> searchPartsByKeyword(@Param("keyword") String keyword);
+
+
+    @Query("SELECT p FROM Part p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Part> findByNameParts(@Param("keyword") String keyword);
 }

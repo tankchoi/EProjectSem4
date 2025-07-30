@@ -43,6 +43,7 @@ body {
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 16px;
+    font-family: Arial, sans-serif;
 }
 
 .form-group textarea {

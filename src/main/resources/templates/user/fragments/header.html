@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Header HP</title>
     <link rel="stylesheet" th:href="@{/assets/css/user/header.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
 </head>
 
 <body>
@@ -13,16 +13,16 @@
             <div class="logo">
                 <img th:src="@{/images/2048px-HP_logo_2012.svg.png}" alt="HP Logo">
                 <nav class="nav-links">
-                    <a href="#">Support</a>
-                    <a href="#">Contact</a>
+                    <a href="/user/homepage">Trang chủ</a>
+                    <a href="/user/contact">Liên hệ</a>
                 </nav>
             </div>
             <div class="search-login">
                 <div class="search-box">
-                    <input type="text" placeholder="Search for support">
+                    <input type="text" placeholder="Tìm kiếm hỗ trợ">
                     <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </div>
-                <button class="login-btn">Login</button>
+                <a href="/user/custom-login" class="login-btn">Đăng nhập</a>
             </div>
         </div>
     </header>
