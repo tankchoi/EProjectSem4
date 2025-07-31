@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import vn.aptech.java.models.CustomUserDetails;
@@ -15,7 +16,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 @Service
-public class CustomUserDetailServiceImpl implements CustomUserDetailService {
+public class CustomUserDetailServiceImpl implements CustomUserDetailService , UserDetailsService {
 
     @Autowired
     private UserService userService;
@@ -27,7 +28,7 @@ public class CustomUserDetailServiceImpl implements CustomUserDetailService {
             throw new UsernameNotFoundException("Vui lòng nhập đúng thông tin");
         }
         if (user.getStatus() != User.Status.ACTIVE) {
-            throw new UsernameNotFoundException("User account is not active");
+            throw new UsernameNotFoundException("Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để biết thêm chi tiết.");
         }
         Collection<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().toString()));

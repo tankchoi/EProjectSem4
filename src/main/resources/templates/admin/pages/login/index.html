@@ -48,14 +48,14 @@
             <!-- Login Form -->
             <div class="login-form-container">
                 <!-- Alert Messages -->
-                <div th:if="${successMessage}" class="alert alert-success">
+                <div th:if="${param.logout}" class="alert alert-success">
                     <span class="material-symbols-outlined">check_circle</span>
-                    <span th:text="${successMessage}"></span>
+                    <span>Đăng xuất thành công!</span>
                 </div>
 
-                <div th:if="${errorMessage}" class="alert alert-error">
+                <div th:if="${param.error}" class="alert alert-error">
                     <span class="material-symbols-outlined">error</span>
-                    <span th:text="${errorMessage}"></span>
+                    <span>Sai tên đăng nhập, mật khẩu hoặc tài khoản bị khóa</span>
                 </div>
 
                 <form class="login-form" method="POST" th:action="@{/admin/login}">
@@ -105,19 +105,8 @@
                         </span>
                     </button>
 
-                    <!-- Divider -->
-                    <div class="divider">
-                        <span class="divider-text">hoặc</span>
-                    </div>
 
-                    <!-- Customer Login Link -->
-                    <div class="alternative-login">
-                        <p class="alt-text">Bạn là khách hàng?</p>
-                        <a href="/client/login" class="customer-link">
-                            <span class="material-symbols-outlined">person_outline</span>
-                            <span>Đăng nhập khách hàng</span>
-                        </a>
-                    </div>
+
                 </form>
             </div>
         </div>
