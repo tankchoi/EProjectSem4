@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     @Override
@@ -26,6 +26,6 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         String userName = authentication.getName();
-        return userRepository.findByUsername(userName);
+        return userRepository.findByUsername(userName).orElse(null);
     }
 }

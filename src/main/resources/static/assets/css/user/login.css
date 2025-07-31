@@ -77,8 +77,10 @@ body{
     left: 50%;
     transform: translate(-50%,-50%);
     color: #fff;
-    font-size: 24px;
+    font-size: 20px;
     transition: 0.3s;
+    width: 140px;
+    text-align: center;
 }
 .title-register{
     top: 50px;

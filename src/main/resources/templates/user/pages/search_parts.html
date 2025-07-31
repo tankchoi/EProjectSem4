@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,42 +9,41 @@
     <link rel="stylesheet" th:href="@{/assets/css/user/search_parts.css}">
     <link rel="stylesheet" th:href="@{/assets/css/user/footer.css}">
     <link rel="stylesheet" th:href="@{/assets/css/user/header.css}">
-    <link rel="stylesheet" type="text/css"
-		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+
 </head>
 
 <body>
     <div th:replace="user/fragments/header :: header"></div>
     <div class="lookup-container">
         <div class="lookup-header">
-            <h2>Check Spare Parts</h2>
+            <h2>Kiểm tra linh kiện</h2>
         </div>
 
-        <div class="form-group">
-            <input type="text" placeholder="Enter part name or product serial">
-            <button>Lookup</button>
-        </div>
+        <form th:action="@{/user/search-parts}" method="get" class="form-group">
+            <input type="text" name="keyword" placeholder="Nhập tên linh kiện cần tìm"
+                th:value="${keyword}">
+            <button type="submit">Tra cứu</button>
+        </form>
 
         <div class="lookup-header">
-            <h2>Search Results for Spare Parts</h2>
+            <h2>Kết quả tìm kiếm linh kiện</h2>
         </div>
 
-        <div class="part-card">
-            <img class="part-image" th:src="@{/images/imgstd.jpg}" alt="Spare Part">
-            <div class="part-info">
-                <h3>Micron 7450 3.2T MTFDKCC3T2TFS-1BC45ABYY 4k SED U.3 SSD with 2.5 HS tray CSP I4</h3>
-                <p><strong>Part No:</strong> 03LA326</p>
-                <p><strong>Commodity:</strong> DRIVES AND STORAGE - SSD_ASM</p>
+        <div th:if="${parts != null and !parts.isEmpty()}" class="result-scroll">
+            <div th:each="part : ${parts}" class="part-card">
+                <img class="part-image" th:src="@{${part.imgUrl != null ? '../' + part.imgUrl : '/images/imgstd.jpg'}}">
+
+                <div class="part-info">
+                    <h3 th:text="${part.name}">Tên linh kiện</h3>
+                    <p><strong>Mã sản phẩm:</strong> <span th:text="${part.id}">ID</span></p>
+                    <p><strong>Mặt hàng:</strong> <span th:text="${part.partType.name}">Loại</span></p>
+                </div>
             </div>
         </div>
 
-        <div class="part-card">
-            <img class="part-image" th:src="@{/images/imgstd.jpg}" alt="Spare Part">
-            <div class="part-info">
-                <h3>Kingston 1TB SSD NVMe Gen4 with heat sink</h3>
-                <p><strong>Part No:</strong> KSN1TBG4</p>
-                <p><strong>Commodity:</strong> STORAGE DEVICES</p>
-            </div>
+        <div th:if="${parts == null or parts.isEmpty()}" class="no-results">
+            <p>Không tìm thấy linh kiện phù hợp.</p>
         </div>
     </div>
     <div th:replace="user/fragments/footer :: footer"></div>
