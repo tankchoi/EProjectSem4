@@ -20,7 +20,7 @@
             <h2>Kiểm tra linh kiện</h2>
         </div>
 
-        <form th:action="@{/user/search-parts}" method="get" class="form-group">
+        <form action="/search-parts" method="get" class="form-group">
             <input type="text" name="keyword" placeholder="Nhập tên linh kiện cần tìm"
                 th:value="${keyword}">
             <button type="submit">Tra cứu</button>

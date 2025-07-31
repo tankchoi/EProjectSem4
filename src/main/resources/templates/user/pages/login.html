@@ -12,24 +12,24 @@
 </head>
 
 <body>
-    <div class="wrapper">
+    <div class="wrapper-login">
         <div class="form-header">
             <div class="titles">
                 <div class="title-login">Đăng Nhập</div>
-                <div class="title-register">Đăng Ký</div>
             </div>
         </div>
         <!-- LOGIN FORM -->
-        <form action="user/custom-login" method="post" class="login-form" autocomplete="off">
+        <form th:action="@{/custom-login}" method="post" class="login-form" autocomplete="off">
             <div class="input-box">
-                <input type="text" class="input-field" name="username" required>
-                <label class="label">Tên đăng nhập</label>
-                <i class='bx bx-envelope icon'></i>
+                <input type="text" class="input-field" name="username" placeholder="Nhập tên đăng nhập">
+                <i class='bx bx-user icon'></i> 
             </div>
             <div class="input-box">
-                <input type="password" class="input-field" name="password" required>
-                <label class="label">Mật khẩu</label>
+                <input type="password" class="input-field" name="password" placeholder="Nhập mật khẩu">
                 <i class='bx bx-lock-alt icon'></i>
+            </div>
+            <div th:if="${param.error}" style="color: red; margin-bottom:10px;">
+                Tên đăng nhập hoặc mật khẩu không đúng.
             </div>
             <div class="form-cols">
                 <div class="col-1"></div>
@@ -41,40 +41,11 @@
                 <button class="btn-submit" id="SignInBtn" type="submit">Đăng nhập <i class='bx bx-log-in'></i></button>
             </div>
             <div class="switch-form">
-                <span>Bạn chưa có tài khoản? <a href="#" onclick="registerFunction()">Đăng ký</a></span>
-            </div>
-        </form>
-
-        <!-- REGISTER FORM -->
-        <form action="/user/register" method="post" class="register-form" autocomplete="off">
-            <div class="input-box">
-                <input type="text" class="input-field" name="username" required>
-                <label class="label">Tên đăng nhập</label>
-            </div>
-            <div class="input-box">
-                <input type="text" class="input-field" name="email" required>
-                <label class="label">Email</label>
-            </div>
-            <div class="input-box">
-                <input type="password" class="input-field" name="password" required>
-                <label class="label">Mật khẩu</label>
-            </div>
-            <div class="form-cols">
-                <div class="col-1">
-                    <input type="checkbox" id="agree">
-                    <label for="agree"> Tôi đồng ý với các điều khoản và điều kiện</label>
-                </div>
-                <div class="col-2"></div>
-            </div>
-            <div class="input-box">
-                <button class="btn-submit" id="SignUpBtn" type="submit">Đăng ký <i class='bx bx-user-plus'></i></button>
-            </div>
-            <div class="switch-form">
-                <span>Đã có tài khoản? <a href="#" onclick="loginFunction()">Đăng nhập</a></span>
+                <span>Bạn chưa có tài khoản? <a href="/register">Đăng ký</a></span>
             </div>
         </form>
     </div>
-    <script th:src="@{/assets/js/user/script.js}"></script>
+
 </body>
 
 </html>

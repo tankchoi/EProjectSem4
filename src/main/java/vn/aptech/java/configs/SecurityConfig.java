@@ -45,17 +45,17 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .securityMatcher("/**")
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/logon").permitAll()
+                        .requestMatchers("/", "/custom-login", "/register", "/homepage", "/search-parts", "/images/parts/**", "/images/**").permitAll()
                         .anyRequest().hasAuthority("CUSTOMER"))
                 .formLogin(login -> login
-                        .loginPage("/logon")
-                        .loginProcessingUrl("/logon")
+                        .loginPage("/custom-login")
+                        .loginProcessingUrl("/custom-login")
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/", true))
+                        .defaultSuccessUrl("/homepage", true))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/logon"));
+                        .logoutSuccessUrl("/custom-login"));
         return http.build();
     }
 

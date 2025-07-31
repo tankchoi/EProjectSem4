@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/assets/css/user/history.css}">
     <link rel="stylesheet" th:href="@{/assets/css/user/footer.css}">
     <link rel="stylesheet" th:href="@{/assets/css/user/header.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 </head>
 
 <body>
@@ -19,41 +20,29 @@
         <table>
             <thead>
                 <tr>
-                    <th>Ngày</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Số sê-ri</th>
+                    <th>Ngày đặt</th>
+                    <th>Tên Laptop</th>
+                    <th>Số Serial</th>
                     <th>Vấn đề</th>
                     <th>Trạng thái</th>
-                    <th>Ghi chú</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td data-label="Date">2025-03-01</td>
-                    <td data-label="Product Name">Dell Inspiron 15</td>
-                    <td data-label="Serial Number">D123456789</td>
-                    <td data-label="Issue">Won’t power on</td>
-                    <td data-label="Status">Resolved</td>
-                    <td data-label="Notes">Mainboard replaced</td>
+                <tr th:if="${#lists.isEmpty(historyList)}">
+                    <td colspan="5" class="no-results">
+                        Không có lịch sử bảo hành nào.
+                    </td>
                 </tr>
-                <tr>
-                    <td data-label="Date">2025-04-10</td>
-                    <td data-label="Product Name">HP Pavilion</td>
-                    <td data-label="Serial Number">HP987654321</td>
-                    <td data-label="Issue">Screen issue</td>
-                    <td data-label="Status">In Progress</td>
-                    <td data-label="Notes">Waiting for parts</td>
-                </tr>
-                <tr>
-                    <td data-label="Date">2025-05-05</td>
-                    <td data-label="Product Name">Asus VivoBook</td>
-                    <td data-label="Serial Number">ASU1234567</td>
-                    <td data-label="Issue">Battery problem</td>
-                    <td data-label="Status">Resolved</td>
-                    <td data-label="Notes">Battery replaced</td>
+                <tr th:each="req : ${historyList}">
+                    <td th:text="${#dates.format(req.bookingDate, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${req.customerLaptop.laptop.name}"></td>
+                    <td th:text="${req.customerLaptop.serialNumber}"></td>
+                    <td th:text="${req.description}"></td>
+                    <td th:text="${req.status}"></td>
                 </tr>
             </tbody>
         </table>
+
     </div>
     <div th:replace="user/fragments/footer :: footer"></div>
 </body>

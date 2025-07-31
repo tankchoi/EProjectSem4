@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <title>Header HP</title>
@@ -8,23 +10,34 @@
 </head>
 
 <body>
-    <header class="header">
-        <div class="header-container">
-            <div class="logo">
-                <img th:src="@{/images/2048px-HP_logo_2012.svg.png}" alt="HP Logo">
-                <nav class="nav-links">
-                    <a href="/user/homepage">Trang chủ</a>
-                    <a href="/user/contact">Liên hệ</a>
-                </nav>
+<header class="header">
+    <div class="header-container">
+        <div class="logo">
+            <img src="/images/2048px-HP_logo_2012.svg.png" alt="HP Logo">
+            <nav class="nav-links">
+                <a href="/homepage">Trang chủ</a>
+                <a href="/contact">Liên hệ</a>
+            </nav>
+        </div>
+
+        <div class="search-login">
+            <div class="search-box">
+                <input type="text" placeholder="Tìm kiếm hỗ trợ">
+                <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-            <div class="search-login">
-                <div class="search-box">
-                    <input type="text" placeholder="Tìm kiếm hỗ trợ">
-                    <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-                </div>
-                <a href="/user/custom-login" class="login-btn">Đăng nhập</a>
+
+            <!-- Nếu chưa đăng nhập -->
+            <div sec:authorize="!isAuthenticated()">
+                <a href="/custom-login" class="login-btn">Đăng nhập</a>
+            </div>
+
+            <!-- Nếu đã đăng nhập -->
+            <div sec:authorize="isAuthenticated()" class="user-info">
+                <span th:text="'Xin chào, ' + ${#authentication.name}"></span>
+                <a href="/logout" class="logout-btn">Đăng xuất</a>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 </body>
 </html>
