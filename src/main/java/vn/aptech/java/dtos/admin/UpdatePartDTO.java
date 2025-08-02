@@ -1,9 +1,11 @@
-package vn.aptech.java.dtos;
+package vn.aptech.java.dtos.admin;
 
 import jakarta.validation.constraints.*;
 import org.springframework.web.multipart.MultipartFile;
 
-public class CreatePartDTO {
+public class UpdatePartDTO {
+    @NotNull(message = "ID linh kiện không được để trống")
+    private Long id;
     @NotNull(message = "Loại linh kiện không được để trống")
     private Long partTypeId;
     private Long laptopId;
@@ -20,15 +22,11 @@ public class CreatePartDTO {
     private Integer warrantyPeriod;
     private String imgUrl;
     private MultipartFile imgFile;
-    @AssertTrue(message = "Cần cung cấp ảnh URL hoặc file ảnh")
-    public boolean isImageProvided() {
-        return (imgUrl != null && !imgUrl.trim().isEmpty()) ||
-               (imgFile != null && !imgFile.isEmpty());
-    }
-    public CreatePartDTO() {
+    public UpdatePartDTO() {
     }
 
-    public CreatePartDTO(Long partTypeId, Long laptopId, String name, Double price, Integer quantity, Integer warrantyPeriod, String imgUrl, MultipartFile imgFile) {
+    public UpdatePartDTO(Long id, Long partTypeId, Long laptopId, String name, Double price, Integer quantity, Integer warrantyPeriod, String imgUrl, MultipartFile imgFile) {
+        this.id = id;
         this.partTypeId = partTypeId;
         this.laptopId = laptopId;
         this.name = name;
@@ -37,6 +35,10 @@ public class CreatePartDTO {
         this.warrantyPeriod = warrantyPeriod;
         this.imgUrl = imgUrl;
         this.imgFile = imgFile;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getPartTypeId() {
@@ -69,6 +71,10 @@ public class CreatePartDTO {
 
     public MultipartFile getImgFile() {
         return imgFile;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setPartTypeId(Long partTypeId) {

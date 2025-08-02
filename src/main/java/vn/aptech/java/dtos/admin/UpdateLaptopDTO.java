@@ -1,12 +1,10 @@
-package vn.aptech.java.dtos;
+package vn.aptech.java.dtos.admin;
 
 
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.web.multipart.MultipartFile;
-import vn.aptech.java.models.Model;
 
 public class UpdateLaptopDTO {
     @NotNull(message = "ID không được để trống")

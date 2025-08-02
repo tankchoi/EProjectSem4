@@ -2,8 +2,8 @@ package vn.aptech.java.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.aptech.java.dtos.CreatePartTypeDTO;
-import vn.aptech.java.dtos.UpdatePartTypeDTO;
+import vn.aptech.java.dtos.admin.CreatePartTypeDTO;
+import vn.aptech.java.dtos.admin.UpdatePartTypeDTO;
 import vn.aptech.java.models.PartType;
 import vn.aptech.java.repositories.PartTypeRepository;
 import vn.aptech.java.services.PartTypeService;
@@ -29,19 +29,19 @@ public class PartTypeServiceImp implements PartTypeService {
     }
 
     @Override
-    public PartType createPartType(CreatePartTypeDTO createPartTypeDTO) {
+    public void createPartType(CreatePartTypeDTO createPartTypeDTO) {
         PartType partType = new PartType();
         partType.setName(createPartTypeDTO.getName());
-        return partTypeRepository.save(partType);
+        partTypeRepository.save(partType);
     }
 
     @Override
-    public PartType updatePartType(UpdatePartTypeDTO updatePartTypeDTO) {
+    public void updatePartType(UpdatePartTypeDTO updatePartTypeDTO) {
         Optional<PartType> optionalPartType = partTypeRepository.findById(updatePartTypeDTO.getId());
         if (optionalPartType.isPresent()) {
             PartType partType = optionalPartType.get();
             partType.setName(updatePartTypeDTO.getName());
-            return partTypeRepository.save(partType);
+            partTypeRepository.save(partType);
         } else {
             throw new IllegalArgumentException("PartType with ID " + updatePartTypeDTO.getId() + " does not exist.");
         }

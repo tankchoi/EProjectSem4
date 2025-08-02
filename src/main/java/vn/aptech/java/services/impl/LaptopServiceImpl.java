@@ -2,8 +2,8 @@ package vn.aptech.java.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.aptech.java.dtos.CreateLaptopDTO;
-import vn.aptech.java.dtos.UpdateLaptopDTO;
+import vn.aptech.java.dtos.admin.CreateLaptopDTO;
+import vn.aptech.java.dtos.admin.UpdateLaptopDTO;
 import vn.aptech.java.models.Laptop;
 import vn.aptech.java.models.Model;
 import vn.aptech.java.repositories.LaptopRepository;
@@ -36,7 +36,7 @@ public class LaptopServiceImpl implements LaptopService {
     }
 
     @Override
-    public Laptop createLaptop(CreateLaptopDTO createLaptopDTO) {
+    public void createLaptop(CreateLaptopDTO createLaptopDTO) {
         Laptop laptop = new Laptop();
         Optional<Model> model = modelService.getModelById(createLaptopDTO.getModelId());
         if (model.isEmpty()) {
@@ -46,11 +46,11 @@ public class LaptopServiceImpl implements LaptopService {
         laptop.setModel(model.get());
         laptop.setWarrantyPeriod(createLaptopDTO.getWarrantyPeriod());
         laptop.setImgUrl(createLaptopDTO.getImgUrl());
-        return laptopRepository.save(laptop);
+        laptopRepository.save(laptop);
     }
 
     @Override
-    public Laptop updateLaptop(UpdateLaptopDTO updateLaptopDTO) {
+    public void updateLaptop(UpdateLaptopDTO updateLaptopDTO) {
         Optional<Laptop> laptopOpt = laptopRepository.findById(updateLaptopDTO.getId());
         if (laptopOpt.isPresent()) {
             Laptop laptop = laptopOpt.get();
@@ -60,7 +60,7 @@ public class LaptopServiceImpl implements LaptopService {
             laptop.setModel(model);
             laptop.setWarrantyPeriod(updateLaptopDTO.getWarrantyPeriod());
             laptop.setImgUrl(updateLaptopDTO.getImgUrl());
-            return laptopRepository.save(laptop);
+            laptopRepository.save(laptop);
         } else {
             throw new IllegalArgumentException("Laptop with ID " + updateLaptopDTO.getId() + " does not exist.");
         }

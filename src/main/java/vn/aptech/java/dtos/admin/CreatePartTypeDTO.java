@@ -1,23 +1,20 @@
-package vn.aptech.java.dtos;
+package vn.aptech.java.dtos.admin;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class CreateModelDTO {
-    @NotBlank(message = "Tên model không được để trống")
+public class CreatePartTypeDTO {
+    @NotBlank(message = "Tên kiểu linh kiện không được để trống")
     private String name;
-
-    public CreateModelDTO() {
+    public CreatePartTypeDTO() {
     }
-
-    public CreateModelDTO(String name) {
+    public CreatePartTypeDTO(String name) {
         this.name = name;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
+
 }

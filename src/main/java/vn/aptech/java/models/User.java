@@ -20,7 +20,9 @@ public class User {
     private String password;
 
     private String fullname;
+    @Column(unique = true)
     private String email;
+    @Column(unique = true)
     private String phone;
     public enum Role {
         ADMIN,

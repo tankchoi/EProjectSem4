@@ -8,14 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vn.aptech.java.dtos.CreateLaptopDTO;
-import vn.aptech.java.dtos.UpdateLaptopDTO;
+import vn.aptech.java.dtos.admin.CreateLaptopDTO;
+import vn.aptech.java.dtos.admin.UpdateLaptopDTO;
 import vn.aptech.java.models.Laptop;
 import vn.aptech.java.services.LaptopService;
 import vn.aptech.java.services.ModelService;
 import vn.aptech.java.utils.ImgUploadUtil;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Controller

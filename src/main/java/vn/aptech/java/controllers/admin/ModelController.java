@@ -7,7 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vn.aptech.java.dtos.UpdateModelDTO;
+import vn.aptech.java.dtos.admin.UpdateModelDTO;
+import vn.aptech.java.dtos.admin.CreateModelDTO;
 import vn.aptech.java.services.ModelService;
 
 import java.util.Optional;
@@ -28,11 +29,11 @@ public class ModelController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("activePage", "model");
-        model.addAttribute("model", new vn.aptech.java.dtos.CreateModelDTO());
+        model.addAttribute("model", new CreateModelDTO());
         return "admin/pages/model/create";
     }
     @PostMapping("/create")
-    public String store(@Valid @ModelAttribute("model") vn.aptech.java.dtos.CreateModelDTO createModelDTO,
+    public String store(@Valid @ModelAttribute("model") CreateModelDTO createModelDTO,
                         BindingResult bindingResult,
                         RedirectAttributes redirectAttributes,
                         Model model) {
@@ -74,7 +75,7 @@ public class ModelController {
 
     }
     @PostMapping("/update")
-    public String update(@Valid @ModelAttribute("model") vn.aptech.java.dtos.UpdateModelDTO updateModelDTO,
+    public String update(@Valid @ModelAttribute("model") UpdateModelDTO updateModelDTO,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes,
                          Model model) {

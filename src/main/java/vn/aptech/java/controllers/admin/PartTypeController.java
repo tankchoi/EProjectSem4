@@ -7,8 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vn.aptech.java.dtos.CreatePartTypeDTO;
-import vn.aptech.java.dtos.UpdatePartTypeDTO;
+import vn.aptech.java.dtos.admin.CreatePartTypeDTO;
+import vn.aptech.java.dtos.admin.UpdatePartTypeDTO;
 import vn.aptech.java.models.PartType;
 import vn.aptech.java.services.PartTypeService;
 
@@ -34,7 +34,7 @@ public class PartTypeController {
         return "admin/pages/part_type/create";
     }
     @PostMapping("/create")
-    public String store(@Valid @ModelAttribute("partType") vn.aptech.java.dtos.CreatePartTypeDTO createPartTypeDTO,
+    public String store(@Valid @ModelAttribute("partType") CreatePartTypeDTO createPartTypeDTO,
                         BindingResult bindingResult,
                         RedirectAttributes redirectAttributes,
                         Model model) {

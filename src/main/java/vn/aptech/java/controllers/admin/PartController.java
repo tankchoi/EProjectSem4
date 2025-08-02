@@ -6,9 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vn.aptech.java.dtos.CreatePartDTO;
-import vn.aptech.java.dtos.UpdatePartDTO;
-import vn.aptech.java.models.Laptop;
+import vn.aptech.java.dtos.admin.CreatePartDTO;
+import vn.aptech.java.dtos.admin.UpdatePartDTO;
 import vn.aptech.java.models.Part;
 import vn.aptech.java.services.LaptopService;
 import vn.aptech.java.services.PartService;
@@ -38,7 +37,7 @@ public class PartController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("activePage", "part");
-        model.addAttribute("part", new vn.aptech.java.dtos.CreatePartDTO());
+        model.addAttribute("part", new CreatePartDTO());
         model.addAttribute("partTypes", partTypeService.getPartTypes(null));
         model.addAttribute("laptops", laptopService.getLaptops(null));
         return "admin/pages/part/create";

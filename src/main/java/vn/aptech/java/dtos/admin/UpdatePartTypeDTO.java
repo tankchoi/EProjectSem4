@@ -1,16 +1,15 @@
-package vn.aptech.java.dtos;
+package vn.aptech.java.dtos.admin;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class UpdateModelDTO {
+public class UpdatePartTypeDTO {
     @NotNull
     private Long id;
-    @NotBlank(message = "Tên model không được để trống")
+    @NotBlank(message = "Tên kiểu linh kiện không được để trống")
     private String name;
-    public UpdateModelDTO() {
-    }
-    public UpdateModelDTO(Long id, String name) {
+    public UpdatePartTypeDTO() {}
+    public UpdatePartTypeDTO(Long id, String name) {
         this.id = id;
         this.name = name;
     }

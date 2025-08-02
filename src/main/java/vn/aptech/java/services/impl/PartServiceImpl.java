@@ -2,8 +2,8 @@ package vn.aptech.java.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.aptech.java.dtos.CreatePartDTO;
-import vn.aptech.java.dtos.UpdatePartDTO;
+import vn.aptech.java.dtos.admin.CreatePartDTO;
+import vn.aptech.java.dtos.admin.UpdatePartDTO;
 import vn.aptech.java.models.Laptop;
 import vn.aptech.java.models.Part;
 import vn.aptech.java.models.PartType;
@@ -39,7 +39,7 @@ public class PartServiceImpl implements PartService {
     }
 
     @Override
-    public Part createPart(CreatePartDTO createPartDTO) {
+    public void createPart(CreatePartDTO createPartDTO) {
         Part part = new Part();
         Optional<PartType> partTypeOpt = partTypeService.getPartTypeById(createPartDTO.getPartTypeId());
         if (partTypeOpt.isEmpty()) {
@@ -58,11 +58,11 @@ public class PartServiceImpl implements PartService {
         part.setQuantity(createPartDTO.getQuantity());
         part.setWarrantyPeriod(createPartDTO.getWarrantyPeriod());
         part.setImgUrl(createPartDTO.getImgUrl());
-        return partRepository.save(part);
+        partRepository.save(part);
     }
 
     @Override
-    public Part updatePart(UpdatePartDTO updatePartDTO) {
+    public void updatePart(UpdatePartDTO updatePartDTO) {
         Optional<Part> partOpt = partRepository.findById(updatePartDTO.getId());
         if(partOpt.isEmpty()){
             throw new IllegalArgumentException("Không tìm thấy linh kiện với ID: " + updatePartDTO.getId());
@@ -87,7 +87,7 @@ public class PartServiceImpl implements PartService {
         part.setQuantity(updatePartDTO.getQuantity());
         part.setWarrantyPeriod(updatePartDTO.getWarrantyPeriod());
         part.setImgUrl(updatePartDTO.getImgUrl());
-        return partRepository.save(part);
+        partRepository.save(part);
     }
 
     @Override

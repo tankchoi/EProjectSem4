@@ -12,6 +12,24 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .field-error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .field-error .material-symbols-outlined {
+            font-size: 16px;
+            margin-right: 5px;
+        }
+        
+        .form-control.error {
+            border-color: #dc3545;
+        }
+    </style>
 </head>
 
 <body>
@@ -57,35 +75,49 @@
                                 </h3>
                             </div>
                             <div class="card-body">
-                                <form class="profile-form">
+                                <form class="profile-form" th:action="@{/admin/profile/update}" method="POST" th:object="${updateProfileDTO}">
                                     <div class="form-group">
                                         <label for="username">
                                             <span class="material-symbols-outlined">badge</span>
                                             Tên đăng nhập
                                         </label>
-                                        <input type="text" class="form-control" id="username" th:value="${username}"
-                                            readonly>
+                                        <input type="text" class="form-control" id="username" th:value="${#authentication.name}" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="email">
                                             <span class="material-symbols-outlined">email</span>
                                             Email
                                         </label>
-                                        <input type="email" class="form-control" id="email" value="admin@example.com">
+                                        <input type="email" class="form-control" id="email" th:field="*{email}"
+                                               th:classappend="${#fields.hasErrors('email')} ? 'error' : ''">
+                                        <div class="field-error" th:if="${#fields.hasErrors('email')}">
+                                            <span class="material-symbols-outlined">error</span>
+                                            <span th:errors="*{email}"></span>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="fullname">
                                             <span class="material-symbols-outlined">person</span>
                                             Họ và tên
                                         </label>
-                                        <input type="text" class="form-control" id="fullname" value="Phạm Nhật Anh">
+                                        <input type="text" class="form-control" id="fullname" th:field="*{fullname}"
+                                               th:classappend="${#fields.hasErrors('fullname')} ? 'error' : ''">
+                                        <div class="field-error" th:if="${#fields.hasErrors('fullname')}">
+                                            <span class="material-symbols-outlined">error</span>
+                                            <span th:errors="*{fullname}"></span>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="phone">
                                             <span class="material-symbols-outlined">phone</span>
                                             Số điện thoại
                                         </label>
-                                        <input type="text" class="form-control" id="phone" value="0123456789">
+                                        <input type="text" class="form-control" id="phone" th:field="*{phone}"
+                                               th:classappend="${#fields.hasErrors('phone')} ? 'error' : ''">
+                                        <div class="field-error" th:if="${#fields.hasErrors('phone')}">
+                                            <span class="material-symbols-outlined">error</span>
+                                            <span th:errors="*{phone}"></span>
+                                        </div>
                                     </div>
                                     <div class="form-actions">
                                         <button type="submit" class="btn btn-primary">
@@ -105,27 +137,50 @@
                                 </h3>
                             </div>
                             <div class="card-body">
-                                <form class="password-form">
+                                <form class="password-form" th:action="@{/admin/profile/change-password}" method="POST" th:object="${updatePasswordDTO}">
                                     <div class="form-group">
                                         <label for="current-password">
                                             <span class="material-symbols-outlined">key</span>
                                             Mật khẩu hiện tại
                                         </label>
-                                        <input type="password" class="form-control" id="current-password">
+                                        <input type="password" class="form-control" id="current-password" th:field="*{currentPassword}"
+                                               th:classappend="${#fields.hasErrors('currentPassword')} ? 'error' : ''">
+                                        <div class="field-error" th:if="${#fields.hasErrors('currentPassword')}">
+                                            <span class="material-symbols-outlined">error</span>
+                                            <span th:errors="*{currentPassword}"></span>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="new-password">
                                             <span class="material-symbols-outlined">vpn_key</span>
                                             Mật khẩu mới
                                         </label>
-                                        <input type="password" class="form-control" id="new-password">
+                                        <input type="password" class="form-control" id="new-password" th:field="*{newPassword}"
+                                               th:classappend="${#fields.hasErrors('newPassword')} ? 'error' : ''">
+                                        <div class="field-error" th:if="${#fields.hasErrors('newPassword')}">
+                                            <span class="material-symbols-outlined">error</span>
+                                            <span th:errors="*{newPassword}"></span>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="confirm-password">
                                             <span class="material-symbols-outlined">verified</span>
                                             Xác nhận mật khẩu
                                         </label>
-                                        <input type="password" class="form-control" id="confirm-password">
+                                        <input type="password" class="form-control" id="confirm-password" th:field="*{confirmPassword}"
+                                               th:classappend="${#fields.hasErrors('confirmPassword')} ? 'error' : ''">
+                                        <div class="field-error" th:if="${#fields.hasErrors('confirmPassword')}">
+                                            <span class="material-symbols-outlined">error</span>
+                                            <span th:errors="*{confirmPassword}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="field-error" th:if="${#fields.hasErrors('passwordMatching')}">
+                                        <span class="material-symbols-outlined">error</span>
+                                        <span th:errors="*{passwordMatching}"></span>
+                                    </div>
+                                    <div class="field-error" th:if="${#fields.hasErrors('newPasswordDifferent')}">
+                                        <span class="material-symbols-outlined">error</span>
+                                        <span th:errors="*{newPasswordDifferent}"></span>
                                     </div>
                                     <div class="form-actions">
                                         <button type="submit" class="btn btn-warning">

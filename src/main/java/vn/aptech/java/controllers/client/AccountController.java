@@ -12,8 +12,8 @@ import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 
-import vn.aptech.java.dtos.RegisterDTO;
-import vn.aptech.java.dtos.UpdateInfoDTO;
+import vn.aptech.java.dtos.client.RegisterDTO;
+import vn.aptech.java.dtos.client.UpdateInfoDTO;
 import vn.aptech.java.models.*;
 import vn.aptech.java.repositories.UserRepository;
 import org.springframework.ui.Model;

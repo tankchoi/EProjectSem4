@@ -65,7 +65,13 @@
                     <div class="user-info">
                         <span class="user-name"
                             th:text="${#authentication != null ? #authentication.name : 'Admin'}">Admin</span>
-                        <span class="user-role">Quản trị viên</span>
+                        <span class="user-role"
+                              th:text="${#authentication != null ?
+                                        (#authorization.expression('hasAuthority(''ADMIN'')') ? 'Quản lý' :
+                                         #authorization.expression('hasAuthority(''STAFF'')') ? 'Nhân viên' : 'Quản trị viên')
+                                        : 'Quản trị viên'}">
+                            Quản trị viên
+                        </span>
                     </div>
                     <span class="material-symbols-outlined dropdown-arrow">keyboard_arrow_down</span>
                 </div>
