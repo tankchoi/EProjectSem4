@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import vn.aptech.java.services.CustomerLaptopService;
 import vn.aptech.java.services.PartService;
 import vn.aptech.java.services.RequestService;
 
@@ -21,7 +22,6 @@ import org.springframework.validation.BindingResult;
 
 import vn.aptech.java.dtos.client.WarrantyRequestDTO;
 import vn.aptech.java.models.*;
-import vn.aptech.java.repositories.*;
 
 @Controller
 public class WarrantyController {
@@ -29,10 +29,7 @@ public class WarrantyController {
     private PartService partService;
 
     @Autowired
-    private RequestRepository requestRepository;
-
-    @Autowired
-    private CustomerLaptopRepository customerLaptopRepository;
+    private CustomerLaptopService customerLaptopService;
 
     @Autowired
     private RequestService requestService;
@@ -41,7 +38,7 @@ public class WarrantyController {
     public String viewHistory(Model model,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         Long customerId = customUserDetails.getUser().getId();
-        List<Request> history = requestRepository.getHistoryByCustomerId(customerId);
+        List<Request> history = requestService.getHistoryByCustomerId(customerId);
         model.addAttribute("historyList", history);
         return "user/pages/history";
     }
@@ -53,19 +50,7 @@ public class WarrantyController {
             Model model) {
 
         Long customerId = customUserDetails.getUser().getId();
-        List<CustomerLaptop> laptops;
-
-        if (serialNumber != null && !serialNumber.isBlank()) {
-            CustomerLaptop cl = customerLaptopRepository.findBySerialAndCustomerId(serialNumber.trim(), customerId);
-            if (cl != null) {
-                laptops = List.of(cl);
-            } else {
-                laptops = List.of();
-            }
-        } else {
-            laptops = customerLaptopRepository.findAllByCustomerId(customerId);
-        }
-
+        List<CustomerLaptop> laptops = customerLaptopService.getLaptopsByCustomerIdAndSerial(customerId, serialNumber);
         model.addAttribute("laptops", laptops);
         return "user/pages/check_warranty";
     }

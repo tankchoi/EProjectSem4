@@ -11,6 +11,8 @@ import vn.aptech.java.services.RequestService;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
+
 
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -43,5 +45,10 @@ public class RequestServiceImpl implements RequestService {
         }
 
         requestRepository.save(request);
+    }
+
+    @Override
+    public List<Request> getHistoryByCustomerId(Long customerId) {
+        return requestRepository.getHistoryByCustomerId(customerId);
     }
 }

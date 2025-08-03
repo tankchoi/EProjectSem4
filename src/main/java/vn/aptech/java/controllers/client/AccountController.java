@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import vn.aptech.java.dtos.client.RegisterDTO;
 import vn.aptech.java.dtos.client.UpdateInfoDTO;
 import vn.aptech.java.models.*;
-import vn.aptech.java.repositories.UserRepository;
 import vn.aptech.java.services.UserService;
 
 import org.springframework.ui.Model;
@@ -23,9 +22,6 @@ import org.springframework.validation.BindingResult;
 
 @Controller
 public class AccountController {
-    @Autowired
-    private UserRepository userRepository;
-
     @Autowired
     private UserService userService;
 
@@ -70,7 +66,7 @@ public class AccountController {
     public String information(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             String username = userDetails.getUsername();
-            User user = userRepository.findByUsername(username).orElse(null);
+            User user = userService.findByUsername(username); 
             model.addAttribute("user", user);
 
             UpdateInfoDTO dto = new UpdateInfoDTO();
@@ -110,7 +106,7 @@ public class AccountController {
             } else {
                 model.addAttribute("error", "Đã xảy ra lỗi: " + message);
             }
-            
+
             return "user/pages/information";
         }
 
