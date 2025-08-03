@@ -19,7 +19,7 @@
             <h2>Kiểm tra bảo hành máy tính xách tay</h2>
         </div>
 
-        <form method="post" class="input-group">
+        <form action="/check-warranty" method="get" class="input-group">
             <input type="text" name="serialNumber" placeholder="Nhập số sê-ri" required />
             <button type="submit">Kiểm tra</button>
         </form>
@@ -30,22 +30,27 @@
         <table>
             <thead>
                 <tr>
+                    <th>Ảnh</th>
+                    <th>Tên Laptop</th>
+                    <th>Hãng</th>
                     <th>Số sê-ri</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Thời gian bắt đầu</th>
-                    <th>Thời gian kết thúc</th>
-                    <th>Trạng thái</th>
+                    <th>Thời hạn bảo hành</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                <tr th:if="${#lists.isEmpty(laptops)}">
+                    <td colspan="6" class="no-results">Không tìm thấy kết quả nào.</td>
+                </tr>
+
+                <tr th:each="l : ${laptops}">
+                    <td><img th:src="@{${l.laptop.imgUrl != null ? '../' + l.laptop.imgUrl : '/images/imgstd.jpg'}}" width="100" /></td>
+                    <td th:text="${l.laptop.name}">Tên laptop</td>
+                    <td th:text="${l.laptop.model.name}">Hãng</td>
+                    <td th:text="${l.serialNumber}">Số sê-ri</td>
+                    <td th:text="${l.laptop.warrantyPeriod + ' tháng'}">Hạn bảo hành</td>
                 </tr>
             </tbody>
+
         </table>
     </div>
     <div th:replace="user/fragments/footer :: footer"></div>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/assets/css/user/schedule_warranty.css}">
     <link rel="stylesheet" th:href="@{/assets/css/user/footer.css}">
     <link rel="stylesheet" th:href="@{/assets/css/user/header.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 
 </head>
 
@@ -18,34 +19,53 @@
             <h2>Đặt lịch gia hạn bảo hành</h2>
         </div>
 
-        <form>
+        
+        <div th:if="${success != null}" class="success" th:text="${success}"></div>
+        <form th:action="@{/schedule-warranty}" th:object="${warrantyRequestDTO}" method="post">
             <div class="form-group">
                 <label for="name">Họ và tên:</label>
-                <input type="text" id="name" placeholder="Nhập họ và tên" required>
+                <input type="text" id="name" th:field="*{fullname}" placeholder="Nhập họ và tên">
+                <p th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"
+                    style="margin: 5px 0 5px; color: red;"></p>
             </div>
 
             <div class="form-group">
-                <label for="email">Địa chỉ email:</label>
-                <input type="email" id="email" placeholder="Nhập email của bạn" required>
+                <label for="phone">Điện thoại:</label>
+                <input type="text" id="phone" th:field="*{phone}" placeholder="Nhập số điện thoại">
+                <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="margin: 5px 0 5px; color: red;">
+                </p>
             </div>
 
             <div class="form-group">
-                <label for="serial">Số sê-ri máy tính xách tay:</label>
-                <input type="text" id="serial" placeholder="Nhập số sê-ri máy tính xách tay của bạn" required>
+                <label for="email">Email:</label>
+                <input type="text" id="email" th:field="*{email}" placeholder="Nhập email của bạn">
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="margin: 5px 0 5px; color: red;">
+                </p>
             </div>
 
             <div class="form-group">
-                <label for="date">Ngày mong muốn:</label>
-                <input type="date" id="date" required>
+                <label for="adrress">Địa chỉ:</label>
+                <input type="text" id="adrress" th:field="*{address}" placeholder="Nhập số địa chỉ">
+                <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}"
+                    style="margin: 5px 0 5px; color: red;"></p>
             </div>
 
             <div class="form-group">
-                <label for="notes">Ghi chú bổ sung:</label>
-                <textarea id="notes" placeholder="Mọi yêu cầu hoặc thông tin đặc biệt..."></textarea>
+                <label for="serial">Số sê-ri:</label>
+                <input type="text" id="serial" th:field="*{serialNumber}" placeholder="Nhập số sê-ri">
+                <p th:if="${error != null}" style="margin: 5px 0 5px; color: red;" th:text="${error}"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Mô tả:</label>
+                <textarea id="description" th:field="*{description}" placeholder="Nhập mô tả ..."></textarea>
+                <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+                    style="margin: 5px 0 5px; color: red;"></p>
             </div>
 
             <button type="submit">Đặt lịch ngay</button>
         </form>
+
     </div>
     <div th:replace="user/fragments/footer :: footer"></div>
 </body>

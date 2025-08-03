@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 
 public class UpdateInfoDTO {
 
-    @NotBlank(message = "Tên đăng nhập không được để trống")
     private String username;
 
     private String fullname;

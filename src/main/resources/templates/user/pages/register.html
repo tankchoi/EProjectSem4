@@ -26,7 +26,6 @@
                 <i class='bx bx-user icon'></i>
             </div>
             <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="margin: 5px 0 5px; color: red;"></p>
-            <div th:if="${error}" style="margin: 5px 0 5px; color: red;" th:text="${error}"></div>
 
             <div class="input-box">
                 <input type="text" th:field="*{email}" class="input-field" placeholder="Nhập email">

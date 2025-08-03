@@ -83,10 +83,12 @@ body {
     background-color: #767676;
 }
 
-.note {
-    font-size: 12px;
-    color: #666;
-    margin-top: 10px;
+.success{
+    color: green;
+    padding: 15px;
+    background-color: rgb(204, 233, 204);
+    margin-bottom: 10px;
+    border-radius: 6px;
 }
 
 @media (max-width: 768px) {

@@ -3,9 +3,9 @@ package vn.aptech.java.controllers.client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.validation.Valid;
@@ -16,6 +16,8 @@ import vn.aptech.java.dtos.client.RegisterDTO;
 import vn.aptech.java.dtos.client.UpdateInfoDTO;
 import vn.aptech.java.models.*;
 import vn.aptech.java.repositories.UserRepository;
+import vn.aptech.java.services.UserService;
+
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -25,7 +27,7 @@ public class AccountController {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserService userService;
 
     @GetMapping("/custom-login")
     public String login() {
@@ -48,18 +50,18 @@ public class AccountController {
             return "user/pages/register";
         }
 
-        if (userRepository.findByUsername(registerDTO.getUsername()).isPresent()) {
-            model.addAttribute("error", "Tên đăng nhập đã tồn tại!");
+        try {
+            userService.createAccount(registerDTO);
+        } catch (IllegalArgumentException ex) {
+            if (ex.getMessage().contains("Tên đăng nhập")) {
+                bindingResult.rejectValue("username", "error.username", ex.getMessage());
+            } else if (ex.getMessage().contains("Email")) {
+                bindingResult.rejectValue("email", "error.email", ex.getMessage());
+            } else {
+                model.addAttribute("error", ex.getMessage());
+            }
             return "user/pages/register";
         }
-
-        User user = new User();
-        user.setUsername(registerDTO.getUsername());
-        user.setEmail(registerDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        user.setRole(User.Role.CUSTOMER);
-        user.setStatus(User.Status.ACTIVE);
-        userRepository.save(user);
 
         return "user/pages/login";
     }
@@ -85,6 +87,7 @@ public class AccountController {
     public String updateInformation(
             @Valid @ModelAttribute("updateInfoDTO") UpdateInfoDTO dto,
             BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
             Model model,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
@@ -94,29 +97,24 @@ public class AccountController {
 
         Long userId = userDetails.getUser().getId();
 
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            model.addAttribute("error", "Không tìm thấy người dùng!");
+        try {
+            userService.updateInformation(userId, dto);
+        } catch (IllegalArgumentException ex) {
+            String message = ex.getMessage();
+            if (message.contains("Email")) {
+                bindingResult.rejectValue("email", null, message);
+            } else if (message.contains("Mật khẩu")) {
+                bindingResult.rejectValue("confirmPassword", null, message);
+            } else if (message.contains("Người dùng")) {
+                model.addAttribute("error", message);
+            } else {
+                model.addAttribute("error", "Đã xảy ra lỗi: " + message);
+            }
+            
             return "user/pages/information";
         }
 
-        if (!dto.getNewPassword().isEmpty() || !dto.getConfirmPassword().isEmpty()) {
-            if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
-                model.addAttribute("error", "Mật khẩu mới và xác nhận không khớp!");
-                return "user/pages/information";
-            }
-            user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-        }
-
-        user.setUsername(dto.getUsername());
-        user.setFullname(dto.getFullname());
-        user.setEmail(dto.getEmail());
-        user.setPhone(dto.getPhone());
-
-        userRepository.save(user);
-
-        model.addAttribute("success", "Cập nhật thông tin thành công!");
-        return "user/pages/information";
+        redirectAttributes.addFlashAttribute("success", "Cập nhật thông tin thành công!");
+        return "redirect:/information";
     }
-
 }
