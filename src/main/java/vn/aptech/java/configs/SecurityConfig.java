@@ -24,7 +24,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .securityMatcher("/admin/**")
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/admin/login").permitAll()
+                        .requestMatchers("/admin/**").permitAll()
                         .anyRequest().hasAnyAuthority("ADMIN", "STAFF"))
 
                 .formLogin(login -> login

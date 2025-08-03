@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PartService {
-    List<Part> getParts(String keyword);
+    List<Part> getParts(String name, Long partTypeId, Long laptopId);
     Optional<Part> getPartById(Long id);
     void createPart(CreatePartDTO createPartDTO);
     void updatePart(UpdatePartDTO updatePartDTO);

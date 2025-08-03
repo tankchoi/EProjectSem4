@@ -13,6 +13,7 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -60,16 +61,41 @@
             <!-- Form tìm kiếm -->
             <div class="search-container">
                 <form action="/admin/part" method="get" class="search-form">
-                    <input type="text" name="keyword" th:value="${keyword}"
-                        placeholder="Tìm kiếm theo tên linh kiện, loại linh kiện..." class="search-input">
-                    <button type="submit" class="btn-search">
-                        <span class="material-symbols-outlined">search</span>
-                        Tìm kiếm
-                    </button>
-                    <a href="/admin/part" class="btn-reset">
-                        <span class="material-symbols-outlined">refresh</span>
-                        Hiện tất cả
-                    </a>
+                    <input type="text" name="name" th:value="${name}"
+                        placeholder="Tìm kiếm theo tên linh kiện" class="search-input">
+                    
+                    <!-- Select for Part Type -->
+                    <div class="select-container">
+                        <select id="partTypeId" name="partTypeId" class="select2-filter">
+                            <option value="">-- Tất cả loại linh kiện --</option>
+                            <option th:each="type : ${partTypes}" 
+                                    th:value="${type.id}" 
+                                    th:text="${type.name}"
+                                    th:selected="${partTypeId == type.id}">RAM</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Select for Laptop -->
+                    <div class="select-container">
+                        <select id="laptopId" name="laptopId" class="select2-filter">
+                            <option value="">-- Tất cả laptop --</option>
+                            <option th:each="laptop : ${laptops}" 
+                                    th:value="${laptop.id}" 
+                                    th:text="${laptop.name}"
+                                    th:selected="${laptopId == laptop.id}">Dell XPS</option>
+                        </select>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn-search">
+                            <span class="material-symbols-outlined">search</span>
+                            Tìm kiếm
+                        </button>
+                        <a href="/admin/part" class="btn-reset">
+                            <span class="material-symbols-outlined">refresh</span>
+                            Hiện tất cả
+                        </a>
+                    </div>
                 </form>
             </div>
 
@@ -123,16 +149,6 @@
                         </tr>
                     </tbody>
                 </table>
-
-                <!-- Empty state -->
-                <div th:if="${#lists.isEmpty(parts)}" class="empty-state">
-                    <span class="material-symbols-outlined">inventory_2</span>
-                    <h3 th:if="${keyword}">Không tìm thấy linh kiện nào</h3>
-                    <h3 th:unless="${keyword}">Chưa có linh kiện nào</h3>
-                    <p th:if="${keyword}">Không có linh kiện nào phù hợp với từ khóa "<strong
-                            th:text="${keyword}"></strong>"</p>
-                    <p th:unless="${keyword}">Hệ thống chưa có linh kiện nào. Hãy thêm linh kiện đầu tiên!</p>
-                </div>
             </div>
         </div>
 
@@ -141,8 +157,28 @@
     </div>
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Initialize Select2
+            $(document).ready(function() {
+                $('#partTypeId').select2({
+                    width: '100%',
+                    placeholder: "-- Tất cả loại linh kiện --",
+                    allowClear: true
+                });
+                
+                $('#laptopId').select2({
+                    width: '100%',
+                    placeholder: "-- Tất cả laptop --",
+                    allowClear: true
+                });
+            });
+            $('.select2-filter').on('change', function() {
+                $('.search-form').submit();
+            });
             // Kiểm tra nếu có dữ liệu thì mới khởi tạo DataTable
             if (document.querySelector('#myTable tbody tr:not(.empty-row)')) {
                 new DataTable("#myTable", {
@@ -174,9 +210,6 @@
             }
         });
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script th:src="@{/assets/js/admin/script.js}"></script>
 </body>
 
 </html>

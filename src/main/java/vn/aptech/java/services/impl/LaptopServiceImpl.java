@@ -22,12 +22,14 @@ public class LaptopServiceImpl implements LaptopService {
     private ModelService modelService;
 
     @Override
-    public List<Laptop> getLaptops(String keyword) {
-        if(keyword == null || keyword.isEmpty()) {
-            return laptopRepository.findAll();
-        } else {
-            return laptopRepository.searchLaptopsByKeyword(keyword);
+    public List<Laptop> getLaptops(String name, Long modelId) {
+        if (name == null || name.isEmpty()) {
+            name = null;
         }
+        if (modelId == null || modelId <= 0) {
+            modelId = null;
+        }
+        return laptopRepository.filterLaptops(name, modelId);
     }
 
     @Override

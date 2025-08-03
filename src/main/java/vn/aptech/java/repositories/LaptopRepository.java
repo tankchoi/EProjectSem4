@@ -10,11 +10,9 @@ import java.util.List;
 public interface LaptopRepository extends JpaRepository<Laptop, Long> {
     @Query(value = """
     SELECT l.* FROM laptops l
-    JOIN models m ON l.model_id = m.id
-    WHERE LOWER(l.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
-       OR LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
-       OR CAST(l.warranty_period AS CHAR) LIKE CONCAT('%', :keyword, '%')
+    WHERE (:name IS NULL OR LOWER(l.name) LIKE LOWER(CONCAT('%', :name, '%')))
+      AND (:modelId IS NULL OR l.model_id = :modelId)
     """, nativeQuery = true)
-    List<Laptop> searchLaptopsByKeyword(@Param("keyword") String keyword);
+    List<Laptop> filterLaptops(@Param("name") String name, @Param("modelId") Long modelId);
 
 }

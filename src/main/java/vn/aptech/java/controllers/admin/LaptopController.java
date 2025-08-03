@@ -26,10 +26,13 @@ public class LaptopController {
     private ModelService modelService;
     @GetMapping()
     public String index(Model model,
-                        @RequestParam(value = "keyword", required = false) String keyword) {
+                        @RequestParam(value = "name", required = false) String name,
+                        @RequestParam(value = "modelId", required = false) Long modelId) {
         model.addAttribute("activePage", "laptop");
-        model.addAttribute("laptops", laptopService.getLaptops(keyword));
-        model.addAttribute("keyword", keyword);
+        model.addAttribute("laptops", laptopService.getLaptops(name, modelId));
+        model.addAttribute("models", modelService.getModels(null));
+        model.addAttribute("name", name);
+        model.addAttribute("modelId", modelId);
         return "admin/pages/laptop/index";
     }
     @GetMapping("/create")

@@ -104,14 +104,13 @@ body {
 
 .search-form {
     display: flex;
-    gap: 12px;
-    align-items: center;
+    gap: 16px;
     flex-wrap: wrap;
 }
 
 .search-input {
     flex: 1;
-    min-width: 300px;
+    min-width: 240px;
     padding: 12px 16px;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
@@ -125,6 +124,29 @@ body {
     border-color: #3b82f6;
     background: white;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Select2 container styles */
+.select-container {
+    flex: 1;
+    min-width: 240px;
+}
+
+.select-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+}
+
+/* Button group styles */
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    align-items: flex-end;
+    flex-wrap: wrap;
 }
 
 .btn-search,
@@ -161,6 +183,40 @@ body {
 .btn-reset:hover {
     background: #e2e8f0;
     color: #334155;
+}
+
+/* Select2 custom styles */
+.select2-container--default .select2-selection--single {
+    height: 44px;
+    padding: 8px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #f8fafc;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 28px;
+    color: #374151;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 42px;
+}
+
+.select2-container--default .select2-selection--single:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.select2-dropdown {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #3b82f6;
 }
 
 .table-container {
@@ -363,8 +419,13 @@ body {
         align-items: stretch;
     }
 
-    .search-input {
+    .search-input, .select-container {
         min-width: 100%;
+    }
+    
+    .button-group {
+        width: 100%;
+        justify-content: space-between;
     }
 }
 

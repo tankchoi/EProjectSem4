@@ -13,8 +13,12 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <!-- Add Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <!-- Add Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 
 <body>
@@ -60,18 +64,21 @@
 
             <!-- Form tìm kiếm -->
             <div class="search-container">
-                <form th:action="@{/admin/laptop}" method="get" class="search-form">
-                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm laptop..."
+                <form th:action="@{/admin/laptop}" method="get" class="search-form" id="searchForm">
+                    <input type="text" name="name" th:value="${name}" placeholder="Tìm kiếm theo tên laptop"
                         class="search-input">
-                    <button type="submit" class="btn-search">
-                        <span class="material-symbols-outlined"
-                            style="font-size: 18px; margin-right: 4px;">search</span>
+                    <select name="modelId" class="search-input select2-model">
+                        <option value="">-- Tất cả model --</option>
+                        <option th:each="model : ${models}" th:value="${model.id}" th:text="${model.name}"
+                                th:selected="${model.id == modelId}"></option>
+                    </select>
+                    <button type="submit" class="search-btn">
+                        <span class="material-symbols-outlined">search</span>
                         Tìm kiếm
                     </button>
-                    <a th:href="@{/admin/laptop}" class="btn-reset">
-                        <span class="material-symbols-outlined"
-                            style="font-size: 18px; margin-right: 4px;">refresh</span>
-                        Hiện tất cả
+                    <a th:href="@{/admin/laptop}" class="clear-btn">
+                        <span class="material-symbols-outlined">clear</span>
+                        Làm mới
                     </a>
                 </form>
             </div>
@@ -117,15 +124,6 @@
                                 </form>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(laptops)}">
-                            <td colspan="7" style="text-align: center; padding: 2rem; color: #718096;">
-                                <span class="material-symbols-outlined"
-                                    style="font-size: 2rem; margin-bottom: 0.5rem; display: block;">laptop</span>
-                                <span th:if="${keyword}">Không tìm thấy laptop nào với từ khóa "<strong
-                                        th:text="${keyword}"></strong>"</span>
-                                <span th:unless="${keyword}">Chưa có laptop nào trong hệ thống</span>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -138,7 +136,23 @@
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json"
                 },
-                "pageLength": 10
+                "pageLength": 10,
+                "searching": false,
+                "ordering": true,
+                "info": true
+            });
+
+            // Initialize Select2
+            $('.select2-model').select2({
+                placeholder: "-- Tất cả model --",
+                allowClear: true,
+                width: '100%',
+                dropdownAutoWidth: false
+            });
+
+            // Auto-submit form when the select changes
+            $('.select2-model').on('change', function() {
+                $('#searchForm').submit();
             });
         });
     </script>

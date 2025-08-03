@@ -28,10 +28,16 @@ public class PartController {
     private LaptopService laptopService;
     @GetMapping()
     public String index(Model model,
-                        @RequestParam(value = "keyword", required = false) String keyword) {
+                        @RequestParam(value = "name", required = false) String name,
+                        @RequestParam(value = "partTypeId", required = false) Long partTypeId,
+                        @RequestParam(value = "laptopId", required = false) Long laptopId){
         model.addAttribute("activePage", "part");
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("parts", partService.getParts(keyword));
+        model.addAttribute("name", name);
+        model.addAttribute("partTypeId", partTypeId);
+        model.addAttribute("laptopId", laptopId);
+        model.addAttribute("partTypes", partTypeService.getPartTypes(null));
+        model.addAttribute("laptops", laptopService.getLaptops(null, null));
+        model.addAttribute("parts", partService.getParts(name, partTypeId, laptopId));
         return "admin/pages/part/index";
     }
     @GetMapping("/create")
@@ -39,13 +45,13 @@ public class PartController {
         model.addAttribute("activePage", "part");
         model.addAttribute("part", new CreatePartDTO());
         model.addAttribute("partTypes", partTypeService.getPartTypes(null));
-        model.addAttribute("laptops", laptopService.getLaptops(null));
+        model.addAttribute("laptops", laptopService.getLaptops(null, null));
         return "admin/pages/part/create";
     }
     private void handleErrorAttributes(Model model){
         model.addAttribute("activePage", "part");
         model.addAttribute("partTypes", partTypeService.getPartTypes(null));
-        model.addAttribute("laptops", laptopService.getLaptops(null));
+        model.addAttribute("laptops", laptopService.getLaptops(null, null));
     }
     @PostMapping("/create")
     public String store(@Valid@ModelAttribute("part") CreatePartDTO createPartDTO,
@@ -97,7 +103,7 @@ public class PartController {
                 model.addAttribute("activePage", "part");
                 model.addAttribute("part", updatePartDTO);
                 model.addAttribute("partTypes", partTypeService.getPartTypes(null));
-                model.addAttribute("laptops", laptopService.getLaptops(null));
+                model.addAttribute("laptops", laptopService.getLaptops(null, null));
                 return "admin/pages/part/edit";
             } else {
                 redirectAttributes.addFlashAttribute("error", "Không tìm thấy linh kiện!");

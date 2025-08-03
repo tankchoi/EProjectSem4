@@ -25,12 +25,18 @@ public class PartServiceImpl implements PartService {
     private LaptopService laptopService;
 
     @Override
-    public List<Part> getParts(String keyword) {
-        if (keyword == null || keyword.isEmpty()) {
-            return partRepository.findAll();
-        } else {
-            return partRepository.searchPartsByKeyword(keyword);
+    public List<Part> getParts(String name, Long partTypeId, Long laptopId) {
+        if (name == null || name.isEmpty()) {
+            name = null;
         }
+        if (partTypeId == null || partTypeId <= 0) {
+            partTypeId = null;
+        }
+        if (laptopId == null || laptopId <= 0) {
+            laptopId = null;
+        }
+        return partRepository.filterParts(name, partTypeId, laptopId);
+
     }
 
     @Override
