@@ -4,13 +4,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import vn.aptech.java.services.CustomerLaptopService;
 import vn.aptech.java.services.PartService;
 import vn.aptech.java.services.RequestService;
+import vn.aptech.java.utils.ImgUploadUtil;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +68,7 @@ public class WarrantyController {
     public String scheduleWarranty(
             @Valid @ModelAttribute("warrantyRequestDTO") WarrantyRequestDTO dto,
             BindingResult result,
+            @RequestParam(value = "images", required = false) MultipartFile[] images,
             RedirectAttributes redirectAttributes,
             Model model) {
 
@@ -72,13 +76,29 @@ public class WarrantyController {
             return "user/pages/schedule_warranty";
         }
 
+        if (images != null && images.length > 0) {
+            for (MultipartFile file : images) {
+                if (!file.isEmpty()) {
+                    if (!ImgUploadUtil.isValidImageFormat(file)) {
+                        model.addAttribute("imageError",
+                                "Định dạng ảnh không hợp lệ. Chỉ cho phép: jpg, jpeg, png, gif, bmp");
+                        model.addAttribute("warrantyRequestDTO", dto);
+                        return "user/pages/schedule_warranty";
+                    }
+                }
+            }
+        }
+
         try {
-            requestService.createScheduleRequest(dto);
+            requestService.createScheduleRequest(dto, images);
             redirectAttributes.addFlashAttribute("success", "Đặt lịch thành công!");
             return "redirect:/schedule-warranty";
         } catch (IllegalArgumentException ex) {
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("warrantyRequestDTO", dto);
+            return "user/pages/schedule_warranty";
+        } catch (IOException e) {
+            model.addAttribute("error", "Lỗi khi upload ảnh: " + e.getMessage());
             return "user/pages/schedule_warranty";
         }
     }

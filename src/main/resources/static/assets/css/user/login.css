@@ -33,9 +33,9 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 430px;
-    height: 600px;
+    height: 650px;
     background-color: #fff;
-    padding: 120px 32px 64px;
+    padding: 100px 32px 64px;
     border: 1px solid #0D1936;
     overflow: hidden;
 }
@@ -96,7 +96,7 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
-    margin: 20px 0;
+    margin: 15px 0;
 }
 
 .input-field {
