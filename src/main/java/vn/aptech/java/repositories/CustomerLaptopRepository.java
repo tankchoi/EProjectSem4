@@ -24,4 +24,6 @@ public interface CustomerLaptopRepository extends JpaRepository<CustomerLaptop, 
 
        @Query("SELECT cl FROM CustomerLaptop cl WHERE cl.serialNumber = :serial")
        CustomerLaptop findBySerial(@Param("serial") String serial);
+
+       boolean existsBySerialNumber(String serialNumber);
 }

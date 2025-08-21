@@ -7,4 +7,7 @@ import java.util.List;
 public interface CustomerLaptopService {
         List<CustomerLaptop> getLaptopsByCustomerIdAndSerial(Long customerId, String serialNumber);
 
+        boolean isLaptopExists(String serialNumber);
+
+
 }

@@ -27,7 +27,12 @@ public class Request {
     private String description;
 
     private Date bookingDate;
-    private String status; // PENDING, APPROVED, REJECTED
+
+    public enum Status {
+        PENDING, APPROVED, COMPLETED, REJECTED
+    }
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @ManyToOne
     @JoinColumn(name = "technicianId")
@@ -43,7 +48,7 @@ public class Request {
     public Request() {
     }
 
-    public Request(Long id, CustomerLaptop customerLaptop, String fullname, String email, String phone, String address, String description, Date bookingDate, String status, User technician, Timestamp createdAt, Timestamp updatedAt) {
+    public Request(Long id, CustomerLaptop customerLaptop, String fullname, String email, String phone, String address, String description, Date bookingDate, Status status, User technician, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.customerLaptop = customerLaptop;
         this.fullname = fullname;
@@ -86,12 +91,12 @@ public class Request {
         return description;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
     public Date getBookingDate() {
         return bookingDate;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     public User getTechnician() {
@@ -118,16 +123,16 @@ public class Request {
         this.fullname = fullname;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public void setDescription(String description) {
@@ -138,16 +143,16 @@ public class Request {
         this.bookingDate = bookingDate;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
     }
 
     public void setTechnician(User technician) {
         this.technician = technician;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setUpdatedAt(Timestamp updatedAt) {

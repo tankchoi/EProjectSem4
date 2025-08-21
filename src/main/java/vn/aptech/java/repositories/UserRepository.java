@@ -2,6 +2,8 @@ package vn.aptech.java.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import vn.aptech.java.models.User;
+
+import java.util.List;
 import java.util.Optional;
 
 
@@ -12,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByPhone(String phone);
     boolean existsByEmailAndIdNot(String email, Long id);
     boolean existsByPhoneAndIdNot(String phone, Long id);
+    // Dùng tạm sau lấy hàm phần get nhân viên của Trứng sau
+    List<User> findAllByRole(User.Role role);
 }

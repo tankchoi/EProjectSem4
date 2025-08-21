@@ -274,6 +274,56 @@ body {
     font-size: 18px;
 }
 
+/* FilePond Custom Styles */
+.filepond--panel-root {
+    background-color: #f8fafc;
+    border: 1px dashed #d1d5db;
+}
+
+.filepond--drop-label {
+    color: #6b7280;
+}
+
+.filepond--label-action {
+    text-decoration-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.filepond--item-panel {
+    background-color: #f0f9ff;
+}
+
+.filepond--panel-root {
+    border-radius: 8px;
+}
+
+.filepond--file {
+    color: #1e293b;
+}
+
+.filepond--file-action-button {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #3b82f6;
+}
+
+.filepond--file-info {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.filepond--root {
+    margin-bottom: 0;
+}
+
+.image-upload-help {
+    margin-top: 8px;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.filepond--credits {
+    display: none;
+}
+
 /* Responsive design */
 @media (max-width: 1024px) {
     .page-container {

@@ -74,7 +74,6 @@ public class PartController {
                 }
                 createPartDTO.setImgUrl(ImgUploadUtil.saveFile(createPartDTO.getImgFile(), "parts"));
             }
-            System.out.println(createPartDTO);
             partService.createPart(createPartDTO);
             redirectAttributes.addFlashAttribute("success", "Thêm linh kiện thành công!");
             return "redirect:/admin/part";

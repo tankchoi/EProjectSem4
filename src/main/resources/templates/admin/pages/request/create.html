@@ -11,6 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
+    <!-- FilePond CSS -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 </head>
 
 <body>
@@ -32,9 +35,9 @@
                 </div>
             </div>
             <!-- Thông báo -->
-            <div th:if="${errorMessage}" class="alert alert-error">
+            <div th:if="${error}" class="alert alert-error">
                 <span class="material-symbols-outlined">error</span>
-                <span th:text="${errorMessage}"></span>
+                <span th:text="${error}"></span>
             </div>
 
             <div class="page-content">
@@ -42,25 +45,18 @@
                     <span class="material-symbols-outlined">add</span>
                     <h2>Thông tin yêu cầu bảo hành</h2>
                 </div>
-                <form th:action="@{/admin/request}" th:object="${request}" method="post" class="form-content">
+                <form th:action="@{/admin/request/create}" th:object="${request}" method="post" class="form-content" enctype="multipart/form-data">
                     <div class="form-grid">
                         <!-- Customer Laptop -->
                         <div class="input-group full-width">
-                            <label for="customerLaptopId" class="required">
+                            <label for="serialNumber" class="required">
                                 <span class="material-symbols-outlined">laptop</span>
-                                Laptop khách hàng
+                                Số serial laptop
                             </label>
-                            <select id="customerLaptopId" th:field="*{customerLaptopId}" required>
-                                <option value="">Chọn laptop khách hàng</option>
-                                <option th:each="customerLaptop : ${customerLaptops}" th:value="${customerLaptop.id}"
-                                    th:text="${customerLaptop.customer.fullname + ' - ' + customerLaptop.laptop.name + ' (SN: ' + customerLaptop.serialNumber + ')'}">
-                                    Nguyễn Văn A - HP ProBook 450 (SN: ABC123)
-                                </option>
-                            </select>
-                            <div class="error-message" th:if="${#fields.hasErrors('customerLaptopId')}"
-                                th:errors="*{customerLaptopId}">
-                                Vui lòng chọn laptop khách hàng.
-                            </div>
+                            <input type="text" id="serialNumber" th:field="*{serialNumber}" placeholder="Nhập số serial laptop"
+                                   required>
+                            <div class="error-message" th:if="${#fields.hasErrors('serialNumber')}"
+                                th:errors="*{serialNumber}">
                         </div>
 
                         <!-- Full Name -->
@@ -129,16 +125,15 @@
 
                         <!-- Status -->
                         <div class="input-group">
-                            <label for="status">
+                            <label for="status" class="required">
                                 <span class="material-symbols-outlined">flag</span>
                                 Trạng thái
                             </label>
                             <select id="status" th:field="*{status}">
                                 <option value="PENDING">Chờ xử lý</option>
-                                <option value="APPROVED">Đã duyệt</option>
-                                <option value="REJECTED">Từ chối</option>
-                                <option value="IN_PROGRESS">Đang thực hiện</option>
-                                <option value="COMPLETED">Hoàn thành</option>
+                                <option value="APPROVED">Đang thực hiện</option>
+<!--                                <option value="REJECTED">Từ chối</option>-->
+<!--                                <option value="COMPLETED">Hoàn thành</option>-->
                             </select>
                         </div>
 
@@ -170,6 +165,23 @@
                                 Vui lòng nhập mô tả vấn đề.
                             </div>
                         </div>
+                        
+                        <!-- Image Upload with FilePond -->
+                        <div class="input-group full-width">
+                            <label for="images">
+                                <span class="material-symbols-outlined">image</span>
+                                Hình ảnh tình trạng thiết bị
+                            </label>
+                            <input type="file"
+                                   id="images"
+                                   th:field="*{images}"
+                                   multiple 
+                                   class="filepond-input" 
+                                   accept="image/*" />
+                            <div class="image-upload-help">
+                                <small>Chấp nhận các file hình ảnh (JPG, PNG, GIF). Kích thước tối đa: 5MB. Nhận tối đa 5 file.</small>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-actions">
@@ -188,13 +200,20 @@
     </div>
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
+    
+    <!-- FilePond JS and plugins -->
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    
     <script>
         // Set minimum date to today
         document.getElementById('bookingDate').min = new Date().toISOString().split('T')[0];
 
         // Form validation
         document.querySelector('form').addEventListener('submit', function (e) {
-            const customerLaptopId = document.getElementById('customerLaptopId').value;
+            const serialNumber = document.getElementById('serialNumber').value;
             const fullname = document.getElementById('fullname').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
@@ -202,7 +221,7 @@
             const bookingDate = document.getElementById('bookingDate').value;
             const description = document.getElementById('description').value.trim();
 
-            if (!customerLaptopId || !fullname || !email || !phone || !address || !bookingDate || !description) {
+            if (!serialNumber || !fullname || !email || !phone || !address || !bookingDate || !description) {
                 e.preventDefault();
                 alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
                 return;
@@ -223,6 +242,43 @@
                 alert('Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số)!');
                 return;
             }
+        });
+        
+        // FilePond initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Register FilePond plugins
+            FilePond.registerPlugin(
+                FilePondPluginFileValidateSize,
+                FilePondPluginFileValidateType,
+                FilePondPluginImagePreview
+            );
+            
+            // Get the file input element
+            const inputElement = document.querySelector('.filepond-input');
+            
+            // Create the FilePond instance
+            const pond = FilePond.create(inputElement, {
+                name: 'images',  // Set the name attribute to match the server-side parameter
+                allowMultiple: true,
+                maxFiles: 5,
+                maxFileSize: '5MB',
+                acceptedFileTypes: ['image/*'],
+                storeAsFile: true,  // Store as actual File objects, important for form submission
+                labelIdle: 'Kéo & thả hình ảnh hoặc <span class="filepond--label-action">Chọn file</span>',
+                labelFileTypeNotAllowed: 'Loại file không hợp lệ',
+                fileValidateTypeLabelExpectedTypes: 'Chỉ chấp nhận file hình ảnh',
+                labelMaxFileSizeExceeded: 'File quá lớn',
+                labelMaxFileSize: 'Kích thước tối đa: {filesize}',
+                labelFileLoading: 'Đang tải',
+                labelFileLoadError: 'Lỗi khi tải file',
+                labelFileProcessing: 'Đang xử lý',
+                labelFileProcessingComplete: 'Đã xử lý xong',
+                labelFileProcessingAborted: 'Đã hủy xử lý',
+                labelTapToCancel: 'nhấn để hủy',
+                labelTapToRetry: 'nhấn để thử lại',
+                labelTapToUndo: 'nhấn để hoàn tác',
+                credits: false,
+            });
         });
     </script>
 </body>

@@ -14,6 +14,8 @@ import vn.aptech.java.models.User;
 import vn.aptech.java.repositories.UserRepository;
 import vn.aptech.java.services.UserService;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -80,7 +82,6 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(registerDTO.getEmail())) {
             throw new IllegalArgumentException("Email đã tồn tại");
         }
-
         User user = new User();
         user.setUsername(registerDTO.getUsername());
         user.setEmail(registerDTO.getEmail());
@@ -114,4 +115,8 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public List<User> getAllTechnicians() {
+        return userRepository.findAllByRole(User.Role.STAFF);
+    }
 }
