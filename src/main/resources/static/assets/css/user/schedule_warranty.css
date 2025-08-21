@@ -78,6 +78,10 @@ form button {
     border-radius: 6px;
 }
 
+input[type="file"] {
+    color: transparent;
+}
+
 @media (max-width: 600px) {
     .schedule-container {
         padding: 20px;

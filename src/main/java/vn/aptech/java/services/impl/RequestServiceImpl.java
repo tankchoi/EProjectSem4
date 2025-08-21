@@ -1,5 +1,4 @@
 package vn.aptech.java.services.impl;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,13 +14,12 @@ import vn.aptech.java.repositories.RequestRepository;
 import vn.aptech.java.services.RequestImgService;
 import vn.aptech.java.services.RequestService;
 import vn.aptech.java.utils.ImgUploadUtil;
-
-import java.sql.Date;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Collections;
+import vn.aptech.java.repositories.RequestImgRepository;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -34,29 +32,48 @@ public class RequestServiceImpl implements RequestService {
 
     @Autowired
     private RequestImgService requestImgService;
+    @Autowired
+    private RequestImgRepository requestImgRepository;
+
 
     @Override
-    public void createScheduleRequest(WarrantyRequestDTO dto) {
+    public void createScheduleRequest(WarrantyRequestDTO dto, MultipartFile[] images) throws IOException {
         Request request = new Request();
         request.setFullname(dto.getFullname());
         request.setPhone(dto.getPhone());
         request.setEmail(dto.getEmail());
         request.setAddress(dto.getAddress());
         request.setDescription(dto.getDescription());
-        request.setBookingDate(Date.valueOf(LocalDate.now()));
         request.setStatus(Request.Status.PENDING);
+
+
+        if (dto.getBookingDate() != null) {
+            request.setBookingDate(dto.getBookingDate());
+        } else {
+            request.setBookingDate(new Date());
+        }
 
         if (dto.getSerialNumber() != null && !dto.getSerialNumber().isBlank()) {
             CustomerLaptop cl = customerLaptopRepository.findBySerial(dto.getSerialNumber().trim());
-
             if (cl == null) {
                 throw new IllegalArgumentException("Số sê-ri không tồn tại hoặc không hợp lệ.");
             }
-
             request.setCustomerLaptop(cl);
         }
 
         requestRepository.save(request);
+
+        if (images != null && images.length > 0) {
+            for (MultipartFile file : images) {
+                if (!file.isEmpty()) {
+                    String imgUrl = ImgUploadUtil.saveFile(file, "requests");
+                    RequestImg requestImg = new RequestImg();
+                    requestImg.setRequest(request);
+                    requestImg.setImgUrl(imgUrl);
+                    requestImgRepository.save(requestImg);
+                }
+            }
+        }
     }
 
     @Override
@@ -74,7 +91,7 @@ public class RequestServiceImpl implements RequestService {
             request.setEmail(dto.getEmail());
             request.setAddress(dto.getAddress());
             request.setDescription(dto.getDescription());
-            request.setBookingDate(Date.valueOf(LocalDate.now()));
+            request.setBookingDate(dto.getBookingDate());
             request.setStatus(dto.getStatus());
             if (dto.getSerialNumber() != null && !dto.getSerialNumber().isBlank()) {
                 CustomerLaptop cl = customerLaptopRepository.findBySerial(dto.getSerialNumber().trim());

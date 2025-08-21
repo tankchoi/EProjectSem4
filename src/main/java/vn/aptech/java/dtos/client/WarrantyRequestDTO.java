@@ -1,7 +1,15 @@
 package vn.aptech.java.dtos.client;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class WarrantyRequestDTO {
 
@@ -22,6 +30,21 @@ public class WarrantyRequestDTO {
 
     @NotBlank(message = "Mô tả không được để trống")
     private String description;
+
+    @NotNull(message = "Ngày đặt lịch không được để trống")
+    @Future(message = "Ngày đặt lịch phải sau ngày hiện tại")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date bookingDate;
+
+    private List<MultipartFile> images;
+
+    public Date getBookingDate() {
+        return bookingDate;
+    }
+
+    public void setBookingDate(Date bookingDate) {
+        this.bookingDate = bookingDate;
+    }
 
     public String getFullname() {
         return fullname;
@@ -69,5 +92,13 @@ public class WarrantyRequestDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<MultipartFile> getImages() {
+        return images;
+    }
+
+    public void setImages(List<MultipartFile> images) {
+        this.images = images;
     }
 }

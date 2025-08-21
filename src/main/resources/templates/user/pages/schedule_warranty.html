@@ -19,13 +19,21 @@
             <h2>Đặt lịch gia hạn bảo hành</h2>
         </div>
 
-        
+
         <div th:if="${success != null}" class="success" th:text="${success}"></div>
-        <form th:action="@{/schedule-warranty}" th:object="${warrantyRequestDTO}" method="post">
+        <form th:action="@{/schedule-warranty}" th:object="${warrantyRequestDTO}" method="post"
+            enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Họ và tên:</label>
                 <input type="text" id="name" th:field="*{fullname}" placeholder="Nhập họ và tên">
                 <p th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"
+                    style="margin: 5px 0 5px; color: red;"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="bookingDate">Ngày đặt lịch:</label>
+                <input type="date" id="bookingDate" th:field="*{bookingDate}">
+                <p th:if="${#fields.hasErrors('bookingDate')}" th:errors="*{bookingDate}"
                     style="margin: 5px 0 5px; color: red;"></p>
             </div>
 
@@ -57,6 +65,13 @@
             </div>
 
             <div class="form-group">
+                <label for="images" class="custom-file-upload">Ảnh minh họa:</label>
+                <input type="file" id="images" name="images" multiple>
+                <ul id="fileList" style="margin: 5px 0; color: green;"></ul>
+                <p th:if="${imageError != null}" style="margin: 5px 0 5px; color: red;" th:text="${imageError}"></p>
+            </div>
+
+            <div class="form-group">
                 <label for="description">Mô tả:</label>
                 <textarea id="description" th:field="*{description}" placeholder="Nhập mô tả ..."></textarea>
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
@@ -68,6 +83,20 @@
 
     </div>
     <div th:replace="user/fragments/footer :: footer"></div>
+
+    <script>
+        const input = document.getElementById('images');
+        const fileList = document.getElementById('fileList');
+
+        input.addEventListener('change', () => {
+            fileList.innerHTML = "";
+            for (let file of input.files) {
+                let li = document.createElement('li');
+                li.textContent = file.name + " (" + Math.round(file.size / 1024) + " KB)";
+                fileList.appendChild(li);
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -34,6 +34,12 @@
             <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="margin: 5px 0 5px; color: red;"></p>
 
             <div class="input-box">
+                <input type="text" th:field="*{phone}" class="input-field" placeholder="Nhập số điện thoại">
+                <i class='bx bx-phone icon'></i> 
+            </div>
+            <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="margin: 5px 0 5px; color: red;"></p>
+
+            <div class="input-box">
                 <input type="password" th:field="*{password}" class="input-field" placeholder="Nhập mật khẩu">
                 <i class='bx bx-lock-alt icon'></i>
             </div>

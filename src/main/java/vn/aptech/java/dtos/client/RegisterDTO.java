@@ -12,6 +12,9 @@ public class RegisterDTO {
     @Email(message = "Email không hợp lệ")
     private String email;
 
+    @NotBlank(message = "Số điện thoại không được để trống")
+    private String phone;
+
     @NotBlank(message = "Mật khẩu không được để trống")
     private String password;
 
@@ -29,6 +32,14 @@ public class RegisterDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getPassword() {
