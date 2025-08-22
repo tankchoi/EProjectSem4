@@ -1,4 +1,5 @@
 package vn.aptech.java.services.impl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,6 @@ import vn.aptech.java.services.RequestService;
 import vn.aptech.java.utils.ImgUploadUtil;
 import java.util.Date;
 import java.util.Collections;
-import vn.aptech.java.repositories.RequestImgRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -32,9 +32,6 @@ public class RequestServiceImpl implements RequestService {
 
     @Autowired
     private RequestImgService requestImgService;
-    @Autowired
-    private RequestImgRepository requestImgRepository;
-
 
     @Override
     public void createScheduleRequest(WarrantyRequestDTO dto, MultipartFile[] images) throws IOException {
@@ -45,7 +42,6 @@ public class RequestServiceImpl implements RequestService {
         request.setAddress(dto.getAddress());
         request.setDescription(dto.getDescription());
         request.setStatus(Request.Status.PENDING);
-
 
         if (dto.getBookingDate() != null) {
             request.setBookingDate(dto.getBookingDate());
@@ -66,11 +62,15 @@ public class RequestServiceImpl implements RequestService {
         if (images != null && images.length > 0) {
             for (MultipartFile file : images) {
                 if (!file.isEmpty()) {
+                    if (!ImgUploadUtil.isValidImageFormat(file)) {
+                        throw new IllegalArgumentException(
+                                "Định dạng ảnh không hợp lệ. Chỉ chấp nhận jpg, jpeg, png, webp.");
+                    }
                     String imgUrl = ImgUploadUtil.saveFile(file, "requests");
                     RequestImg requestImg = new RequestImg();
                     requestImg.setRequest(request);
                     requestImg.setImgUrl(imgUrl);
-                    requestImgRepository.save(requestImg);
+                    requestImgService.createRequestImg(requestImg);
                 }
             }
         }
@@ -104,7 +104,8 @@ public class RequestServiceImpl implements RequestService {
             if (dto.getImages() != null && dto.getImages().stream().anyMatch(file -> !file.isEmpty())) {
                 for (MultipartFile image : dto.getImages()) {
                     if (!ImgUploadUtil.isValidImageFormat(image)) {
-                        throw new IllegalArgumentException("Định dạng ảnh không hợp lệ. Chỉ chấp nhận jpg, jpeg, png, webp.");
+                        throw new IllegalArgumentException(
+                                "Định dạng ảnh không hợp lệ. Chỉ chấp nhận jpg, jpeg, png, webp.");
                     }
                     RequestImg requestImg = new RequestImg();
                     requestImg.setRequest(request);
@@ -116,6 +117,7 @@ public class RequestServiceImpl implements RequestService {
             throw new RuntimeException("Lỗi khi tạo yêu cầu bảo hành: " + e.getMessage(), e);
         }
     }
+
     @Override
     public Optional<Request> getRequestById(Long id) {
         return requestRepository.findById(id);
@@ -129,7 +131,7 @@ public class RequestServiceImpl implements RequestService {
             if (optionalRequest.isEmpty()) {
                 throw new IllegalArgumentException("Không tìm thấy yêu cầu bảo hành với ID: " + dto.getId());
             }
-            
+
             Request request = optionalRequest.get();
             request.setFullname(dto.getFullname());
             request.setPhone(dto.getPhone());
@@ -137,7 +139,7 @@ public class RequestServiceImpl implements RequestService {
             request.setAddress(dto.getAddress());
             request.setDescription(dto.getDescription());
             request.setStatus(dto.getStatus());
-            
+
             if (dto.getSerialNumber() != null && !dto.getSerialNumber().isBlank()) {
                 CustomerLaptop cl = customerLaptopRepository.findBySerial(dto.getSerialNumber().trim());
                 if (cl == null) {
@@ -145,7 +147,7 @@ public class RequestServiceImpl implements RequestService {
                 }
                 request.setCustomerLaptop(cl);
             }
-            
+
             requestRepository.save(request);
             List<RequestImg> oldImages = requestImgService.getRequestImgByRequestId(dto.getId());
             List<String> existingUrls = Optional.ofNullable(dto.getExistingImageUrls())
@@ -159,7 +161,8 @@ public class RequestServiceImpl implements RequestService {
             if (dto.getNewImages() != null && dto.getNewImages().stream().anyMatch(file -> !file.isEmpty())) {
                 for (MultipartFile image : dto.getNewImages()) {
                     if (!ImgUploadUtil.isValidImageFormat(image)) {
-                        throw new IllegalArgumentException("Định dạng ảnh không hợp lệ. Chỉ chấp nhận jpg, jpeg, png, webp.");
+                        throw new IllegalArgumentException(
+                                "Định dạng ảnh không hợp lệ. Chỉ chấp nhận jpg, jpeg, png, webp.");
                     }
                     RequestImg requestImg = new RequestImg();
                     requestImg.setRequest(request);
@@ -168,12 +171,8 @@ public class RequestServiceImpl implements RequestService {
                 }
             }
 
-
-
-
         } catch (Exception e) {
             throw new RuntimeException("Lỗi khi cập nhật yêu cầu bảo hành: " + e.getMessage(), e);
         }
     }
 }
-

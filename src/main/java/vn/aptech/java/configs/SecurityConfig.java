@@ -45,14 +45,14 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .securityMatcher("/**")
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/custom-login", "/register", "/homepage","/contact", "/search-parts", "/images/parts/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/custom-login", "/register", "/contact", "/search-parts", "/images/parts/**", "/images/**").permitAll()
                         .anyRequest().hasAuthority("CUSTOMER"))
                 .formLogin(login -> login
                         .loginPage("/custom-login")
                         .loginProcessingUrl("/custom-login")
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/homepage", true))
+                        .defaultSuccessUrl("/", true))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/custom-login"));

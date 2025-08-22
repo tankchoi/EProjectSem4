@@ -83,6 +83,12 @@ body {
     font-size: 18px;
 }
 
+.part-info div{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+}
+
 .no-results {
     text-align: center;
     color: #888;

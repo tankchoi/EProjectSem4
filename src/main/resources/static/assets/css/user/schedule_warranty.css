@@ -82,6 +82,57 @@ input[type="file"] {
     color: transparent;
 }
 
+.custom-file-upload{
+    display: flex;
+    gap: 10px;
+}
+
+#fileList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+    list-style: none;
+    padding: 0;
+}
+
+#fileList li {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    background: #fafafa;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 200px;   
+    max-height: 200px;
+    overflow: hidden;
+}
+
+#fileList img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;  
+    border-radius: 10px;
+}
+
+#fileList li span.remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 0, 0, 0.7);
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    padding: 2px 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+#fileList li span.remove:hover {
+    background: red;
+}
+
 @media (max-width: 600px) {
     .schedule-container {
         padding: 20px;

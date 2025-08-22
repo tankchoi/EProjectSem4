@@ -20,7 +20,7 @@
         </div>
 
         <form action="/check-warranty" method="get" class="input-group">
-            <input type="text" name="serialNumber" placeholder="Nhập số sê-ri"/>
+            <input type="text" name="serialNumber" placeholder="Nhập số sê-ri" />
             <button type="submit">Kiểm tra</button>
         </form>
 
@@ -35,19 +35,26 @@
                     <th>Hãng</th>
                     <th>Số sê-ri</th>
                     <th>Thời hạn bảo hành</th>
+                    <th>Ngày mua</th>
+                    <th>Ngày hết hạn bảo hành</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:if="${#lists.isEmpty(laptops)}">
-                    <td colspan="6" class="no-results">Không tìm thấy kết quả nào.</td>
+                    <td colspan="7" class="no-results">Không tìm thấy kết quả nào.</td>
                 </tr>
 
                 <tr th:each="l : ${laptops}">
-                    <td><img th:src="@{${l.laptop.imgUrl != null ? '../' + l.laptop.imgUrl : '/images/imgstd.jpg'}}" width="100" /></td>
+                    <td><img th:src="@{${l.laptop.imgUrl != null ? l.laptop.imgUrl : '/images/imgstd.jpg'}}"
+                            width="100" /></td>
                     <td th:text="${l.laptop.name}">Tên laptop</td>
                     <td th:text="${l.laptop.model.name}">Hãng</td>
                     <td th:text="${l.serialNumber}">Số sê-ri</td>
                     <td th:text="${l.laptop.warrantyPeriod + ' tháng'}">Hạn bảo hành</td>
+                    <td th:text="${#temporals.format(l.createdAt.toLocalDateTime(), 'dd/MM/yyyy')}">Ngày mua</td>
+                    <td th:text="${#temporals.format(l.createdAt.toLocalDateTime().plusMonths(l.laptop.warrantyPeriod), 'dd/MM/yyyy')}">
+                        Ngày hết hạn
+                    </td>
                 </tr>
             </tbody>
 
