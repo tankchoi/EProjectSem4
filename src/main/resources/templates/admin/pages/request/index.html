@@ -12,6 +12,8 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 </head>
 
 <body>
@@ -27,13 +29,13 @@
             </div>
 
             <!-- Flash Messages -->
-            <div th:if="${successMessage}" class="alert alert-success">
+            <div th:if="${success}" class="alert alert-success">
                 <span class="material-symbols-outlined">check_circle</span>
-                <span th:text="${successMessage}"></span>
+                <span th:text="${success}"></span>
             </div>
-            <div th:if="${errorMessage}" class="alert alert-error">
+            <div th:if="${error}" class="alert alert-error">
                 <span class="material-symbols-outlined">error</span>
-                <span th:text="${errorMessage}"></span>
+                <span th:text="${error}"></span>
             </div>
 
             <div class="dashboard-header">
@@ -80,13 +82,13 @@
                                     Trạng thái
                                 </label>
                                 <select class="form-input" id="status" name="status">
-                                    <option value="">Tất cả</option>
-                                    <option value="PENDING" th:selected="${status == 'PENDING'}">Chờ xử lý</option>
-                                    <option value="APPROVED" th:selected="${status == 'APPROVED'}">Đã duyệt</option>
-                                    <option value="REJECTED" th:selected="${status == 'REJECTED'}">Từ chối</option>
-                                    <option value="IN_PROGRESS" th:selected="${status == 'IN_PROGRESS'}">Đang thực hiện
-                                    </option>
-                                    <option value="COMPLETED" th:selected="${status == 'COMPLETED'}">Hoàn thành</option>
+<!--                                    <option value="">Tất cả</option>-->
+<!--                                    <option value="PENDING" th:selected="${status == 'PENDING'}">Chờ xử lý</option>-->
+<!--                                    <option value="APPROVED" th:selected="${status == 'APPROVED'}">Đã duyệt</option>-->
+<!--                                    <option value="REJECTED" th:selected="${status == 'REJECTED'}">Từ chối</option>-->
+<!--                                    <option value="IN_PROGRESS" th:selected="${status == 'IN_PROGRESS'}">Đang thực hiện-->
+<!--                                    </option>-->
+<!--                                    <option value="COMPLETED" th:selected="${status == 'COMPLETED'}">Hoàn thành</option>-->
                                 </select>
                             </div>
                             <div class="form-group">
@@ -95,10 +97,10 @@
                                     Hiển thị
                                 </label>
                                 <select class="form-input" id="size" name="size">
-                                    <option value="5" th:selected="${size == 5}">5</option>
-                                    <option value="10" th:selected="${size == 10}">10</option>
-                                    <option value="25" th:selected="${size == 25}">25</option>
-                                    <option value="50" th:selected="${size == 50}">50</option>
+<!--                                    <option value="5" th:selected="${size == 5}">5</option>-->
+<!--                                    <option value="10" th:selected="${size == 10}">10</option>-->
+<!--                                    <option value="25" th:selected="${size == 25}">25</option>-->
+<!--                                    <option value="50" th:selected="${size == 50}">50</option>-->
                                 </select>
                             </div>
                             <div class="form-group form-actions-group">
@@ -157,58 +159,19 @@
                         <table class="data-table" id="requestTable">
                             <thead>
                                 <tr>
-                                    <th class="sortable">
-                                        <a th:href="@{/admin/request(page=${currentPage}, size=${size}, sortBy='id', sortDir=${sortBy == 'id' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search}, status=${status})}"
-                                            class="sort-link">
-                                            ID
-                                            <span th:if="${sortBy == 'id'}" class="material-symbols-outlined sort-icon"
-                                                th:text="${sortDir == 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}"></span>
-                                            <span th:unless="${sortBy == 'id'}"
-                                                class="material-symbols-outlined sort-icon">sort</span>
-                                        </a>
-                                    </th>
-                                    <th class="sortable">
-                                        <a th:href="@{/admin/request(page=${currentPage}, size=${size}, sortBy='fullname', sortDir=${sortBy == 'fullname' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search}, status=${status})}"
-                                            class="sort-link">
-                                            Họ tên
-                                            <span th:if="${sortBy == 'fullname'}"
-                                                class="material-symbols-outlined sort-icon"
-                                                th:text="${sortDir == 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}"></span>
-                                            <span th:unless="${sortBy == 'fullname'}"
-                                                class="material-symbols-outlined sort-icon">sort</span>
-                                        </a>
-                                    </th>
+                                    <th>ID</th>
+                                    <th>Họ và tên</th>
                                     <th>Email</th>
                                     <th>Điện thoại</th>
                                     <th>Laptop</th>
-                                    <th class="sortable">
-                                        <a th:href="@{/admin/request(page=${currentPage}, size=${size}, sortBy='bookingDate', sortDir=${sortBy == 'bookingDate' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search}, status=${status})}"
-                                            class="sort-link">
-                                            Ngày hẹn
-                                            <span th:if="${sortBy == 'bookingDate'}"
-                                                class="material-symbols-outlined sort-icon"
-                                                th:text="${sortDir == 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}"></span>
-                                            <span th:unless="${sortBy == 'bookingDate'}"
-                                                class="material-symbols-outlined sort-icon">sort</span>
-                                        </a>
-                                    </th>
-                                    <th class="sortable">
-                                        <a th:href="@{/admin/request(page=${currentPage}, size=${size}, sortBy='status', sortDir=${sortBy == 'status' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search}, status=${status})}"
-                                            class="sort-link">
-                                            Trạng thái
-                                            <span th:if="${sortBy == 'status'}"
-                                                class="material-symbols-outlined sort-icon"
-                                                th:text="${sortDir == 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}"></span>
-                                            <span th:unless="${sortBy == 'status'}"
-                                                class="material-symbols-outlined sort-icon">sort</span>
-                                        </a>
-                                    </th>
+                                    <th>Ngày hẹn</th>
+                                    <th>Trạng thái</th>
                                     <th>Kỹ thuật viên</th>
                                     <th class="actions-col">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="request : ${requests.content}">
+                                <tr th:each="request : ${requests}">
                                     <td class="id-col" th:text="${request.id}">1</td>
                                     <td class="name-col" th:text="${request.fullname}">Nguyễn Văn A</td>
                                     <td class="email-col" th:text="${request.email}">email@example.com</td>
@@ -218,20 +181,16 @@
                                     <td class="date-col" th:text="${#dates.format(request.bookingDate, 'dd/MM/yyyy')}">
                                         01/01/2025</td>
                                     <td class="status-col">
-                                        <span th:switch="${request.status}" class="status-badge">
+                                        <span th:switch="${request.status.name()}" class="status-badge">
                                             <span th:case="'PENDING'" class="status-pending">
                                                 <span class="material-symbols-outlined">schedule</span>
                                                 Chờ xử lý
-                                            </span>
-                                            <span th:case="'APPROVED'" class="status-approved">
-                                                <span class="material-symbols-outlined">check_circle</span>
-                                                Đã duyệt
                                             </span>
                                             <span th:case="'REJECTED'" class="status-rejected">
                                                 <span class="material-symbols-outlined">cancel</span>
                                                 Từ chối
                                             </span>
-                                            <span th:case="'IN_PROGRESS'" class="status-progress">
+                                            <span th:case="'APPROVED'" class="status-progress">
                                                 <span class="material-symbols-outlined">settings</span>
                                                 Đang thực hiện
                                             </span>
@@ -249,7 +208,7 @@
                                                 class="action-btn view-btn" title="Xem chi tiết">
                                                 <span class="material-symbols-outlined">visibility</span>
                                             </a>
-                                            <a th:href="@{/admin/request/{id}/edit(id=${request.id})}"
+                                            <a th:href="@{/admin/request/edit/{id}(id=${request.id})}"
                                                 class="action-btn edit-btn" title="Chỉnh sửa">
                                                 <span class="material-symbols-outlined">edit</span>
                                             </a>
@@ -267,49 +226,7 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
-                    <div class="pagination-container" th:if="${totalPages > 1}">
-                        <div class="pagination-wrapper">
-                            <div class="pagination-nav">
-                                <a class="page-btn first"
-                                    th:href="@{/admin/request(page=0, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
-                                    th:classappend="${currentPage == 0} ? 'disabled'">
-                                    <span class="material-symbols-outlined">first_page</span>
-                                </a>
-                                <a class="page-btn prev"
-                                    th:href="@{/admin/request(page=${currentPage - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
-                                    th:classappend="${currentPage == 0} ? 'disabled'">
-                                    <span class="material-symbols-outlined">chevron_left</span>
-                                </a>
 
-                                <div class="page-numbers">
-                                    <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-                                        th:if="${pageNum >= currentPage - 2 and pageNum <= currentPage + 2}"
-                                        class="page-num" th:classappend="${pageNum == currentPage} ? 'active'"
-                                        th:href="@{/admin/request(page=${pageNum}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
-                                        th:text="${pageNum + 1}">1</a>
-                                </div>
-
-                                <a class="page-btn next"
-                                    th:href="@{/admin/request(page=${currentPage + 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
-                                    th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                                    <span class="material-symbols-outlined">chevron_right</span>
-                                </a>
-                                <a class="page-btn last"
-                                    th:href="@{/admin/request(page=${totalPages - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search}, status=${status})}"
-                                    th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                                    <span class="material-symbols-outlined">last_page</span>
-                                </a>
-                            </div>
-                            <div class="pagination-info">
-                                <span class="info-text">
-                                    Hiển thị <strong th:text="${currentPage * size + 1}">1</strong> đến
-                                    <strong th:text="${currentPage * size + requests.numberOfElements}">10</strong>
-                                    trong tổng số <strong th:text="${totalElements}">100</strong> yêu cầu
-                                </span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -362,6 +279,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
         // Enhanced page functionality
         document.addEventListener('DOMContentLoaded', function () {
@@ -524,7 +442,7 @@
 
         function confirmDelete(requestId, requestName) {
             document.getElementById('deleteRequestName').textContent = requestName;
-            document.getElementById('deleteForm').action = '/admin/request/' + requestId + '/delete';
+            document.getElementById('deleteForm').action = '/admin/request/delete/' + requestId ;
             showModal('deleteModal');
         }
 
@@ -780,6 +698,20 @@
             }
         `;
         document.head.appendChild(notificationStyles);
+
+        // Initialize DataTable
+        $(document).ready(function () {
+            $('#requestTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json'
+                },
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true
+            });
+        });
     </script>
 </body>
 

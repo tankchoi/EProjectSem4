@@ -15,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmailAndIdNot(String email, Long id);
     boolean existsByPhoneAndIdNot(String phone, Long id);
     // Dùng tạm sau lấy hàm phần get nhân viên của Trứng sau
-    List<User> findAllByRole(User.Role role);
+    List<User> findAllByRoleAndStatus(User.Role role, User.Status status);
 }

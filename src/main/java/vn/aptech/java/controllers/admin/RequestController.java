@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vn.aptech.java.dtos.admin.CreatePartDTO;
 import vn.aptech.java.dtos.admin.CreateRequestDTO;
 import vn.aptech.java.dtos.admin.UpdateRequestDTO;
 import vn.aptech.java.models.Request;
@@ -15,7 +14,6 @@ import vn.aptech.java.models.RequestImg;
 import vn.aptech.java.services.RequestImgService;
 import vn.aptech.java.services.RequestService;
 import vn.aptech.java.services.UserService;
-import vn.aptech.java.utils.ImgUploadUtil;
 
 import java.util.Optional;
 
@@ -29,15 +27,36 @@ public class RequestController {
     @Autowired
     private UserService userService;
     @GetMapping
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("activePage", "request");
+        model.addAttribute("requests", requestService.getRequests());
+        model.addAttribute("totalElements", requestService.getRequests().size());
         return "admin/pages/request/index";
     }
-
+    @GetMapping("/{id}")
+    public String show(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        model.addAttribute("activePage", "request");
+        try {
+            Optional<Request> requestOpt = requestService.getRequestById(id);
+            if (requestOpt.isPresent()) {
+                Request request = requestOpt.get();
+                model.addAttribute("request", request);
+                model.addAttribute("requestImages", requestImgService.getRequestImgByRequestId(id));
+                return "admin/pages/request/view";
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Yêu cầu không tồn tại: " + id);
+                return "redirect:/admin/request";
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi truy xuất yêu cầu: " + id);
+            return "redirect:/admin/request";
+        }
+    }
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("activePage", "request");
         model.addAttribute("request", new CreateRequestDTO());
-        model.addAttribute("technicians", userService.getAllTechnicians());
+        model.addAttribute("technicians", userService.getTechnicians());
         return "admin/pages/request/create";
     }
     @PostMapping("/create")
@@ -49,7 +68,7 @@ public class RequestController {
             if (bindingResult.hasErrors()) {
                 System.out.println("Binding errors: " + bindingResult.getAllErrors());
                 model.addAttribute("activePage", "request");
-                model.addAttribute("technicians", userService.getAllTechnicians());
+                model.addAttribute("technicians", userService.getTechnicians());
                 model.addAttribute("request", createRequestDTO);
                 return "admin/pages/request/create";
             }
@@ -60,7 +79,7 @@ public class RequestController {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("activePage", "request");
             model.addAttribute("request", createRequestDTO);
-            model.addAttribute("technicians", userService.getAllTechnicians());
+            model.addAttribute("technicians", userService.getTechnicians());
             return "admin/pages/request/create";
         }
     }
@@ -88,7 +107,7 @@ public class RequestController {
                                 .toList()
                 );
                 model.addAttribute("request", updateRequestDTO);
-                model.addAttribute("technicians", userService.getAllTechnicians());
+                model.addAttribute("technicians", userService.getTechnicians());
                 return "admin/pages/request/edit";
             } else {
                 redirectAttributes.addFlashAttribute("error", "Yêu cầu không tồn tại: " + id);
@@ -107,7 +126,7 @@ public class RequestController {
                          Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("activePage", "request");
-            model.addAttribute("technicians", userService.getAllTechnicians());
+            model.addAttribute("technicians", userService.getTechnicians());
             model.addAttribute("request", updateRequestDTO);
             System.out.println("newImageUrls: " + updateRequestDTO.getNewImages());
             System.out.println("Error: " + bindingResult.getFieldErrors());
@@ -121,10 +140,21 @@ public class RequestController {
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("activePage", "request");
-            model.addAttribute("technicians", userService.getAllTechnicians());
+            model.addAttribute("technicians", userService.getTechnicians());
             model.addAttribute("request", updateRequestDTO);
             return "admin/pages/request/edit";
         }
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            requestService.deleteRequest(id);
+            redirectAttributes.addFlashAttribute("success", "Yêu cầu đã được xóa thành công.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi xóa yêu cầu: " + id);
+        }
+        return "redirect:/admin/request";
     }
 
 }

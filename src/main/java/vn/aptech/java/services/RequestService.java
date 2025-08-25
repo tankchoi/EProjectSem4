@@ -18,4 +18,6 @@ public interface RequestService {
     void createRequest(CreateRequestDTO dto);
     Optional<Request> getRequestById(Long id);
     void updateRequest(UpdateRequestDTO dto);
+    List<Request> getRequests();
+    void deleteRequest(Long id);
 }

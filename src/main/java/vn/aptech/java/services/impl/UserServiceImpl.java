@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllTechnicians() {
-        return userRepository.findAllByRole(User.Role.STAFF);
+    public List<User> getTechnicians() {
+        return userRepository.findAllByRoleAndStatus(User.Role.STAFF, User.Status.ACTIVE);
     }
 }

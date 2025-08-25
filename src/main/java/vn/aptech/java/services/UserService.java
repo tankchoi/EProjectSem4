@@ -1,6 +1,5 @@
 package vn.aptech.java.services;
 
-import vn.aptech.java.dtos.admin.UpdatePasswordDTO;
 import vn.aptech.java.dtos.admin.UpdateProfileDTO;
 import vn.aptech.java.dtos.client.RegisterDTO;
 import vn.aptech.java.dtos.client.UpdateInfoDTO;
@@ -13,7 +12,7 @@ public interface UserService {
     User getCurrentUser();
     void updateProfile(UpdateProfileDTO updateProfileDTO);
     void updatePassword(String newPassword);
-    List<User> getAllTechnicians();
+    List<User> getTechnicians();
 
     void createAccount(RegisterDTO registerDTO);
     void updateInformation(Long userId, UpdateInfoDTO dto);

@@ -51,7 +51,7 @@
                         <span class="material-symbols-outlined">arrow_back</span>
                         Quay lại
                     </a>
-                    <a th:href="@{/admin/request/{id}/edit(id=${request.id})}" class="btn-warning">
+                    <a th:href="@{/admin/request//edit/{id}(id=${request.id})}" class="btn-warning">
                         <span class="material-symbols-outlined">edit</span>
                         Chỉnh sửa
                     </a>
@@ -83,13 +83,14 @@
                                 <div class="info-label">Trạng thái:</div>
                                 <div class="info-value">
                                     <span class="status-badge"
-                                        th:classappend="${request.status == 'PENDING' ? 'status-pending' : 
-                                                          request.status == 'IN_PROGRESS' ? 'status-in-progress' : 
-                                                          request.status == 'COMPLETED' ? 'status-completed' : 
-                                                          request.status == 'CANCELLED' ? 'status-cancelled' : 'status-pending'}" th:text="${request.status == 'PENDING' ? 'Chờ xử lý' : 
-                                                    request.status == 'IN_PROGRESS' ? 'Đang xử lý' : 
-                                                    request.status == 'COMPLETED' ? 'Hoàn thành' : 
-                                                    request.status == 'CANCELLED' ? 'Đã hủy' : request.status}">
+                                        th:classappend="${request.status.name() == 'PENDING' ? 'status-pending' :
+                                                          request.status.name() == 'APPROVED' ? 'status-in-progress' :
+                                                          request.status.name() == 'COMPLETED' ? 'status-completed' :
+                                                          request.status.name() == 'CANCELLED' ? 'status-cancelled' : 'status-pending'}"
+                                          th:text="${request.status.name() == 'PENDING' ? 'Chờ xử lý' :
+                                                    request.status.name() == 'APPROVED' ? 'Đang xử lý' :
+                                                    request.status.name() == 'COMPLETED' ? 'Hoàn thành' :
+                                                    request.status.name() == 'CANCELLED' ? 'Đã hủy' : request.status}">
                                     </span>
                                 </div>
                             </div>
@@ -149,21 +150,23 @@
                                     <div class="info-label">Serial Number:</div>
                                     <div class="info-value" th:text="${request.customerLaptop.serialNumber}"></div>
                                 </div>
-                                <div class="info-row" th:if="${request.customerLaptop?.purchaseDate}">
+                                <div class="info-row" th:if="${request.customerLaptop?.createdAt}">
                                     <div class="info-label">Ngày mua:</div>
                                     <div class="info-value"
-                                        th:text="${#dates.format(request.customerLaptop.purchaseDate, 'dd/MM/yyyy')}">
+                                        th:text="${#dates.format(request.customerLaptop.createdAt, 'dd/MM/yyyy')}">
                                     </div>
                                 </div>
-                                <div class="info-row" th:if="${request.customerLaptop?.warrantyExpiredDate}">
+                                <div class="info-row" th:if="${request.customerLaptop != null and request.customerLaptop.laptop != null}">
                                     <div class="info-label">Hết hạn bảo hành:</div>
                                     <div class="info-value">
-                                        <span
-                                            th:text="${#dates.format(request.customerLaptop.warrantyExpiredDate, 'dd/MM/yyyy')}"></span>
+                                        <!-- Tính ngày hết hạn: createdAt + warrantyPeriod (theo tháng) -->
+                                        <span th:text="${#temporals.format(request.customerLaptop.createdAt.plusMonths(request.customerLaptop.laptop.warrantyPeriod), 'dd/MM/yyyy')}"></span>
+
+                                        <!-- Trạng thái hết hạn hay còn hạn -->
                                         <span class="status-badge"
-                                            th:classappend="${#temporals.createDate(request.customerLaptop.warrantyExpiredDate.year, request.customerLaptop.warrantyExpiredDate.monthValue, request.customerLaptop.warrantyExpiredDate.dayOfMonth).before(#dates.createNow()) ? 'warranty-expired' : 'warranty-valid'}"
-                                            th:text="${#temporals.createDate(request.customerLaptop.warrantyExpiredDate.year, request.customerLaptop.warrantyExpiredDate.monthValue, request.customerLaptop.warrantyExpiredDate.dayOfMonth).before(#dates.createNow()) ? 'Hết hạn' : 'Còn hạn'}"
-                                            style="margin-left: 0.5rem;">
+                                              th:classappend="${request.customerLaptop.createdAt.plusMonths(request.customerLaptop.laptop.warrantyPeriod).isBefore(T(java.time.LocalDate).now()) ? 'warranty-expired' : 'warranty-valid'}"
+                                              th:text="${request.customerLaptop.createdAt.plusMonths(request.customerLaptop.laptop.warrantyPeriod).isBefore(T(java.time.LocalDate).now()) ? 'Hết hạn' : 'Còn hạn'}"
+                                              style="margin-left: 0.5rem;">
                                         </span>
                                     </div>
                                 </div>
@@ -230,6 +233,21 @@
                             <div class="info-row" th:if="${request.technician.phone}">
                                 <div class="info-label">Điện thoại:</div>
                                 <div class="info-value" th:text="${request.technician.phone}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Image Gallery -->
+                        <div class="info-card" th:if="${!#lists.isEmpty(requestImages)}">
+                            <div class="info-card-header">
+                                <span class="material-symbols-outlined">photo_library</span>
+                                <h3>Hình ảnh</h3>
+                            </div>
+                            <div class="image-gallery">
+                                <div class="gallery-grid">
+                                    <div class="gallery-item" th:each="img : ${requestImages}" onclick="openImageModal(this)">
+                                        <img class="gallery-image" th:src="@{${img.imgUrl}}" alt="Hình ảnh yêu cầu bảo hành">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -339,6 +357,16 @@
         </div>
     </div>
 
+    <!-- Image Viewer Modal -->
+    <div id="imageModal" class="modal-overlay" style="display: none;">
+        <div class="modal-image-container">
+            <button class="modal-close-btn" onclick="closeImageModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <img id="modalImage" src="" alt="Hình ảnh yêu cầu bảo hành">
+        </div>
+    </div>
+
     <script>
         // Load parts and cost information
         function loadPartsInfo() {
@@ -398,6 +426,26 @@
         function hideDeleteModal() {
             document.getElementById('deleteModal').style.display = 'none';
         }
+        
+        // Image Modal Functions
+        function openImageModal(element) {
+            const imgSrc = element.querySelector('.gallery-image').src;
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            
+            modalImg.src = imgSrc;
+            modal.style.display = 'flex';
+            
+            // Prevent scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+            
+            // Re-enable scrolling
+            document.body.style.overflow = 'auto';
+        }
 
         // Auto-hide alerts after 5 seconds
         document.addEventListener("DOMContentLoaded", function () {
@@ -422,6 +470,13 @@
         document.getElementById('deleteModal').addEventListener('click', function (e) {
             if (e.target === this) {
                 hideDeleteModal();
+            }
+        });
+        
+        // Close image modal when clicking outside
+        document.getElementById('imageModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeImageModal();
             }
         });
     </script>

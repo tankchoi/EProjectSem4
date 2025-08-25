@@ -1,5 +1,6 @@
 package vn.aptech.java.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -167,12 +168,29 @@ public class RequestServiceImpl implements RequestService {
                     requestImgService.createRequestImg(requestImg);
                 }
             }
-
-
-
-
         } catch (Exception e) {
             throw new RuntimeException("Lỗi khi cập nhật yêu cầu bảo hành: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Request> getRequests() {
+        return requestRepository.findAll(Sort.by(Sort.Direction.DESC, "bookingDate"));
+    }
+    @Override
+    public void deleteRequest(Long id) {
+        try{
+            Optional<Request> requestOpt = requestRepository.findById(id);
+            if (requestOpt.isEmpty()) {
+                throw new IllegalArgumentException("Không tìm thấy yêu cầu bảo hành với ID: " + id);
+            }
+            List<RequestImg> images = requestImgService.getRequestImgByRequestId(id);
+            for (RequestImg img : images) {
+                requestImgService.deleteRequestImg(img);
+            }
+            requestRepository.deleteById(id);
+        }catch (Exception e) {
+            throw new RuntimeException("Lỗi khi xóa yêu cầu bảo hành: " + e.getMessage(), e);
         }
     }
 }
