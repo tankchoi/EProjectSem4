@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class ClientController {
-    @GetMapping("/homepage")
+    @GetMapping("/")
     public String homepage() {
         return "user/pages/homepage";
     }

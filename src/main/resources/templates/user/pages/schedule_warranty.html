@@ -65,9 +65,11 @@
             </div>
 
             <div class="form-group">
-                <label for="images" class="custom-file-upload">Ảnh minh họa:</label>
-                <input type="file" id="images" name="images" multiple>
-                <ul id="fileList" style="margin: 5px 0; color: green;"></ul>
+                <div class="custom-file-upload">
+                    <label for="images">Ảnh minh họa:</label>
+                    <input type="file" id="images" name="images" multiple>
+                </div>
+                <ul id="fileList"></ul>
                 <p th:if="${imageError != null}" style="margin: 5px 0 5px; color: red;" th:text="${imageError}"></p>
             </div>
 
@@ -90,11 +92,33 @@
 
         input.addEventListener('change', () => {
             fileList.innerHTML = "";
-            for (let file of input.files) {
-                let li = document.createElement('li');
-                li.textContent = file.name + " (" + Math.round(file.size / 1024) + " KB)";
-                fileList.appendChild(li);
-            }
+            Array.from(input.files).forEach((file, index) => {
+                if (file.type.startsWith("image/")) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        let li = document.createElement('li');
+
+                        let img = document.createElement('img');
+                        img.src = e.target.result;
+
+                        let removeBtn = document.createElement('span');
+                        removeBtn.classList.add("remove");
+                        removeBtn.innerHTML = "&times;";
+                        removeBtn.onclick = () => {
+                            li.remove();
+                        };
+
+                        li.appendChild(img);
+                        li.appendChild(removeBtn);
+                        fileList.appendChild(li);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    let li = document.createElement('li');
+                    li.textContent = file.name + " (" + Math.round(file.size / 1024) + " KB)";
+                    fileList.appendChild(li);
+                }
+            });
         });
     </script>
 </body>

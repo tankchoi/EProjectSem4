@@ -38,7 +38,13 @@
                     <td th:text="${req.customerLaptop.laptop.name}"></td>
                     <td th:text="${req.customerLaptop.serialNumber}"></td>
                     <td th:text="${req.description}"></td>
-                    <td th:text="${req.status}"></td>
+                    <td th:switch="${req.status.name()}">
+                        <span th:case="'PENDING'">Chờ xử lý</span>
+                        <span th:case="'APPROVED'">Đã duyệt</span>
+                        <span th:case="'COMPLETED'">Hoàn thành</span>
+                        <span th:case="'REJECTED'">Bị từ chối</span>
+                        <span th:case="*">Không xác định</span>
+                    </td>
                 </tr>
             </tbody>
         </table>
