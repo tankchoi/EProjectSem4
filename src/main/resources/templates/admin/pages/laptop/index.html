@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý laptop</title>
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/laptop/index.css}">
+    
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <!-- Add Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/laptop/index.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <!-- Add Select2 JS -->
@@ -76,10 +77,10 @@
                         <span class="material-symbols-outlined">search</span>
                         Tìm kiếm
                     </button>
-                    <a th:href="@{/admin/laptop}" class="clear-btn">
+                    <button th:href="@{/admin/laptop}" class="clear-btn">
                         <span class="material-symbols-outlined">clear</span>
                         Làm mới
-                    </a>
+                    </button>
                 </form>
             </div>
 
@@ -138,6 +139,7 @@
                 },
                 "pageLength": 10,
                 "searching": false,
+                "lengthChange": false,
                 "ordering": true,
                 "info": true
             });

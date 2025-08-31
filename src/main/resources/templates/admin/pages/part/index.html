@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Linh kiện</title>
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/part/index.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link
@@ -14,6 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <link rel="stylesheet" th:href="@{/assets/css/admin/pages/part/index.css}">
+
 </head>
 
 <body>
@@ -91,10 +92,10 @@
                             <span class="material-symbols-outlined">search</span>
                             Tìm kiếm
                         </button>
-                        <a href="/admin/part" class="btn-reset">
+                        <button href="/admin/part" class="btn-reset">
                             <span class="material-symbols-outlined">refresh</span>
                             Hiện tất cả
-                        </a>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -183,10 +184,10 @@
             if (document.querySelector('#myTable tbody tr:not(.empty-row)')) {
                 new DataTable("#myTable", {
                     paging: true,
-                    searching: true,
+                    searching: false,
                     ordering: true,
                     info: true,
-                    lengthMenu: [10, 25, 50, 100],
+                    lengthChange: false,
                     pageLength: 10,
                     language: {
                         search: "Tìm kiếm:",

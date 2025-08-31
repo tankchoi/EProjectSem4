@@ -60,15 +60,17 @@
             <div class="search-container">
                 <form action="/admin/model" method="get" class="search-form">
                     <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm model..."
-                           class="search-input">
+                        class="search-input">
                     <button type="submit" class="btn-search">
-                        <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 4px;">search</span>
+                        <span class="material-symbols-outlined"
+                            style="font-size: 18px; margin-right: 4px;">search</span>
                         Tìm kiếm
                     </button>
-                    <a href="/admin/model" class="btn-reset">
-                        <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 4px;">refresh</span>
+                    <button href="/admin/model" class="btn-reset">
+                        <span class="material-symbols-outlined"
+                            style="font-size: 18px; margin-right: 4px;">refresh</span>
                         Hiện tất cả
-                    </a>
+                    </button>
                 </form>
             </div>
 
@@ -129,7 +131,9 @@
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json"
                 },
-                "pageLength": 10
+                "pageLength": 10,
+                "searching": false,
+                "lengthChange": false
             });
         });
     </script>

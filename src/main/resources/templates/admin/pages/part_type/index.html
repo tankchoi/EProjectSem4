@@ -74,11 +74,11 @@
                             style="font-size: 18px; margin-right: 4px;">search</span>
                         Tìm kiếm
                     </button>
-                    <a href="/admin/part-type" class="btn-reset">
+                    <button href="/admin/part-type" class="btn-reset">
                         <span class="material-symbols-outlined"
                             style="font-size: 18px; margin-right: 4px;">refresh</span>
                         Hiện tất cả
-                    </a>
+                    </button>
                 </form>
             </div>
 
@@ -153,7 +153,8 @@
                     }
                 },
                 "pageLength": 10,
-                "lengthMenu": [10, 20, 30, 40]
+                "searching": false,
+                "lengthChange": false,
             });
         });
     </script>

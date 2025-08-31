@@ -1,11 +1,15 @@
 /* Modern Nav Top Design */
+body::-webkit-scrollbar {
+    display: none;
+}
+
 .nav-top-side {
     width: 100vw;
     height: 4.5rem;
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding-left: 15rem;
+    padding-left: 16.5rem;
     padding-right: 1.5rem;
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     border-bottom: 1px solid #e2e8f0;
