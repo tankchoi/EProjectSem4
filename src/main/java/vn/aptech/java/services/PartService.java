@@ -15,4 +15,5 @@ public interface PartService {
     void deletePart(Long id);
 
     List<Part> searchByName(String keyword);
+    Optional<Part> lockPartById(Long id);
 }

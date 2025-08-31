@@ -66,7 +66,6 @@ public class RequestController {
                         Model model) {
         try {
             if (bindingResult.hasErrors()) {
-                System.out.println("Binding errors: " + bindingResult.getAllErrors());
                 model.addAttribute("activePage", "request");
                 model.addAttribute("technicians", userService.getTechnicians());
                 model.addAttribute("request", createRequestDTO);

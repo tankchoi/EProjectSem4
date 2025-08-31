@@ -2,6 +2,7 @@ package vn.aptech.java.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.aptech.java.dtos.admin.CreatePartDTO;
 import vn.aptech.java.dtos.admin.UpdatePartDTO;
 import vn.aptech.java.models.Laptop;
@@ -108,5 +109,11 @@ public class PartServiceImpl implements PartService {
         } else {
             return partRepository.findByNameParts(keyword);
         }
+    }
+
+    @Override
+    @Transactional
+    public Optional<Part> lockPartById(Long id) {
+        return partRepository.findByIdWithLock(id);
     }
 }

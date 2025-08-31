@@ -27,9 +27,9 @@
             </div>
 
             <!-- Flash Messages -->
-            <div th:if="${message}" class="alert alert-success" style="margin: 1.5rem;">
+            <div th:if="${success}" class="alert alert-success" style="margin: 1.5rem;">
                 <span class="material-symbols-outlined">check_circle</span>
-                <span th:text="${message}"></span>
+                <span th:text="${success}"></span>
             </div>
 
             <div th:if="${error}" class="alert alert-danger" style="margin: 1.5rem;">
@@ -157,17 +157,9 @@
                                     </div>
                                 </div>
                                 <div class="info-row" th:if="${request.customerLaptop != null and request.customerLaptop.laptop != null}">
-                                    <div class="info-label">Hết hạn bảo hành:</div>
-                                    <div class="info-value">
-                                        <!-- Tính ngày hết hạn: createdAt + warrantyPeriod (theo tháng) -->
-                                        <span th:text="${#temporals.format(request.customerLaptop.createdAt.plusMonths(request.customerLaptop.laptop.warrantyPeriod), 'dd/MM/yyyy')}"></span>
-
-                                        <!-- Trạng thái hết hạn hay còn hạn -->
-                                        <span class="status-badge"
-                                              th:classappend="${request.customerLaptop.createdAt.plusMonths(request.customerLaptop.laptop.warrantyPeriod).isBefore(T(java.time.LocalDate).now()) ? 'warranty-expired' : 'warranty-valid'}"
-                                              th:text="${request.customerLaptop.createdAt.plusMonths(request.customerLaptop.laptop.warrantyPeriod).isBefore(T(java.time.LocalDate).now()) ? 'Hết hạn' : 'Còn hạn'}"
-                                              style="margin-left: 0.5rem;">
-                                        </span>
+                                    <div class="info-label">Thời hạn bảo hành:</div>
+                                    <div class="info-value"
+                                         th:text="|${request.customerLaptop.laptop.warrantyPeriod} tháng|">
                                     </div>
                                 </div>
                             </div>
@@ -251,55 +243,55 @@
                             </div>
                         </div>
 
-                        <!-- Status Update Form -->
-                        <div class="info-card">
-                            <div class="info-card-header">
-                                <span class="material-symbols-outlined">update</span>
-                                <h3>Cập nhật trạng thái</h3>
-                            </div>
-                            <form th:action="@{/admin/request/{id}/update-status(id=${request.id})}" method="post">
-                                <div class="form-group">
-                                    <label for="status" class="form-label">Trạng thái mới:</label>
-                                    <select class="form-select" id="status" name="status" required>
-                                        <option value="PENDING" th:selected="${request.status == 'PENDING'}">Chờ xử lý
-                                        </option>
-                                        <option value="IN_PROGRESS" th:selected="${request.status == 'IN_PROGRESS'}">
-                                            Đang xử lý</option>
-                                        <option value="COMPLETED" th:selected="${request.status == 'COMPLETED'}">Hoàn
-                                            thành</option>
-                                        <option value="CANCELLED" th:selected="${request.status == 'CANCELLED'}">Hủy bỏ
-                                        </option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn-primary">
-                                    <span class="material-symbols-outlined">save</span>
-                                    Cập nhật
-                                </button>
-                            </form>
-                        </div>
+<!--                        &lt;!&ndash; Status Update Form &ndash;&gt;-->
+<!--                        <div class="info-card">-->
+<!--                            <div class="info-card-header">-->
+<!--                                <span class="material-symbols-outlined">update</span>-->
+<!--                                <h3>Cập nhật trạng thái</h3>-->
+<!--                            </div>-->
+<!--                            <form th:action="@{/admin/request/{id}/update-status(id=${request.id})}" method="post">-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="status" class="form-label">Trạng thái mới:</label>-->
+<!--                                    <select class="form-select" id="status" name="status" required>-->
+<!--                                        <option value="PENDING" th:selected="${request.status == 'PENDING'}">Chờ xử lý-->
+<!--                                        </option>-->
+<!--                                        <option value="IN_PROGRESS" th:selected="${request.status == 'IN_PROGRESS'}">-->
+<!--                                            Đang xử lý</option>-->
+<!--                                        <option value="COMPLETED" th:selected="${request.status == 'COMPLETED'}">Hoàn-->
+<!--                                            thành</option>-->
+<!--                                        <option value="CANCELLED" th:selected="${request.status == 'CANCELLED'}">Hủy bỏ-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                                <button type="submit" class="btn-primary">-->
+<!--                                    <span class="material-symbols-outlined">save</span>-->
+<!--                                    Cập nhật-->
+<!--                                </button>-->
+<!--                            </form>-->
+<!--                        </div>-->
 
-                        <!-- Assign Technician -->
-                        <div class="info-card" th:if="${!request.technician}">
-                            <div class="info-card-header">
-                                <span class="material-symbols-outlined">person_add</span>
-                                <h3>Phân công kỹ thuật viên</h3>
-                            </div>
-                            <form th:action="@{/admin/request/{id}/assign-technician(id=${request.id})}" method="post">
-                                <div class="form-group">
-                                    <label for="technicianId" class="form-label">Chọn kỹ thuật viên:</label>
-                                    <select class="form-select" id="technicianId" name="technicianId" required>
-                                        <option value="">-- Chọn kỹ thuật viên --</option>
-                                        <option th:each="tech : ${technicians}" th:value="${tech.id}"
-                                            th:text="${tech.fullname + ' (' + tech.email + ')'}">
-                                        </option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn-success">
-                                    <span class="material-symbols-outlined">person_check</span>
-                                    Phân công
-                                </button>
-                            </form>
-                        </div>
+<!--                        &lt;!&ndash; Assign Technician &ndash;&gt;-->
+<!--                        <div class="info-card" th:if="${!request.technician}">-->
+<!--                            <div class="info-card-header">-->
+<!--                                <span class="material-symbols-outlined">person_add</span>-->
+<!--                                <h3>Phân công kỹ thuật viên</h3>-->
+<!--                            </div>-->
+<!--                            <form th:action="@{/admin/request/{id}/assign-technician(id=${request.id})}" method="post">-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="technicianId" class="form-label">Chọn kỹ thuật viên:</label>-->
+<!--                                    <select class="form-select" id="technicianId" name="technicianId" required>-->
+<!--                                        <option value="">&#45;&#45; Chọn kỹ thuật viên &#45;&#45;</option>-->
+<!--                                        <option th:each="tech : ${technicians}" th:value="${tech.id}"-->
+<!--                                            th:text="${tech.fullname + ' (' + tech.email + ')'}">-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                                <button type="submit" class="btn-success">-->
+<!--                                    <span class="material-symbols-outlined">person_check</span>-->
+<!--                                    Phân công-->
+<!--                                </button>-->
+<!--                            </form>-->
+<!--                        </div>-->
                     </div>
 
                     <!-- Actions Section -->
