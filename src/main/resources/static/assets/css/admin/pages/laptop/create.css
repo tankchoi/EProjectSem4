@@ -5,6 +5,13 @@
     box-sizing: border-box;
 }
 
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
+}
+
 /* Common layout styles */
 .main-container {
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -16,19 +23,18 @@
 .page-container {
     padding-left: 15rem;
     padding-top: 5rem;
-    padding-right: 1rem;
-    padding-bottom: 2rem;
 }
 
 .page-header {
-    background: transparent;
-    margin-bottom: 1rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .header-content {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    padding: 1rem 1.5rem;
 }
 
 .page-header h1 {
@@ -43,38 +49,23 @@
     color: #718096;
 }
 
-/* Dashboard header */
-.dashboard-header {
-    background: white;
-    margin-bottom: 1.5rem;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
-}
-
-.dashboard-title h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin: 0;
-}
-
 /* Form container */
 .page-content {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    margin: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 1px solid #e2e8f0;
-    margin: 0 auto;
-    max-width: 800px;
+    padding: 2rem;
 }
 
 .form-header {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 1.5rem;
-    border-bottom: 2px solid #e2e8f0;
-    border-radius: 16px 16px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .form-header h2 {
@@ -85,8 +76,9 @@
     text-align: center;
 }
 
-.form-content {
-    padding: 2rem;
+.form-header span{
+    font-size: 1.5rem;
+    color: #3b82f6;
 }
 
 /* Form groups */
@@ -95,7 +87,9 @@
 }
 
 .input-content label {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-weight: 600;
     color: #374151;
     margin-bottom: 0.5rem;

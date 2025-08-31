@@ -24,67 +24,56 @@ body {
 }
 
 .page-header {
-    background-color: #f8fafc;
+    background-color: #ffffff;
     border-bottom: 1px solid #e2e8f0;
 }
 
 .header-content {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
 }
 
 .page-header h1 {
-    font-size: 1.875rem;
+    font-size: 1.75rem;
     font-weight: 600;
-    color: #0f172a;
-    padding: 1.5rem 1rem;
-}
-
-.dashboard-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    margin: 1.5rem;
-    border-radius: 12px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.dashboard-title h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: white;
+    color: #1f2937;
     margin: 0;
-    padding: 0;
+}
+
+.page-header h1:first-child {
+    color: #6b7280;
 }
 
 .page-content {
-    background: white;
+    background-color: #ffffff;
     margin: 1.5rem;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 1px solid #e2e8f0;
+    padding: 2rem;
 }
 
 .form-header {
-    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .form-header h2 {
+    font-size: 1.5rem;
     font-weight: 600;
-    color: #1e293b;
-    font-size: 1.25rem;
+    color: #2d3748;
     margin: 0;
+    text-align: center;
 }
 
-.form-header .material-symbols-outlined {
-    font-size: 24px;
+.form-header span{
+    font-size: 1.5rem;
     color: #3b82f6;
 }
 

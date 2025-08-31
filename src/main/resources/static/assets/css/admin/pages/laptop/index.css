@@ -92,7 +92,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem;
+    padding: 1.3rem;
     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
 }
 
@@ -134,9 +134,12 @@ body {
 }
 
 .search-container {
+    margin: 1.5rem;
+    background: white;
+    border-radius: 12px;
     padding: 1.5rem;
-    border-bottom: 1px solid #e2e8f0;
-    background: #f8fafc;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
 }
 
 .search-form {
@@ -161,11 +164,52 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+.select2-container .select2-selection--single {
+    height: 44px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 40px;
+    color: #1e293b;
+    padding-left: 0;
+}
+
+.select2-container--default .select2-selection--single:focus,
+.select2-container--default .select2-selection--single:active,
+.select2-container--default.select2-container--open .select2-selection--single {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    outline: none;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100%;
+    right: 10px;
+}
+
+.search-btn,
+.clear-btn {
+    width: auto;
+    /* bỏ fix cứng */
+    min-width: 120px;
+    /* để không quá bé */
+    text-align: center;
+    justify-content: center;
+}
+
 .search-btn {
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
@@ -211,7 +255,7 @@ body {
     background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
@@ -313,49 +357,44 @@ body {
 }
 
 /* Action Buttons */
-.btn-edit {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    text-decoration: none;
-    margin-right: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
+.btn-edit,
+.btn-delete {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
 }
 
 .btn-edit:hover {
+    background: linear-gradient(135deg, #059669, #047857);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    text-decoration: none;
-    color: white;
 }
 
 .btn-delete {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
 }
 
 .btn-delete:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.btn-edit .material-symbols-outlined,
+.btn-delete .material-symbols-outlined {
+    font-size: 16px;
 }
 
 /* Empty State */

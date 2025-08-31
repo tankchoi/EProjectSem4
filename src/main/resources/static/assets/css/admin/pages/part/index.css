@@ -55,7 +55,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 2rem;
+    padding: 1.3rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -69,18 +69,17 @@ body {
 }
 
 .add-btn a {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.15);
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
-    text-decoration: none;
-    padding: 12px 20px;
+    padding: 0.75rem 1.5rem;
     border-radius: 8px;
+    text-decoration: none;
     font-weight: 500;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .add-btn a:hover {
@@ -105,7 +104,7 @@ body {
 .search-form {
     display: flex;
     gap: 16px;
-    flex-wrap: wrap;
+    align-items: center;
 }
 
 .search-input {
@@ -126,10 +125,35 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Select2 container styles */
-.select-container {
-    flex: 1;
-    min-width: 240px;
+.select2-container .select2-selection--single {
+    height: 44px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 40px;
+    color: #1e293b;
+    padding-left: 0;
+}
+
+.select2-container--default .select2-selection--single:focus,
+.select2-container--default .select2-selection--single:active,
+.select2-container--default.select2-container--open .select2-selection--single {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+    outline: none;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100%;
+    right: 10px;
 }
 
 .select-container label {
@@ -144,13 +168,11 @@ body {
 .button-group {
     display: flex;
     gap: 12px;
-    margin-top: 8px;
     align-items: flex-end;
     flex-wrap: wrap;
 }
 
-.btn-search,
-.btn-reset {
+.btn-search {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -161,7 +183,7 @@ body {
     font-size: 14px;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-search {
@@ -175,14 +197,26 @@ body {
 }
 
 .btn-reset {
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
 }
 
 .btn-reset:hover {
-    background: #e2e8f0;
-    color: #334155;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(107, 114, 128, 0.4);
+    text-decoration: none;
+    color: white;
 }
 
 /* Select2 custom styles */
