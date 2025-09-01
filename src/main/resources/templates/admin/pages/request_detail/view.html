@@ -104,11 +104,10 @@
                                     <label>Trạng thái:</label>
                                     <span class="status-badge"
                                         th:class="'status-badge status-' + ${#strings.toLowerCase(requestDetail.request.status)}"
-                                        th:text="${requestDetail.request.status == 'PENDING' ? 'Chờ xử lý' : 
-                                                   requestDetail.request.status == 'APPROVED' ? 'Đã duyệt' : 
-                                                   requestDetail.request.status == 'IN_PROGRESS' ? 'Đang sửa chữa' : 
-                                                   requestDetail.request.status == 'COMPLETED' ? 'Hoàn thành' : 
-                                                   requestDetail.request.status == 'REJECTED' ? 'Từ chối' : requestDetail.request.status}"></span>
+                                        th:text="${requestDetail.request.status.name() == 'PENDING' ? 'Chờ xử lý' : 
+                                                   requestDetail.request.status.name() == 'APPROVED' ? 'Đang sửa chữa' : 
+                                                   requestDetail.request.status.name() == 'COMPLETED' ? 'Hoàn thành' : 
+                                                   requestDetail.request.status.name() == 'REJECTED' ? 'Từ chối' : requestDetail.request.status.name()}"></span>
                                 </div>
                                 <div class="info-item" th:if="${requestDetail.request.technician}">
                                     <label>Kỹ thuật viên:</label>
@@ -151,15 +150,15 @@
                                             <label>Tồn kho:</label>
                                             <span class="value stock" th:text="${requestDetail.part.quantity}"></span>
                                         </div>
-                                        <div class="info-item" th:if="${requestDetail.part.description}">
+                                        <!-- <div class="info-item" th:if="${requestDetail.part.description}">
                                             <label>Mô tả:</label>
                                             <span class="value description"
                                                 th:text="${requestDetail.part.description}"></span>
-                                        </div>
+                                        </div> -->
                                         <div class="info-item">
                                             <label>Thời gian bảo hành:</label>
                                             <span class="value"
-                                                th:text="${requestDetail.part.warrantyPeriod} + ' năm'"></span>
+                                                th:text="${requestDetail.part.warrantyPeriod} + ' tháng'"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -224,7 +223,7 @@
 
             <!-- Action Buttons -->
             <div class="action-bar">
-                <a th:href="@{/admin/request-detail/{id}/edit(id=${requestDetail.id})}" class="btn btn-warning">
+                <a th:href="@{/admin/request-detail/edit/{id}(id=${requestDetail.id})}" class="btn btn-warning">
                     <span class="material-symbols-outlined">edit</span>
                     Chỉnh sửa
                 </a>
@@ -253,7 +252,7 @@
         </div>
 
     </div>
-    <script>
+    <script th:inline="javascript">
         function confirmDelete() {
             document.getElementById('deleteModal').style.display = 'flex';
         }
@@ -265,7 +264,7 @@
         function deleteRecord() {
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = `/admin/request-detail/${/*[[${requestDetail.id}]]*/ ''}/delete`;
+            form.action = /*[[@{/admin/request-detail/delete/{id}(id=${requestDetail.id})}]]*/ '';
 
             const csrfToken = document.querySelector('meta[name="_csrf"]');
             if (csrfToken) {

@@ -15,6 +15,7 @@ import vn.aptech.java.repositories.CustomerLaptopRepository;
 import vn.aptech.java.repositories.RequestRepository;
 import vn.aptech.java.services.RequestImgService;
 import vn.aptech.java.services.RequestService;
+import vn.aptech.java.services.UserService;
 import vn.aptech.java.utils.ImgUploadUtil;
 import java.util.Date;
 import java.util.Collections;
@@ -33,6 +34,9 @@ public class RequestServiceImpl implements RequestService {
 
     @Autowired
     private RequestImgService requestImgService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public void createScheduleRequest(WarrantyRequestDTO dto, MultipartFile[] images) throws IOException {
@@ -93,6 +97,8 @@ public class RequestServiceImpl implements RequestService {
             request.setAddress(dto.getAddress());
             request.setDescription(dto.getDescription());
             request.setBookingDate(dto.getBookingDate());
+            request.setTechnician(userService.findById(dto.getTechnicianId())
+                    .orElseThrow(() -> new IllegalArgumentException("Kỹ thuật viên không tồn tại.")));
             request.setStatus(dto.getStatus());
             if (dto.getSerialNumber() != null && !dto.getSerialNumber().isBlank()) {
                 CustomerLaptop cl = customerLaptopRepository.findBySerial(dto.getSerialNumber().trim());
@@ -139,6 +145,15 @@ public class RequestServiceImpl implements RequestService {
             request.setEmail(dto.getEmail());
             request.setAddress(dto.getAddress());
             request.setDescription(dto.getDescription());
+            if (dto.getStatus() != Request.Status.PENDING) {
+                if (dto.getTechnicianId() == null) {
+                    throw new IllegalArgumentException(
+                            "Phải chọn kỹ thuật viên khi cập nhật trạng thái khác chờ xử lý.");
+                }
+                request.setTechnician(userService.findById(dto.getTechnicianId())
+                        .orElseThrow(() -> new IllegalArgumentException("Kỹ thuật viên không tồn tại.")));
+            }
+            request.setBookingDate(dto.getBookingDate());
             request.setStatus(dto.getStatus());
 
             if (dto.getSerialNumber() != null && !dto.getSerialNumber().isBlank()) {
@@ -180,9 +195,10 @@ public class RequestServiceImpl implements RequestService {
     public List<Request> getRequests() {
         return requestRepository.findAll(Sort.by(Sort.Direction.DESC, "bookingDate"));
     }
+
     @Override
     public void deleteRequest(Long id) {
-        try{
+        try {
             Optional<Request> requestOpt = requestRepository.findById(id);
             if (requestOpt.isEmpty()) {
                 throw new IllegalArgumentException("Không tìm thấy yêu cầu bảo hành với ID: " + id);
@@ -192,7 +208,7 @@ public class RequestServiceImpl implements RequestService {
                 requestImgService.deleteRequestImg(img);
             }
             requestRepository.deleteById(id);
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Lỗi khi xóa yêu cầu bảo hành: " + e.getMessage(), e);
         }
     }

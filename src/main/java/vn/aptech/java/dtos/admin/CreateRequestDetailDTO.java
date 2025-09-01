@@ -3,7 +3,6 @@ package vn.aptech.java.dtos.admin;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
 public class CreateRequestDetailDTO {
     @NotNull(message = "Yêu cầu không được để trống")

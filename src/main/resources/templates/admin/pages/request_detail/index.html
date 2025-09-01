@@ -48,13 +48,13 @@
             </div>
 
             <!-- Flash Messages -->
-            <div th:if="${successMessage}" class="alert alert-success">
+            <div th:if="${success}" class="alert alert-success">
                 <span class="material-symbols-outlined">check_circle</span>
-                <span th:text="${successMessage}"></span>
+                <span th:text="${success}"></span>
             </div>
-            <div th:if="${errorMessage}" class="alert alert-error">
+            <div th:if="${error}" class="alert alert-error">
                 <span class="material-symbols-outlined">error</span>
-                <span th:text="${errorMessage}"></span>
+                <span th:text="${error}"></span>
             </div>
 
             <div class="dashboard-header">
@@ -103,7 +103,7 @@
                             <th>Số lượng</th>
                             <th>Đơn giá</th>
                             <th>Thành tiền</th>
-                            <th>Ngày tạo</th>
+                            <th>Ngày cập nhật</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -120,7 +120,7 @@
                             <td>
                                 <div class="customer-info">
                                     <div class="customer-name" th:text="${detail.request.fullname}"></div>
-                                    <div class="customer-email" th:text="${detail.request.email}"></div>
+                                    <div class="customer-email" th:text="${detail.request.phone}"></div>
                                 </div>
                             </td>
                             <td>
@@ -140,14 +140,14 @@
                                 <span class="total-price"
                                     th:text="${#numbers.formatDecimal(detail.part.price * detail.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
                             </td>
-                            <td th:text="${#dates.format(detail.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${#dates.format(detail.updatedAt, 'dd/MM/yyyy HH:mm')}"></td>
                             <td>
                                 <div class="action-buttons">
                                     <a th:href="@{/admin/request-detail/{id}(id=${detail.id})}"
                                         class="btn-icon btn-view" title="Xem chi tiết">
                                         <span class="material-symbols-outlined">visibility</span>
                                     </a>
-                                    <a th:href="@{/admin/request-detail/{id}/edit(id=${detail.id})}"
+                                    <a th:href="@{/admin/request-detail/edit/{id}(id=${detail.id})}"
                                         class="btn-icon btn-edit" title="Sửa">
                                         <span class="material-symbols-outlined">edit</span>
                                     </a>
@@ -191,14 +191,37 @@
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script th:inline="javascript">
+    <script>
         let deleteId = null;
+        function deleteRequestDetail(id) {
+            deleteId = id;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
 
-        // Debug: Check data availability
-        console.log('Page loaded');
-        /*[+ var requestDetailsCount = [[${#lists.size(requestDetails)}]]; +]*/
-        console.log('Request details count:', requestDetailsCount);
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            deleteId = null;
+        }
 
+        function confirmDelete() {
+            if (deleteId) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/request-detail/delete/${deleteId}`;
+
+                const csrfToken = document.querySelector('meta[name="_csrf"]');
+                if (csrfToken) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = '_token';
+                    input.value = csrfToken.getAttribute('content');
+                    form.appendChild(input);
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
         // Initialize DataTable
         $(document).ready(function () {
             // Remove preload class first to show content
@@ -225,7 +248,6 @@
                     "info": true,
                     "autoWidth": false,
                     "responsive": true,
-                    "order": [[0, "desc"]],
                     "columnDefs": [
                         { "orderable": false, "targets": -1 }
                     ],
@@ -239,36 +261,6 @@
                 console.log('No data in table, skipping DataTable initialization');
             }
         });
-
-        function deleteRequestDetail(id) {
-            deleteId = id;
-            document.getElementById('deleteModal').style.display = 'flex';
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').style.display = 'none';
-            deleteId = null;
-        }
-
-        function confirmDelete() {
-            if (deleteId) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = `/admin/request-detail/${deleteId}/delete`;
-
-                const csrfToken = document.querySelector('meta[name="_csrf"]');
-                if (csrfToken) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = '_token';
-                    input.value = csrfToken.getAttribute('content');
-                    form.appendChild(input);
-                }
-
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
     </script>
 </body>
 

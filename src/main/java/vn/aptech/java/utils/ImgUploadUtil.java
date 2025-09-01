@@ -1,6 +1,5 @@
 package vn.aptech.java.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,8 +50,10 @@ public class ImgUploadUtil {
         Files.copy(file.getInputStream(), filePath);
 
         // Trả về đường dẫn tương đối bao gồm thư mục uploads/
-        return "/" + Paths.get(UPLOAD_DIR, subfolder != null && !subfolder.trim().isEmpty() ? 
-                Paths.get(subfolder, newFilename).toString() : newFilename)
+        return "/" + Paths
+                .get(UPLOAD_DIR,
+                        subfolder != null && !subfolder.trim().isEmpty() ? Paths.get(subfolder, newFilename).toString()
+                                : newFilename)
                 .toString()
                 .replace("\\", "/");
     }
@@ -100,4 +101,3 @@ public class ImgUploadUtil {
         return filename.substring(filename.lastIndexOf(".") + 1);
     }
 }
-

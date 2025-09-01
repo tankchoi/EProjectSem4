@@ -15,6 +15,7 @@ import vn.aptech.java.repositories.UserRepository;
 import vn.aptech.java.services.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -101,7 +102,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmailAndIdNot(dto.getEmail(), userId)) {
             throw new IllegalArgumentException("Email đã tồn tại");
         }
-        
+
         if (dto.getNewPassword() != null && !dto.getNewPassword().isBlank()) {
             if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
                 throw new IllegalArgumentException("Mật khẩu mới và xác nhận không khớp");
@@ -119,5 +120,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getTechnicians() {
         return userRepository.findAllByRoleAndStatus(User.Role.STAFF, User.Status.ACTIVE);
+    }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 }
