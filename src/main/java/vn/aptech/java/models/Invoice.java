@@ -1,4 +1,5 @@
 package vn.aptech.java.models;
+
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -6,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Timestamp;
+
 @Entity
 @Table(name = "Invoices")
 public class Invoice {
@@ -19,8 +21,13 @@ public class Invoice {
     private Request request;
 
     private Double totalPrice;
-    private String status; // PAID, UNPAID
 
+    public enum Status {
+        UNPAID, PAID
+    }
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @CreationTimestamp
     private Timestamp createdAt;
 
@@ -30,7 +37,8 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(Long id, Request request, Double totalPrice, String status, Timestamp createdAt, Timestamp updatedAt) {
+    public Invoice(Long id, Request request, Double totalPrice, Status status, Timestamp createdAt,
+            Timestamp updatedAt) {
         this.id = id;
         this.request = request;
         this.totalPrice = totalPrice;
@@ -51,7 +59,7 @@ public class Invoice {
         return totalPrice;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -75,7 +83,7 @@ public class Invoice {
         this.totalPrice = totalPrice;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

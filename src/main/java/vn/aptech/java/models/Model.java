@@ -1,9 +1,10 @@
 package vn.aptech.java.models;
+
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import jakarta.validation.constraints.*;
 import java.sql.Timestamp;
+
 @Entity
 @Table(name = "Models")
 public class Model {

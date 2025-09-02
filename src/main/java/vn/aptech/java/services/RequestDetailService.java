@@ -17,4 +17,6 @@ public interface RequestDetailService {
     List<RequestDetail> getRequestDetails();
 
     void deleteRequestDetail(Long id);
+
+    List<RequestDetail> getRequestDetailsByRequestId(Long requestId);
 }

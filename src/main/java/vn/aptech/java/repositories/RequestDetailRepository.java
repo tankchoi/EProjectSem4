@@ -5,4 +5,6 @@ import vn.aptech.java.models.RequestDetail;
 
 public interface RequestDetailRepository extends JpaRepository<RequestDetail, Long> {
     boolean existsByRequestIdAndPartId(Long requestId, Long partId);
+
+    java.util.List<RequestDetail> findByRequestId(Long requestId);
 }

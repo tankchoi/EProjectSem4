@@ -1,6 +1,5 @@
 package vn.aptech.java.repositories;
 
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import vn.aptech.java.models.Model;
 

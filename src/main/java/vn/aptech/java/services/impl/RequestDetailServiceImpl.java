@@ -5,7 +5,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.aptech.java.dtos.admin.CreateRequestDetailDTO;
-import vn.aptech.java.dtos.admin.UpdatePartDTO;
 import vn.aptech.java.dtos.admin.UpdateRequestDetailDTO;
 import vn.aptech.java.models.Part;
 import vn.aptech.java.models.Request;
@@ -113,6 +112,11 @@ public class RequestDetailServiceImpl implements RequestDetailService {
                 .orElseThrow(() -> new IllegalArgumentException("Linh kiện không tồn tại."));
         part.setQuantity(part.getQuantity() + requestDetail.getQuantity());
         requestDetailRepository.delete(requestDetail);
+    }
+
+    @Override
+    public List<RequestDetail> getRequestDetailsByRequestId(Long requestId) {
+        return requestDetailRepository.findByRequestId(requestId);
     }
 
 }
