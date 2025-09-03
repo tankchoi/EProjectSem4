@@ -1,17 +1,12 @@
 package vn.aptech.java.services.impl;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import vn.aptech.java.dtos.admin.CreateInvoiceDTO;
 import vn.aptech.java.models.Invoice;
 import vn.aptech.java.models.Request;
-import vn.aptech.java.models.RequestDetail;
 import vn.aptech.java.repositories.InvoiceRepository;
 import vn.aptech.java.services.InvoiceService;
 import vn.aptech.java.services.RequestDetailService;

@@ -157,9 +157,9 @@
                                     </div>
                                 </div>
                                 <div class="info-row" th:if="${request.customerLaptop != null and request.customerLaptop.laptop != null}">
-                                    <div class="info-label">Thời hạn bảo hành:</div>
+                                    <div class="info-label">Hết hạn bảo hành:</div>
                                     <div class="info-value"
-                                         th:text="|${request.customerLaptop.laptop.warrantyPeriod} tháng|">
+                                         th:text="${#temporals.format(request.customerLaptop.createdAt.toLocalDateTime().plusMonths(request.customerLaptop.laptop.warrantyPeriod), 'dd/MM/yyyy')}">
                                     </div>
                                 </div>
                             </div>
