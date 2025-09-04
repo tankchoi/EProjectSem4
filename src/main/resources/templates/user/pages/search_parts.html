@@ -22,6 +22,23 @@
 
         <form action="/search-parts" method="get" class="form-group">
             <input type="text" name="keyword" placeholder="Nhập tên linh kiện cần tìm" th:value="${keyword}">
+
+            <div class="select-container">
+                <select id="partTypeId" name="partTypeId" class="select2-filter" onchange="this.form.submit()">
+                    <option value="">-- Tất cả loại linh kiện --</option>
+                    <option th:each="type : ${partTypes}" th:value="${type.id}" th:text="${type.name}"
+                        th:selected="${partTypeId == type.id}"></option>
+                </select>
+            </div>
+
+            <div class="select-container">
+                <select id="laptopId" name="laptopId" class="select2-filter" onchange="this.form.submit()">
+                    <option value="">-- Tất cả laptop --</option>
+                    <option th:each="laptop : ${laptops}" th:value="${laptop.id}" th:text="${laptop.name}"
+                        th:selected="${laptopId == laptop.id}"></option>
+                </select>
+            </div>
+
             <button type="submit">Tra cứu</button>
         </form>
 
@@ -56,5 +73,13 @@
     </div>
     <div th:replace="user/fragments/footer :: footer"></div>
 </body>
-
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".select2-filter").forEach(select => {
+            select.addEventListener("change", function() {
+                this.form.submit();
+            });
+        });
+    });
+</script>
 </html>

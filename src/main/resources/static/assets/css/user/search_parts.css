@@ -21,33 +21,65 @@ body {
 
 .form-group {
     display: flex;
+    flex-wrap: wrap;
+    /* cho responsive */
+    gap: 10px;
     margin-bottom: 30px;
     margin-top: 10px;
+    align-items: center;
 }
 
 .form-group input[type="text"] {
     flex: 1;
-    padding: 12px;
-    width: 300px;
+    min-width: 250px;
+    padding: 12px 15px;
     border: 1px solid #ccc;
-    border-radius: 6px 0 0 6px;
+    border-radius: 6px;
     outline: none;
     font-size: 16px;
+    transition: border 0.3s;
+}
+
+.form-group input[type="text"]:focus {
+    border-color: #000;
+}
+
+.select-container {
+    flex: 1;
+    min-width: 200px;
+}
+
+.select-container select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s;
+}
+
+.select-container select:focus {
+    border-color: #000;
 }
 
 .form-group button {
-    padding: 10px 20px;
+    padding: 12px 25px;
     font-size: 16px;
     background-color: #000;
     color: #fff;
     border: none;
+    border-radius: 6px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background 0.3s;
+    flex-shrink: 0;
+    /* giữ nguyên kích thước nút */
 }
 
 .form-group button:hover {
     background-color: #767676;
 }
+
 
 .part-card {
     display: flex;
@@ -83,7 +115,7 @@ body {
     font-size: 18px;
 }
 
-.part-info div{
+.part-info div {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px 20px;
@@ -97,9 +129,9 @@ body {
 }
 
 .result-scroll {
-    max-height: 500px; 
+    max-height: 500px;
     overflow-y: auto;
-    padding-right: 10px; 
+    padding-right: 10px;
 }
 
 .result-scroll::-webkit-scrollbar {

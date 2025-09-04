@@ -15,12 +15,12 @@ public class CustomerLaptopServiceImpl implements CustomerLaptopService {
     private CustomerLaptopRepository customerLaptopRepository;
 
     @Override
-    public List<CustomerLaptop> getLaptopsByCustomerIdAndSerial(Long customerId, String serialNumber) {
+    public List<CustomerLaptop> getLaptopsBySerial(String serialNumber) {
         if (serialNumber == null || serialNumber.trim().isEmpty()) {
-            return customerLaptopRepository.findAllByCustomerId(customerId);
+            return List.of();
         }
 
-        CustomerLaptop cl = customerLaptopRepository.findBySerialAndCustomerId(serialNumber.trim(), customerId);
+        CustomerLaptop cl = customerLaptopRepository.findBySerial(serialNumber.trim());
         return (cl != null) ? List.of(cl) : List.of();
     }
 

@@ -9,7 +9,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import vn.aptech.java.services.CustomerLaptopService;
+import vn.aptech.java.services.LaptopService;
 import vn.aptech.java.services.PartService;
+import vn.aptech.java.services.PartTypeService;
 import vn.aptech.java.services.RequestService;
 import vn.aptech.java.utils.ImgUploadUtil;
 
@@ -32,6 +34,12 @@ public class WarrantyController {
     private PartService partService;
 
     @Autowired
+    private PartTypeService partTypeService;
+
+    @Autowired
+    private LaptopService laptopService;
+
+    @Autowired
     private CustomerLaptopService customerLaptopService;
 
     @Autowired
@@ -49,12 +57,19 @@ public class WarrantyController {
     @GetMapping("/check-warranty")
     public String checkWarranty(
             @RequestParam(value = "serialNumber", required = false) String serialNumber,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             Model model) {
 
-        Long customerId = customUserDetails.getUser().getId();
-        List<CustomerLaptop> laptops = customerLaptopService.getLaptopsByCustomerIdAndSerial(customerId, serialNumber);
+        List<CustomerLaptop> laptops = List.of();
+        boolean searched = false;
+
+        if (serialNumber != null && !serialNumber.trim().isEmpty()) {
+            laptops = customerLaptopService.getLaptopsBySerial(serialNumber.trim());
+            searched = true;
+        }
+
         model.addAttribute("laptops", laptops);
+        model.addAttribute("searched", searched);
+
         return "user/pages/check_warranty";
     }
 
@@ -104,10 +119,21 @@ public class WarrantyController {
     }
 
     @GetMapping("/search-parts")
-    public String searchParts(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
-        List<Part> parts = partService.searchByName(keyword);
+    public String searchParts(
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "partTypeId", required = false) Long partTypeId,
+            @RequestParam(name = "laptopId", required = false) Long laptopId,
+            Model model) {
+
+        List<Part> parts = partService.getParts(keyword, partTypeId, laptopId);
+
         model.addAttribute("parts", parts);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("partTypeId", partTypeId);
+        model.addAttribute("laptopId", laptopId);
+        model.addAttribute("partTypes", partTypeService.getPartTypes(null));
+        model.addAttribute("laptops", laptopService.getLaptops(null, null));
+
         return "user/pages/search_parts";
     }
 

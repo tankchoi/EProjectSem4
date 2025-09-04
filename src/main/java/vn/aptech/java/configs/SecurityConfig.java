@@ -45,7 +45,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .securityMatcher("/**")
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/custom-login", "/register", "/contact", "/search-parts", "/images/parts/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/custom-login", "/register", "/contact", "/search-parts", "/images/parts/**", "/images/**", "/check-warranty").permitAll()
                         .anyRequest().hasAuthority("CUSTOMER"))
                 .formLogin(login -> login
                         .loginPage("/custom-login")

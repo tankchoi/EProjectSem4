@@ -5,7 +5,7 @@ import vn.aptech.java.models.CustomerLaptop;
 import java.util.List;
 
 public interface CustomerLaptopService {
-        List<CustomerLaptop> getLaptopsByCustomerIdAndSerial(Long customerId, String serialNumber);
+        List<CustomerLaptop> getLaptopsBySerial(String serialNumber);
 
         boolean isLaptopExists(String serialNumber);
 
