@@ -2,7 +2,9 @@ package vn.aptech.java.controllers.admin;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import vn.aptech.java.dtos.admin.CreateInvoiceDTO;
+import vn.aptech.java.dtos.admin.UpdateInvoiceDTO;
+import vn.aptech.java.models.Invoice;
 import vn.aptech.java.services.InvoiceService;
 import vn.aptech.java.services.RequestDetailService;
 import vn.aptech.java.services.RequestService;
@@ -63,6 +67,59 @@ public class InvoiceController {
             model.addAttribute("invoice", dto);
             model.addAttribute("error", "Lỗi khi tạo hóa đơn: " + e.getMessage());
             return "admin/pages/invoice/create";
+        }
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        model.addAttribute("activePage", "receipt");
+        try {
+            Optional<Invoice> optionalInvoice = invoiceService.getInvoiceById(id);
+            if (optionalInvoice.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Hóa đơn không tồn tại.");
+                return "redirect:/admin/invoice";
+            }
+            Invoice invoice = optionalInvoice.get();
+            UpdateInvoiceDTO dto = new UpdateInvoiceDTO(invoice.getId(), invoice.getStatus());
+            model.addAttribute("invoice", invoice);
+            model.addAttribute("invoiceDto", dto);
+            return "admin/pages/invoice/edit";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi tải hóa đơn: " + e.getMessage());
+            return "redirect:/admin/invoice";
+        }
+    }
+
+    @PostMapping("/update")
+    public String update(@Valid @ModelAttribute("invoiceDto") UpdateInvoiceDTO dto,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes,
+            Model model) {
+
+        try {
+            if (bindingResult.hasErrors()) {
+                Optional<Invoice> optionalInvoice = invoiceService.getInvoiceById(dto.getId());
+                if (optionalInvoice.isPresent()) {
+                    model.addAttribute("invoice", optionalInvoice.get());
+                    model.addAttribute("invoiceDto", dto);
+                    model.addAttribute("activePage", "receipt");
+                    return "admin/pages/invoice/edit";
+                }
+                redirectAttributes.addFlashAttribute("error", "Hóa đơn không tồn tại.");
+                return "redirect:/admin/invoice";
+            }
+            invoiceService.updateInvoice(dto);
+            redirectAttributes.addFlashAttribute("success", "Cập nhật hóa đơn thành công.");
+            return "redirect:/admin/invoice";
+        } catch (Exception e) {
+            Optional<Invoice> optionalInvoice = invoiceService.getInvoiceById(dto.getId());
+            if (optionalInvoice.isPresent()) {
+                model.addAttribute("invoice", optionalInvoice.get());
+                model.addAttribute("invoiceDto", dto);
+                model.addAttribute("activePage", "receipt");
+                return "admin/pages/invoice/edit";
+            }
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi cập nhật hóa đơn: " + e.getMessage());
+            return "redirect:/admin/invoice";
         }
     }
 

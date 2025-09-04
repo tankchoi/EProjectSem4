@@ -1,10 +1,13 @@
 package vn.aptech.java.services.impl;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import vn.aptech.java.dtos.admin.CreateInvoiceDTO;
+import vn.aptech.java.dtos.admin.UpdateInvoiceDTO;
 import vn.aptech.java.models.Invoice;
 import vn.aptech.java.models.Request;
 import vn.aptech.java.repositories.InvoiceRepository;
@@ -26,6 +29,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = new Invoice();
         invoice.setRequest(requestService.getRequestById(dto.getRequestId())
                 .orElseThrow(() -> new IllegalArgumentException("Yêu cầu không tồn tại.")));
+        invoiceRepository.findByRequestId(dto.getRequestId()).ifPresent(existingInvoice -> {
+            throw new IllegalArgumentException("Hóa đơn cho yêu cầu này đã tồn tại.");
+        });
         invoice.setTotalPrice(calculateTotalPrice(dto.getRequestId()));
         invoice.setStatus(dto.getStatus());
         invoiceRepository.save(invoice);
@@ -48,6 +54,19 @@ public class InvoiceServiceImpl implements InvoiceService {
         return requestDetailService.getRequestDetailsByRequestId(requestId).stream()
                 .mapToDouble(detail -> detail.getQuantity() * detail.getPart().getPrice())
                 .sum();
+    }
+
+    @Override
+    public void updateInvoice(UpdateInvoiceDTO dto) {
+        Invoice invoice = invoiceRepository.findById(dto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Hóa đơn không tồn tại."));
+        invoice.setStatus(dto.getStatus());
+        invoiceRepository.save(invoice);
+    }
+
+    @Override
+    public Optional<Invoice> getInvoiceById(Long id) {
+        return invoiceRepository.findById(id);
     }
 
 }

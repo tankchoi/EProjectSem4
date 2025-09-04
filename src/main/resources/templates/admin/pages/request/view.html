@@ -87,7 +87,7 @@
                                                           request.status.name() == 'APPROVED' ? 'status-in-progress' :
                                                           request.status.name() == 'COMPLETED' ? 'status-completed' :
                                                           request.status.name() == 'CANCELLED' ? 'status-cancelled' : 'status-pending'}"
-                                          th:text="${request.status.name() == 'PENDING' ? 'Chờ xử lý' :
+                                        th:text="${request.status.name() == 'PENDING' ? 'Chờ xử lý' :
                                                     request.status.name() == 'APPROVED' ? 'Đang xử lý' :
                                                     request.status.name() == 'COMPLETED' ? 'Hoàn thành' :
                                                     request.status.name() == 'CANCELLED' ? 'Đã hủy' : request.status}">
@@ -156,10 +156,11 @@
                                         th:text="${#dates.format(request.customerLaptop.createdAt, 'dd/MM/yyyy')}">
                                     </div>
                                 </div>
-                                <div class="info-row" th:if="${request.customerLaptop != null and request.customerLaptop.laptop != null}">
+                                <div class="info-row"
+                                    th:if="${request.customerLaptop != null and request.customerLaptop.laptop != null}">
                                     <div class="info-label">Hết hạn bảo hành:</div>
                                     <div class="info-value"
-                                         th:text="${#temporals.format(request.customerLaptop.createdAt.toLocalDateTime().plusMonths(request.customerLaptop.laptop.warrantyPeriod), 'dd/MM/yyyy')}">
+                                        th:text="${#temporals.format(request.customerLaptop.createdAt.toLocalDateTime().plusMonths(request.customerLaptop.laptop.warrantyPeriod), 'dd/MM/yyyy')}">
                                     </div>
                                 </div>
                             </div>
@@ -236,62 +237,64 @@
                             </div>
                             <div class="image-gallery">
                                 <div class="gallery-grid">
-                                    <div class="gallery-item" th:each="img : ${requestImages}" onclick="openImageModal(this)">
-                                        <img class="gallery-image" th:src="@{${img.imgUrl}}" alt="Hình ảnh yêu cầu bảo hành">
+                                    <div class="gallery-item" th:each="img : ${requestImages}"
+                                        onclick="openImageModal(this)">
+                                        <img class="gallery-image" th:src="@{${img.imgUrl}}"
+                                            alt="Hình ảnh yêu cầu bảo hành">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-<!--                        &lt;!&ndash; Status Update Form &ndash;&gt;-->
-<!--                        <div class="info-card">-->
-<!--                            <div class="info-card-header">-->
-<!--                                <span class="material-symbols-outlined">update</span>-->
-<!--                                <h3>Cập nhật trạng thái</h3>-->
-<!--                            </div>-->
-<!--                            <form th:action="@{/admin/request/{id}/update-status(id=${request.id})}" method="post">-->
-<!--                                <div class="form-group">-->
-<!--                                    <label for="status" class="form-label">Trạng thái mới:</label>-->
-<!--                                    <select class="form-select" id="status" name="status" required>-->
-<!--                                        <option value="PENDING" th:selected="${request.status == 'PENDING'}">Chờ xử lý-->
-<!--                                        </option>-->
-<!--                                        <option value="IN_PROGRESS" th:selected="${request.status == 'IN_PROGRESS'}">-->
-<!--                                            Đang xử lý</option>-->
-<!--                                        <option value="COMPLETED" th:selected="${request.status == 'COMPLETED'}">Hoàn-->
-<!--                                            thành</option>-->
-<!--                                        <option value="CANCELLED" th:selected="${request.status == 'CANCELLED'}">Hủy bỏ-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                                <button type="submit" class="btn-primary">-->
-<!--                                    <span class="material-symbols-outlined">save</span>-->
-<!--                                    Cập nhật-->
-<!--                                </button>-->
-<!--                            </form>-->
-<!--                        </div>-->
+                        <!--                        &lt;!&ndash; Status Update Form &ndash;&gt;-->
+                        <!--                        <div class="info-card">-->
+                        <!--                            <div class="info-card-header">-->
+                        <!--                                <span class="material-symbols-outlined">update</span>-->
+                        <!--                                <h3>Cập nhật trạng thái</h3>-->
+                        <!--                            </div>-->
+                        <!--                            <form th:action="@{/admin/request/{id}/update-status(id=${request.id})}" method="post">-->
+                        <!--                                <div class="form-group">-->
+                        <!--                                    <label for="status" class="form-label">Trạng thái mới:</label>-->
+                        <!--                                    <select class="form-select" id="status" name="status" required>-->
+                        <!--                                        <option value="PENDING" th:selected="${request.status == 'PENDING'}">Chờ xử lý-->
+                        <!--                                        </option>-->
+                        <!--                                        <option value="IN_PROGRESS" th:selected="${request.status == 'IN_PROGRESS'}">-->
+                        <!--                                            Đang xử lý</option>-->
+                        <!--                                        <option value="COMPLETED" th:selected="${request.status == 'COMPLETED'}">Hoàn-->
+                        <!--                                            thành</option>-->
+                        <!--                                        <option value="CANCELLED" th:selected="${request.status == 'CANCELLED'}">Hủy bỏ-->
+                        <!--                                        </option>-->
+                        <!--                                    </select>-->
+                        <!--                                </div>-->
+                        <!--                                <button type="submit" class="btn-primary">-->
+                        <!--                                    <span class="material-symbols-outlined">save</span>-->
+                        <!--                                    Cập nhật-->
+                        <!--                                </button>-->
+                        <!--                            </form>-->
+                        <!--                        </div>-->
 
-<!--                        &lt;!&ndash; Assign Technician &ndash;&gt;-->
-<!--                        <div class="info-card" th:if="${!request.technician}">-->
-<!--                            <div class="info-card-header">-->
-<!--                                <span class="material-symbols-outlined">person_add</span>-->
-<!--                                <h3>Phân công kỹ thuật viên</h3>-->
-<!--                            </div>-->
-<!--                            <form th:action="@{/admin/request/{id}/assign-technician(id=${request.id})}" method="post">-->
-<!--                                <div class="form-group">-->
-<!--                                    <label for="technicianId" class="form-label">Chọn kỹ thuật viên:</label>-->
-<!--                                    <select class="form-select" id="technicianId" name="technicianId" required>-->
-<!--                                        <option value="">&#45;&#45; Chọn kỹ thuật viên &#45;&#45;</option>-->
-<!--                                        <option th:each="tech : ${technicians}" th:value="${tech.id}"-->
-<!--                                            th:text="${tech.fullname + ' (' + tech.email + ')'}">-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                                <button type="submit" class="btn-success">-->
-<!--                                    <span class="material-symbols-outlined">person_check</span>-->
-<!--                                    Phân công-->
-<!--                                </button>-->
-<!--                            </form>-->
-<!--                        </div>-->
+                        <!--                        &lt;!&ndash; Assign Technician &ndash;&gt;-->
+                        <!--                        <div class="info-card" th:if="${!request.technician}">-->
+                        <!--                            <div class="info-card-header">-->
+                        <!--                                <span class="material-symbols-outlined">person_add</span>-->
+                        <!--                                <h3>Phân công kỹ thuật viên</h3>-->
+                        <!--                            </div>-->
+                        <!--                            <form th:action="@{/admin/request/{id}/assign-technician(id=${request.id})}" method="post">-->
+                        <!--                                <div class="form-group">-->
+                        <!--                                    <label for="technicianId" class="form-label">Chọn kỹ thuật viên:</label>-->
+                        <!--                                    <select class="form-select" id="technicianId" name="technicianId" required>-->
+                        <!--                                        <option value="">&#45;&#45; Chọn kỹ thuật viên &#45;&#45;</option>-->
+                        <!--                                        <option th:each="tech : ${technicians}" th:value="${tech.id}"-->
+                        <!--                                            th:text="${tech.fullname + ' (' + tech.email + ')'}">-->
+                        <!--                                        </option>-->
+                        <!--                                    </select>-->
+                        <!--                                </div>-->
+                        <!--                                <button type="submit" class="btn-success">-->
+                        <!--                                    <span class="material-symbols-outlined">person_check</span>-->
+                        <!--                                    Phân công-->
+                        <!--                                </button>-->
+                        <!--                            </form>-->
+                        <!--                        </div>-->
                     </div>
 
                     <!-- Actions Section -->
@@ -387,7 +390,7 @@
                 });
 
             // Check if invoice exists for this request
-            fetch(`/admin/receipt/api/check-by-request/${requestId}`)
+            fetch(`/admin/invoice/api/check-by-request/${requestId}`)
                 .then(response => response.json())
                 .then(data => {
                     const invoiceStatusElement = document.getElementById('invoiceStatus');
@@ -418,23 +421,23 @@
         function hideDeleteModal() {
             document.getElementById('deleteModal').style.display = 'none';
         }
-        
+
         // Image Modal Functions
         function openImageModal(element) {
             const imgSrc = element.querySelector('.gallery-image').src;
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
-            
+
             modalImg.src = imgSrc;
             modal.style.display = 'flex';
-            
+
             // Prevent scrolling when modal is open
             document.body.style.overflow = 'hidden';
         }
-        
+
         function closeImageModal() {
             document.getElementById('imageModal').style.display = 'none';
-            
+
             // Re-enable scrolling
             document.body.style.overflow = 'auto';
         }
@@ -464,7 +467,7 @@
                 hideDeleteModal();
             }
         });
-        
+
         // Close image modal when clicking outside
         document.getElementById('imageModal').addEventListener('click', function (e) {
             if (e.target === this) {

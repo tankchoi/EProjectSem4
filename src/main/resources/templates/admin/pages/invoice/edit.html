@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh sửa Hóa đơn</title>
+    <title>Cập nhật Hóa đơn</title>
     <link rel="stylesheet" th:href="@{/assets/css/admin/pages/receipt/index.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
@@ -204,8 +204,8 @@
             </div>
             <div class="dashboard-header">
                 <div class="dashboard-title">
-                    <h1>Chỉnh sửa Hóa đơn #<span th:text="${invoiceId}"></span></h1>
-                    <a th:href="@{/admin/receipt}" class="btn btn-secondary">
+                    <h1>Cập nhật Hóa đơn #<span th:text="${invoice.id}"></span></h1>
+                    <a th:href="@{/admin/invoice}" class="btn btn-secondary">
                         <span class="material-symbols-outlined">arrow_back</span>
                         Quay lại
                     </a>
@@ -223,37 +223,30 @@
             </div>
 
             <div class="form-container">
-                <form th:action="@{/admin/receipt/update/{id}(id=${invoiceId})}" th:object="${invoice}" method="post">
+                <form th:action="@{/admin/invoice/update}" th:object="${invoiceDto}" method="post">
+                    <input type="hidden" th:field="*{id}">
+
                     <div class="form-group">
-                        <label class="form-label required" for="requestId">
+                        <label class="form-label" for="requestInfo">
                             Yêu cầu bảo hành
                         </label>
-                        <select name="requestId" id="requestId" class="form-select" required>
-                            <option value="">-- Chọn yêu cầu bảo hành --</option>
-                            <option th:each="request : ${requests}" th:value="${request.id}"
-                                th:text="${'#' + request.id + ' - ' + request.fullname + ' (' + request.customerLaptop.laptop.name + ')'}"
-                                th:selected="${request.id == invoice.requestId}">
-                                Yêu cầu bảo hành
-                            </option>
-                        </select>
-                        <div th:if="${#fields.hasErrors('requestId')}" class="form-error">
-                            <span th:errors="*{requestId}"></span>
+                        <input type="text" id="requestInfo" class="form-input" readonly
+                            th:value="${'#' + invoice.request.id + ' - ' + invoice.request.fullname + ' (' + invoice.request.customerLaptop.laptop.name + ')'}">
+                        <div class="info-box info">
+                            <span class="material-symbols-outlined">info</span>
+                            Không thể thay đổi yêu cầu bảo hành khi chỉnh sửa hóa đơn
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label required" for="totalPrice">
+                        <label class="form-label" for="totalPrice">
                             Tổng tiền (VNĐ)
-                            <span class="form-help">(Tự động tính từ chi tiết linh kiện)</span>
                         </label>
-                        <input name="totalPrice" th:value="${invoice.totalPrice}" type="number" step="1000" min="0"
-                            id="totalPrice" class="form-input" readonly required>
-                        <div id="totalPriceInfo" class="info-box info">
+                        <input type="text" id="totalPrice" class="form-input" readonly
+                            th:value="${#numbers.formatInteger(invoice.totalPrice, 0, 'COMMA')} + ' VNĐ'">
+                        <div class="info-box info">
                             <span class="material-symbols-outlined">info</span>
                             Tổng tiền được tính tự động từ các linh kiện trong yêu cầu bảo hành
-                        </div>
-                        <div th:if="${#fields.hasErrors('totalPrice')}" class="form-error">
-                            <span th:errors="*{totalPrice}"></span>
                         </div>
                     </div>
 
@@ -261,9 +254,9 @@
                         <label class="form-label required" for="status">
                             Trạng thái thanh toán
                         </label>
-                        <select name="status" id="status" class="form-select" required>
-                            <option value="UNPAID" th:selected="${invoice.status == 'UNPAID'}">Chưa thanh toán</option>
-                            <option value="PAID" th:selected="${invoice.status == 'PAID'}">Đã thanh toán</option>
+                        <select th:field="*{status}" id="status" class="form-select" required>
+                            <option value="UNPAID">Chưa thanh toán</option>
+                            <option value="PAID">Đã thanh toán</option>
                         </select>
                         <div th:if="${#fields.hasErrors('status')}" class="form-error">
                             <span th:errors="*{status}"></span>
@@ -271,7 +264,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <a th:href="@{/admin/receipt}" class="btn btn-secondary">
+                        <a th:href="@{/admin/invoice}" class="btn btn-secondary">
                             <span class="material-symbols-outlined">close</span>
                             Hủy
                         </a>
@@ -286,90 +279,6 @@
     </div>
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Auto-calculate total price when request is changed
-            const requestSelect = document.getElementById('requestId');
-            const totalPriceInput = document.getElementById('totalPrice');
-
-            if (requestSelect && totalPriceInput) {
-                requestSelect.addEventListener('change', function () {
-                    if (this.value) {
-                        // Show loading state
-                        totalPriceInput.value = '';
-                        totalPriceInput.placeholder = 'Đang tính toán...';
-                        totalPriceInput.style.backgroundColor = '#f8fafc';
-
-                        // Fetch calculated total price from server
-                        fetch(`/admin/receipt/calculate-total/${this.value}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.totalPrice !== undefined) {
-                                    totalPriceInput.value = data.totalPrice;
-                                    totalPriceInput.placeholder = 'Tổng tiền tự động tính';
-                                    totalPriceInput.classList.remove('error');
-                                    totalPriceInput.classList.add('success');
-
-                                    // Update info message
-                                    const infoDiv = document.getElementById('totalPriceInfo');
-                                    if (infoDiv) {
-                                        infoDiv.innerHTML = `
-                                            <span class="material-symbols-outlined">check_circle</span>
-                                            Đã tính tổng từ ${data.requestDetailsCount} linh kiện: ${new Intl.NumberFormat('vi-VN').format(data.totalPrice)} VNĐ
-                                        `;
-                                        infoDiv.className = 'info-box success';
-                                    }
-                                } else if (data.error) {
-                                    totalPriceInput.value = 0;
-                                    totalPriceInput.placeholder = 'Lỗi tính toán';
-                                    totalPriceInput.classList.remove('success');
-                                    totalPriceInput.classList.add('error');
-
-                                    const infoDiv = document.getElementById('totalPriceInfo');
-                                    if (infoDiv) {
-                                        infoDiv.innerHTML = `
-                                            <span class="material-symbols-outlined">error</span>
-                                            ${data.error}
-                                        `;
-                                        infoDiv.className = 'info-box error';
-                                    }
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error calculating total price:', error);
-                                totalPriceInput.value = 0;
-                                totalPriceInput.placeholder = 'Lỗi kết nối';
-                                totalPriceInput.classList.remove('success');
-                                totalPriceInput.classList.add('error');
-
-                                const infoDiv = document.getElementById('totalPriceInfo');
-                                if (infoDiv) {
-                                    infoDiv.innerHTML = `
-                                        <span class="material-symbols-outlined">error</span>
-                                        Không thể tính tổng tiền. Vui lòng thử lại.
-                                    `;
-                                    infoDiv.className = 'info-box error';
-                                }
-                            });
-                    } else {
-                        totalPriceInput.value = '';
-                        totalPriceInput.placeholder = 'Chọn yêu cầu để tự động tính tổng tiền';
-                        totalPriceInput.classList.remove('success', 'error');
-                        totalPriceInput.style.backgroundColor = '#f8fafc';
-
-                        const infoDiv = document.getElementById('totalPriceInfo');
-                        if (infoDiv) {
-                            infoDiv.innerHTML = `
-                                <span class="material-symbols-outlined">info</span>
-                                Tổng tiền được tính tự động từ các linh kiện trong yêu cầu bảo hành
-                            `;
-                            infoDiv.className = 'info-box info';
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 
 </html>
