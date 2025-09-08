@@ -155,7 +155,7 @@ body {
     border-radius: 8px;
     font-size: 0.875rem;
     transition: all 0.3s ease;
-    background: #f8fafc;
+    background: white;
 }
 
 .search-input:focus {

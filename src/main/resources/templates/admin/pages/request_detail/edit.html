@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chỉnh Sửa Chi tiết Yêu cầu</title>
-    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/request_detail/create.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin/pages/request_detail/edit.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-side.css}">
     <link rel="stylesheet" th:href="@{/assets/css/admin/fragments/nav-top.css}">
     <link
@@ -22,8 +22,8 @@
     <div class="page-container">
         <div class="page-header">
             <div class="header-content">
-                <span class="material-symbols-outlined">settings</span>
-                <h1>Admin / Chỉnh sửa Chi tiết Yêu cầu</h1>
+                <h1>Admin /</h1>
+                <h1>Chỉnh sửa Chi tiết Yêu cầu</h1>
             </div>
         </div>
 
@@ -44,19 +44,13 @@
                     <span class="material-symbols-outlined">edit_note</span>
                     Chỉnh sửa Chi tiết Yêu cầu mới
                 </h2>
-                <div class="form-actions-top">
-                    <a th:href="@{/admin/request-detail}" class="btn btn-outline">
-                        <span class="material-symbols-outlined">arrow_back</span>
-                        Quay lại
-                    </a>
-                </div>
             </div>
 
             <form th:action="@{/admin/request-detail/update}" method="post" th:object="${updateRequestDetailDTO}"
                   class="form-content">
                 <input type="hidden" th:field="*{id}"/>
                 <div class="form-section">
-                    <h3 class="section-title">
+                    <h3 class="section-title-edit">
                         <span class="material-symbols-outlined">assignment</span>
                         Thông tin Yêu cầu
                     </h3>
