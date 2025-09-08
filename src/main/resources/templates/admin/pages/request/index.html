@@ -82,13 +82,13 @@
                                     Trạng thái
                                 </label>
                                 <select class="form-input" id="status" name="status">
-<!--                                    <option value="">Tất cả</option>-->
-<!--                                    <option value="PENDING" th:selected="${status == 'PENDING'}">Chờ xử lý</option>-->
-<!--                                    <option value="APPROVED" th:selected="${status == 'APPROVED'}">Đã duyệt</option>-->
-<!--                                    <option value="REJECTED" th:selected="${status == 'REJECTED'}">Từ chối</option>-->
-<!--                                    <option value="IN_PROGRESS" th:selected="${status == 'IN_PROGRESS'}">Đang thực hiện-->
-<!--                                    </option>-->
-<!--                                    <option value="COMPLETED" th:selected="${status == 'COMPLETED'}">Hoàn thành</option>-->
+                                    <!--                                    <option value="">Tất cả</option>-->
+                                    <!--                                    <option value="PENDING" th:selected="${status == 'PENDING'}">Chờ xử lý</option>-->
+                                    <!--                                    <option value="APPROVED" th:selected="${status == 'APPROVED'}">Đã duyệt</option>-->
+                                    <!--                                    <option value="REJECTED" th:selected="${status == 'REJECTED'}">Từ chối</option>-->
+                                    <!--                                    <option value="IN_PROGRESS" th:selected="${status == 'IN_PROGRESS'}">Đang thực hiện-->
+                                    <!--                                    </option>-->
+                                    <!--                                    <option value="COMPLETED" th:selected="${status == 'COMPLETED'}">Hoàn thành</option>-->
                                 </select>
                             </div>
                             <div class="form-group">
@@ -97,10 +97,10 @@
                                     Hiển thị
                                 </label>
                                 <select class="form-input" id="size" name="size">
-<!--                                    <option value="5" th:selected="${size == 5}">5</option>-->
-<!--                                    <option value="10" th:selected="${size == 10}">10</option>-->
-<!--                                    <option value="25" th:selected="${size == 25}">25</option>-->
-<!--                                    <option value="50" th:selected="${size == 50}">50</option>-->
+                                    <!--                                    <option value="5" th:selected="${size == 5}">5</option>-->
+                                    <!--                                    <option value="10" th:selected="${size == 10}">10</option>-->
+                                    <!--                                    <option value="25" th:selected="${size == 25}">25</option>-->
+                                    <!--                                    <option value="50" th:selected="${size == 50}">50</option>-->
                                 </select>
                             </div>
                             <div class="form-group form-actions-group">
@@ -183,19 +183,15 @@
                                     <td class="status-col">
                                         <span th:switch="${request.status.name()}" class="status-badge">
                                             <span th:case="'PENDING'" class="status-pending">
-                                                <span class="material-symbols-outlined">schedule</span>
                                                 Chờ xử lý
                                             </span>
                                             <span th:case="'REJECTED'" class="status-rejected">
-                                                <span class="material-symbols-outlined">cancel</span>
                                                 Từ chối
                                             </span>
                                             <span th:case="'APPROVED'" class="status-progress">
-                                                <span class="material-symbols-outlined">settings</span>
                                                 Đang thực hiện
                                             </span>
                                             <span th:case="'COMPLETED'" class="status-completed">
-                                                <span class="material-symbols-outlined">task_alt</span>
                                                 Hoàn thành
                                             </span>
                                         </span>
@@ -442,7 +438,7 @@
 
         function confirmDelete(requestId, requestName) {
             document.getElementById('deleteRequestName').textContent = requestName;
-            document.getElementById('deleteForm').action = '/admin/request/delete/' + requestId ;
+            document.getElementById('deleteForm').action = '/admin/request/delete/' + requestId;
             showModal('deleteModal');
         }
 
@@ -703,13 +699,22 @@
         $(document).ready(function () {
             $('#requestTable').DataTable({
                 language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json'
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+                    "search": "Tìm kiếm:",
+                    "lengthMenu": "Hiển thị _MENU_ dòng",
+                    "info": "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
+                    "paginate": {
+                        "first": "Đầu",
+                        "last": "Cuối",
+                        "next": "Tiếp",
+                        "previous": "Trước"
+                    },
                 },
-                paging: true,
-                searching: true,
-                ordering: true,
-                info: true,
-                lengthChange: true
+                pageLength: 10,
+                lengthChange: false,
+                searching: false,
+                ordering: false,
+                info: true
             });
         });
     </script>

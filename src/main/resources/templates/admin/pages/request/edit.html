@@ -23,32 +23,15 @@
     <div class="page-container">
         <div class="page-header">
             <div class="header-content">
-                <span class="material-symbols-outlined">edit</span>
-                <h1>Admin / Chỉnh sửa yêu cầu bảo hành</h1>
+                <h1>Admin /</h1>
+                <h1>Chỉnh sửa yêu cầu bảo hành</h1>
             </div>
         </div>
-
 
         <!-- Thông báo -->
         <div th:if="${error}" class="alert alert-error">
             <span class="material-symbols-outlined">error</span>
             <span th:text="${error}"></span>
-        </div>
-        <div class="dashboard-header">
-            <div class="dashboard-title">
-                <h1>
-                        <span class="material-symbols-outlined"
-                              style="vertical-align: middle; margin-right: 8px;">settings</span>
-                    Chỉnh sửa yêu cầu bảo hành
-                </h1>
-                <p>Cập nhật thông tin yêu cầu bảo hành trong hệ thống</p>
-            </div>
-            <div class="add-btn">
-                <a th:href="@{/admin/request}">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                    Quay lại danh sách
-                </a>
-            </div>
         </div>
         <div class="page-content">
             <div class="form-header">
@@ -204,14 +187,14 @@
                     </div>
 
                     <div class="form-actions">
-                        <a th:href="@{/admin/request}" class="btn-secondary">
-                            <span class="material-symbols-outlined">close</span>
-                            Hủy
-                        </a>
-                        <button type="submit" class="btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             <span class="material-symbols-outlined">save</span>
                             Cập nhật yêu cầu
                         </button>
+                        <a th:href="@{/admin/request}" class="btn btn-secondary">
+                            <span class="material-symbols-outlined">close</span>
+                            Hủy
+                        </a>
                     </div>
             </form>
         </div>

@@ -51,38 +51,34 @@ body {
 
 .page-container {
     flex: 1;
-    margin-left: 280px;
-    margin-top: 70px;
-    padding: 2rem;
+    margin-left: 15rem;
+    margin-top: 5rem;
     background-color: var(--background-color);
     min-height: calc(100vh - 70px);
 }
 
 /* Page Header */
 .page-header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    margin-bottom: 2rem;
-    box-shadow: var(--box-shadow-lg);
+    background-color: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .header-content {
     display: flex;
     align-items: center;
-    gap: 1rem;
-}
-
-.header-content .material-symbols-outlined {
-    font-size: 2rem;
-    opacity: 0.9;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
 }
 
 .page-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 600;
+    color: #1f2937;
     margin: 0;
+}
+
+.page-header h1:first-child {
+    color: #6b7280;
 }
 
 /* Alert Styles */
@@ -115,6 +111,7 @@ body {
 
 /* Form Container */
 .form-container {
+    margin: 1.5rem;
     background: var(--surface-color);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
@@ -146,11 +143,6 @@ body {
     font-size: 1.5rem;
 }
 
-.form-actions-top {
-    display: flex;
-    gap: 0.75rem;
-}
-
 /* Form Content */
 .form-content {
     padding: 2rem;
@@ -168,7 +160,7 @@ body {
     margin-bottom: 1.5rem;
 }
 
-.section-title {
+.section-title-edit {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -180,7 +172,7 @@ body {
     border-bottom: 2px solid var(--primary-color);
 }
 
-.section-title .material-symbols-outlined {
+.section-title-edit .material-symbols-outlined {
     color: var(--primary-color);
     font-size: 1.25rem;
 }
@@ -448,12 +440,6 @@ body {
     box-shadow: var(--box-shadow-lg);
 }
 
-.btn-outline {
-    background: var(--surface-color);
-    color: var(--text-primary);
-    border-color: var(--border-color);
-}
-
 .btn-outline:hover {
     background: var(--background-color);
     border-color: var(--primary-color);
@@ -548,7 +534,7 @@ body {
         font-size: 1.5rem;
     }
 
-    .section-title {
+    .section-title-edit {
         font-size: 1rem;
     }
 }
@@ -607,17 +593,6 @@ body {
 /* Visual Enhancement */
 .form-section {
     position: relative;
-}
-
-.form-section::before {
-    content: '';
-    position: absolute;
-    left: -2rem;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: linear-gradient(to bottom, var(--primary-color), transparent);
-    border-radius: 1.5px;
 }
 
 /* Enhanced Input Focus */

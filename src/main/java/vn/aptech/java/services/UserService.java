@@ -25,4 +25,7 @@ public interface UserService {
 
     Optional<User> findById(Long id);
 
+
+    long countByRole(User.Role role);
+
 }

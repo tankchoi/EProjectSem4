@@ -212,4 +212,14 @@ public class RequestServiceImpl implements RequestService {
             throw new RuntimeException("Lỗi khi xóa yêu cầu bảo hành: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public long count() {
+        return requestRepository.countAllRequests();
+    }
+
+    @Override
+    public long countByStatus(Request.Status status) {
+        return requestRepository.countByStatus(status);
+    }
 }

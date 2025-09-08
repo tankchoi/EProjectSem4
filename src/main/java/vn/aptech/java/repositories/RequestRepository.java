@@ -14,4 +14,9 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "WHERE cl.customer.id = :customerId " +
             "ORDER BY r.bookingDate DESC")
     List<Request> getHistoryByCustomerId(@Param("customerId") Long customerId);
+
+    long countByStatus(Request.Status status);
+
+    @Query("SELECT COUNT(r) FROM Request r")
+    long countAllRequests();
 }
