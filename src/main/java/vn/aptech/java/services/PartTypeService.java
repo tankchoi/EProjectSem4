@@ -13,4 +13,6 @@ public interface PartTypeService {
     void createPartType(CreatePartTypeDTO createPartTypeDTO);
     void updatePartType(UpdatePartTypeDTO updatePartTypeDTO);
     void deletePartType(Long id);
+
+    long count();
 }

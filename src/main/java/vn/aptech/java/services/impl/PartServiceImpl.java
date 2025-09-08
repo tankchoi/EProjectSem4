@@ -116,4 +116,9 @@ public class PartServiceImpl implements PartService {
     public Optional<Part> lockPartById(Long id) {
         return partRepository.findByIdWithLock(id);
     }
+
+    @Override
+    public long count() {
+        return partRepository.count();
+    }
 }

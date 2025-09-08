@@ -73,4 +73,9 @@ public class LaptopServiceImpl implements LaptopService {
         laptopRepository.deleteById(id);
     }
 
+    @Override
+    public long count() {
+        return laptopRepository.count();
+    }
+
 }

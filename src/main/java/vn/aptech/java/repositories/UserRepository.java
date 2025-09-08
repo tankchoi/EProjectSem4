@@ -23,4 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Dùng tạm sau lấy hàm phần get nhân viên của Trứng sau
     List<User> findAllByRoleAndStatus(User.Role role, User.Status status);
+
+    long countByRole(User.Role role);
+
+    long count();
 }

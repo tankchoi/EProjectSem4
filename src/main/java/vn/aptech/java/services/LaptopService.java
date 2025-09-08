@@ -13,4 +13,6 @@ public interface LaptopService {
     void createLaptop(CreateLaptopDTO createLaptopDTO);
     void updateLaptop(UpdateLaptopDTO updateLaptopDTO);
     void deleteLaptop(Long id);
+
+    long count();
 }

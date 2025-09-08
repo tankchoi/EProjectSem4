@@ -20,4 +20,7 @@ public interface RequestService {
     void updateRequest(UpdateRequestDTO dto);
     List<Request> getRequests();
     void deleteRequest(Long id);
+
+    long count();
+    long countByStatus(Request.Status status);
 }

@@ -51,4 +51,9 @@ public class PartTypeServiceImp implements PartTypeService {
     public void deletePartType(Long id) {
         partTypeRepository.deleteById(id);
     }
+
+    @Override
+    public long count() {
+        return partTypeRepository.count();
+    }
 }

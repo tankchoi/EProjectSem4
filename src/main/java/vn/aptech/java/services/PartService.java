@@ -16,4 +16,6 @@ public interface PartService {
 
     List<Part> searchByName(String keyword);
     Optional<Part> lockPartById(Long id);
+
+    long count();
 }
