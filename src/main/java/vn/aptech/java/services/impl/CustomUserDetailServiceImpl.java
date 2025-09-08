@@ -31,6 +31,7 @@ public class CustomUserDetailServiceImpl implements CustomUserDetailService , Us
             throw new UsernameNotFoundException("Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để biết thêm chi tiết.");
         }
         Collection<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        System.out.println("ROLE: " + user.getRole().toString());
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
         return new CustomUserDetails(user, grantedAuthorities);
     }

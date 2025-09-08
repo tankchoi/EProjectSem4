@@ -1,9 +1,11 @@
 package vn.aptech.java.services.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import vn.aptech.java.dtos.admin.CreateInvoiceDTO;
@@ -69,4 +71,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findById(id);
     }
 
+    @Override
+    public List<Invoice> getInvoices() {
+        return invoiceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+    }
+
+    @Override
+    public void deleteInvoice(Long id) {
+        invoiceRepository.deleteById(id);
+    }
 }

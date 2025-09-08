@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,6 +25,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/admin/invoice")
@@ -40,6 +41,30 @@ public class InvoiceController {
     private void prepareForm(Model model) {
         model.addAttribute("activePage", "receipt");
         model.addAttribute("requests", requestService.getRequests());
+    }
+
+    @GetMapping()
+    public String index(Model model) {
+        model.addAttribute("activePage", "receipt");
+        model.addAttribute("invoices", invoiceService.getInvoices());
+        return "admin/pages/invoice/index";
+    }
+
+    @GetMapping("/{id}")
+    public String show(@PathVariable Long id, Model model) {
+        model.addAttribute("activePage", "receipt");
+        try {
+            Optional<Invoice> optionalInvoice = invoiceService.getInvoiceById(id);
+            if (optionalInvoice.isEmpty()) {
+                model.addAttribute("error", "Hóa đơn không tồn tại.");
+                return "admin/pages/invoice/index";
+            }
+            model.addAttribute("invoice", optionalInvoice.get());
+            return "admin/pages/invoice/view";
+        } catch (Exception e) {
+            model.addAttribute("error", "Lỗi khi tải hóa đơn: " + e.getMessage());
+            return "admin/pages/invoice/index";
+        }
     }
 
     @GetMapping("/create")
@@ -121,6 +146,17 @@ public class InvoiceController {
             redirectAttributes.addFlashAttribute("error", "Lỗi khi cập nhật hóa đơn: " + e.getMessage());
             return "redirect:/admin/invoice";
         }
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            invoiceService.deleteInvoice(id);
+            redirectAttributes.addFlashAttribute("success", "Xóa hóa đơn thành công.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi xóa hóa đơn: " + e.getMessage());
+        }
+        return "redirect:/admin/invoice";
     }
 
     /**

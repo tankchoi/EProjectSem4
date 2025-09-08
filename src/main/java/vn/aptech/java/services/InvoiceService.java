@@ -1,5 +1,6 @@
 package vn.aptech.java.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import vn.aptech.java.dtos.admin.CreateInvoiceDTO;
@@ -14,4 +15,8 @@ public interface InvoiceService {
     Double calculateTotalPrice(Long requestId);
 
     Optional<Invoice> getInvoiceById(Long id);
+
+    List<Invoice> getInvoices();
+
+    void deleteInvoice(Long id);
 }

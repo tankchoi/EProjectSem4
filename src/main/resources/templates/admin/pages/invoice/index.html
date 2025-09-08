@@ -42,7 +42,7 @@
                     <h1>Danh sách Hóa đơn</h1>
                 </div>
                 <div class="add-btn">
-                    <a th:href="@{/admin/receipt/create}">
+                    <a th:href="@{/admin/invoice/create}">
                         <span class="material-symbols-outlined">add</span>
                         Thêm Hóa đơn
                     </a>
@@ -75,11 +75,11 @@
                                 th:text="${#numbers.formatDecimal(invoice.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
                                 1,000,000 VNĐ</td>
                             <td>
-                                <span th:if="${invoice.status == 'PAID'}" class="status-badge status-paid">
+                                <span th:if="${invoice.status.name() == 'PAID'}" class="status-badge status-paid">
                                     <span class="material-symbols-outlined">check_circle</span>
                                     Đã thanh toán
                                 </span>
-                                <span th:if="${invoice.status == 'UNPAID'}" class="status-badge status-unpaid">
+                                <span th:if="${invoice.status.name() == 'UNPAID'}" class="status-badge status-unpaid">
                                     <span class="material-symbols-outlined">schedule</span>
                                     Chưa thanh toán
                                 </span>
@@ -87,17 +87,17 @@
                             <td th:text="${#dates.format(invoice.createdAt, 'dd/MM/yyyy HH:mm')}">12/01/2025</td>
                             <td>
                                 <div style="display: flex; gap: 8px;">
-                                    <a th:href="@{/admin/receipt/edit/{id}(id=${invoice.id})}" class="btn-edit"
+                                    <a th:href="@{/admin/invoice/edit/{id}(id=${invoice.id})}" class="btn-edit"
                                         title="Chỉnh sửa hóa đơn">
                                         <span class="material-symbols-outlined">edit</span>
                                         Sửa
                                     </a>
-                                    <a th:href="@{/admin/receipt/view/{id}(id=${invoice.id})}" class="btn-view"
+                                    <a th:href="@{/admin/invoice/{id}(id=${invoice.id})}" class="btn-view"
                                         title="Xem chi tiết">
                                         <span class="material-symbols-outlined">visibility</span>
                                         Xem
                                     </a>
-                                    <button th:data-invoice-id="${invoice.id}"
+                                    <button type="button" th:data-invoice-id="${invoice.id}"
                                         onclick="confirmDelete(this.dataset.invoiceId)" class="btn-delete"
                                         title="Xóa hóa đơn">
                                         <span class="material-symbols-outlined">delete</span>
@@ -118,6 +118,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Hidden form for delete -->
+    <form id="deleteForm" method="post" style="display: none;">
+
+    </form>
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
     <script>
@@ -166,7 +171,11 @@
 
         function confirmDelete(invoiceId) {
             if (confirm('Bạn có chắc chắn muốn xóa hóa đơn này? Hành động này không thể hoàn tác.')) {
-                window.location.href = '/admin/receipt/delete/' + invoiceId;
+                // Set form action and invoice ID
+                const deleteForm = document.getElementById('deleteForm');
+                deleteForm.action = '/admin/invoice/delete/' + invoiceId;
+                // Submit form
+                deleteForm.submit();
             }
         }
     </script>
