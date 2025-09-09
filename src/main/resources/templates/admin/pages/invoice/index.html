@@ -13,6 +13,10 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    <!-- jQuery and DataTable JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body class="preload">
@@ -126,44 +130,61 @@
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        $(document).ready(function () {
+            console.log('jQuery loaded:', typeof $ !== 'undefined');
+            console.log('DataTable available:', typeof $.fn.DataTable !== 'undefined');
+
             // Remove preload class first to show content
             document.body.classList.remove('preload');
 
+            // Kiểm tra table element
+            const table = $('#myTable');
+            console.log('Table found:', table.length > 0);
+
+            if (table.length === 0) {
+                console.error('Table #myTable not found!');
+                return;
+            }
+
             // Kiểm tra nếu có dữ liệu thì mới khởi tạo DataTable
-            const tableRows = document.querySelectorAll('#myTable tbody tr:not(.empty-row)');
+            const tableRows = $('#myTable tbody tr:not(.empty-row)');
+            console.log('Table rows found:', tableRows.length);
 
             if (tableRows.length > 0) {
                 console.log('Initializing DataTable with', tableRows.length, 'rows');
-                new DataTable("#myTable", {
-                    paging: true,
-                    searching: true,
-                    ordering: true,
-                    info: true,
-                    lengthMenu: [10, 25, 50, 100],
-                    pageLength: 10,
-                    language: {
-                        search: "Tìm kiếm:",
-                        lengthMenu: "Hiển thị _MENU_ dòng",
-                        info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
-                        infoEmpty: "Hiển thị 0 đến 0 của 0 dòng",
-                        infoFiltered: "(được lọc từ _MAX_ dòng)",
-                        paginate: {
-                            first: "Đầu",
-                            last: "Cuối",
-                            next: "Tiếp",
-                            previous: "Trước"
+                try {
+                    $('#myTable').DataTable({
+                        paging: true,
+                        searching: true,
+                        ordering: true,
+                        info: true,
+                        lengthMenu: [10, 25, 50, 100],
+                        pageLength: 10,
+                        language: {
+                            search: "Tìm kiếm:",
+                            lengthMenu: "Hiển thị _MENU_ dòng",
+                            info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
+                            infoEmpty: "Hiển thị 0 đến 0 của 0 dòng",
+                            infoFiltered: "(được lọc từ _MAX_ dòng)",
+                            paginate: {
+                                first: "Đầu",
+                                last: "Cuối",
+                                next: "Tiếp",
+                                previous: "Trước"
+                            },
+                            emptyTable: "Không có dữ liệu trong bảng",
+                            zeroRecords: "Không tìm thấy dòng nào phù hợp"
                         },
-                        emptyTable: "Không có dữ liệu trong bảng",
-                        zeroRecords: "Không tìm thấy dòng nào phù hợp"
-                    },
-                    columnDefs: [
-                        { orderable: false, targets: [7] } // Không sắp xếp cột thao tác
-                    ],
-                    initComplete: function () {
-                        console.log('DataTable initialized successfully');
-                    }
-                });
+                        columnDefs: [
+                            { orderable: false, targets: [7] } // Không sắp xếp cột thao tác
+                        ],
+                        initComplete: function () {
+                            console.log('DataTable initialized successfully');
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error initializing DataTable:', error);
+                }
             } else {
                 console.log('No data in table, skipping DataTable initialization');
             }
