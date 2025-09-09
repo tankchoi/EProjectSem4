@@ -3,13 +3,23 @@ body {
     margin: 0;
 }
 
-.history-header h2 {
+.details-header{
+    line-height: 2rem;
+}
+
+.details-header div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.details-header h2 {
     color: #333;
     margin-top: 0px;
     font-size: 28px;
 }
 
-.history-container {
+.details-container{
     max-width: 1200px;
     margin: 100px auto 300px;
     background: white;
