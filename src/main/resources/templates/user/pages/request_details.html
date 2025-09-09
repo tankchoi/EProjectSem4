@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết yêu cầu</title>
+    <link rel="stylesheet" th:href="@{/assets/css/user/request_details.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/footer.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user/header.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+</head>
+
+<body>
+    <div th:replace="user/fragments/header :: header"></div>
+
+    <div class="details-container">
+        <div class="details-header">
+            <div>
+                <h2>Danh sách linh kiện đã sửa chữa</h2>
+                <a th:href="@{/history}" class="btn-back">
+                    <i class="fa fa-arrow-left"></i> Quay lại lịch sử
+                </a>
+            </div>
+            <p>
+                <strong>Laptop:</strong> <span th:text="${request.customerLaptop.laptop.name}"></span><br>
+                <strong>Số Serial:</strong> <span th:text="${request.customerLaptop.serialNumber}"></span>
+            </p>
+
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ảnh</th>
+                    <th>Tên Part</th>
+                    <th>Loại</th>
+                    <th>Thời gian bảo hành</th>
+                    <th>Số lượng</th>
+                    <th>Giá (VNĐ)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(details)}">
+                    <td colspan="6" class="no-results">Không có linh kiện nào được sửa chữa.</td>
+                </tr>
+                <tr th:each="d : ${details}">
+                    <td>
+                        <img th:src="@{${d.part.imgUrl}}" alt="part-img" width="80">
+                    </td>
+                    <td th:text="${d.part.name}"></td>
+                    <td th:text="${d.part.partType.name}"></td>
+                    <td th:text="${d.part.warrantyPeriod + ' tháng'}"></td>
+                    <td th:text="${d.quantity}"></td>
+                    <td th:text="${#numbers.formatDecimal(d.price, 0, 'COMMA', 0, 'POINT')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="user/fragments/footer :: footer"></div>
+</body>
+
+</html>

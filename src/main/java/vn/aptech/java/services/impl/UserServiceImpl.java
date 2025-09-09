@@ -129,6 +129,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long countByRole(User.Role role) {
-    return userRepository.countByRole(role);
-}
+        return userRepository.countByRole(role);
+    }
 }

@@ -25,15 +25,16 @@
                     <th>Số Serial</th>
                     <th>Vấn đề</th>
                     <th>Trạng thái</th>
+                    <th>Xem chi tiết</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:if="${#lists.isEmpty(historyList)}">
-                    <td colspan="5" class="no-results">
+                    <td colspan="6" class="no-results">
                         Không có lịch sử bảo hành nào.
                     </td>
                 </tr>
-                <tr th:each="req : ${historyList}">
+                <tr th:each="req, iterStat : ${historyList}">
                     <td th:text="${#dates.format(req.bookingDate, 'dd/MM/yyyy')}"></td>
                     <td th:text="${req.customerLaptop.laptop.name}"></td>
                     <td th:text="${req.customerLaptop.serialNumber}"></td>
@@ -45,12 +46,18 @@
                         <span th:case="'REJECTED'">Bị từ chối</span>
                         <span th:case="*">Không xác định</span>
                     </td>
+                    <td>
+                        <a th:href="@{/requests/{id}/details(id=${req.id})}" class="btn-detail">
+                            Xem chi tiết
+                        </a>
+                    </td>
                 </tr>
             </tbody>
         </table>
 
+
     </div>
-    <div th:replace="user/fragments/footer :: footer"></div>
+
 </body>
 
 </html>

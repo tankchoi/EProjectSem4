@@ -2,6 +2,7 @@ package vn.aptech.java.controllers.client;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +13,7 @@ import vn.aptech.java.services.CustomerLaptopService;
 import vn.aptech.java.services.LaptopService;
 import vn.aptech.java.services.PartService;
 import vn.aptech.java.services.PartTypeService;
+import vn.aptech.java.services.RequestDetailService;
 import vn.aptech.java.services.RequestService;
 import vn.aptech.java.utils.ImgUploadUtil;
 
@@ -44,6 +46,9 @@ public class WarrantyController {
 
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    private RequestDetailService requestDetailService;
 
     @GetMapping("/history")
     public String viewHistory(Model model,
@@ -135,6 +140,17 @@ public class WarrantyController {
         model.addAttribute("laptops", laptopService.getLaptops(null, null));
 
         return "user/pages/search_parts";
+    }
+
+    @GetMapping("/requests/{id}/details")
+    public String viewRequestDetails(@PathVariable("id") Long requestId, Model model) {
+        model.addAttribute("details", requestDetailService.getRequestDetailsByRequestId(requestId));
+
+        Request request = requestService.getRequestById(requestId)
+                .orElseThrow(() -> new IllegalArgumentException("Yêu cầu không tồn tại"));
+        model.addAttribute("request", request);
+        
+        return "user/pages/request_details";
     }
 
 }
