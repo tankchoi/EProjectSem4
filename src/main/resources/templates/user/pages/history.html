@@ -47,10 +47,19 @@
                         <span th:case="*">Không xác định</span>
                     </td>
                     <td>
-                        <a th:href="@{/requests/{id}/details(id=${req.id})}" class="btn-detail">
-                            Xem chi tiết
-                        </a>
+                        <span th:if="${req.status.name() == 'COMPLETED'}">
+                            <a th:href="@{/requests/{id}/details(id=${req.id})}" class="btn-detail">
+                                Xem chi tiết
+                            </a>
+                        </span>
+                        <span th:if="${req.status.name() != 'COMPLETED'}">
+                            <a href="javascript:void(0)" class="btn-detail"
+                                onclick="alert('Chỉ có thể xem chi tiết khi trạng thái là Hoàn thành!')">
+                                Xem chi tiết
+                            </a>
+                        </span>
                     </td>
+
                 </tr>
             </tbody>
         </table>

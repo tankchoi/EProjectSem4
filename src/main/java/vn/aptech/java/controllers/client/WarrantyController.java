@@ -18,6 +18,7 @@ import vn.aptech.java.services.RequestService;
 import vn.aptech.java.utils.ImgUploadUtil;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,12 +145,19 @@ public class WarrantyController {
 
     @GetMapping("/requests/{id}/details")
     public String viewRequestDetails(@PathVariable("id") Long requestId, Model model) {
-        model.addAttribute("details", requestDetailService.getRequestDetailsByRequestId(requestId));
+        List<RequestDetail> details = requestDetailService.getRequestDetailsByRequestId(requestId);
+        model.addAttribute("details", details);
 
         Request request = requestService.getRequestById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("Yêu cầu không tồn tại"));
         model.addAttribute("request", request);
-        
+
+        BigDecimal total = details.stream()
+                .map(d -> BigDecimal.valueOf(d.getPrice())
+                        .multiply(BigDecimal.valueOf(d.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        model.addAttribute("total", total);
+
         return "user/pages/request_details";
     }
 

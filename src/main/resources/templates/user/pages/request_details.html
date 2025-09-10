@@ -23,7 +23,8 @@
             </div>
             <p>
                 <strong>Laptop:</strong> <span th:text="${request.customerLaptop.laptop.name}"></span><br>
-                <strong>Số Serial:</strong> <span th:text="${request.customerLaptop.serialNumber}"></span>
+                <strong>Số Serial:</strong> <span th:text="${request.customerLaptop.serialNumber}"></span><br>
+                <strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT') + 'đ'}"></span>
             </p>
 
         </div>
@@ -50,7 +51,7 @@
                     <td th:text="${d.part.partType.name}"></td>
                     <td th:text="${d.part.warrantyPeriod + ' tháng'}"></td>
                     <td th:text="${d.quantity}"></td>
-                    <td th:text="${#numbers.formatDecimal(d.price, 0, 'COMMA', 0, 'POINT')}"></td>
+                    <td th:text="${#numbers.formatDecimal(d.price, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
                 </tr>
             </tbody>
         </table>
