@@ -2,10 +2,13 @@ package vn.aptech.java.repositories;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
+import vn.aptech.java.models.CustomerLaptop;
 import vn.aptech.java.models.Request;
 import java.util.List;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
+
+    List<Request> findByCustomerLaptop(CustomerLaptop customerLaptop);
 
     @Query("SELECT r FROM Request r " +
             "JOIN FETCH r.customerLaptop cl " +

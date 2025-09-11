@@ -11,6 +11,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(Long id);
 
+    Optional<User> findByPhone(String phone);
+
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
@@ -23,6 +25,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Dùng tạm sau lấy hàm phần get nhân viên của Trứng sau
     List<User> findAllByRoleAndStatus(User.Role role, User.Status status);
+
+    List<User> findByPhoneContaining(String phone); // tìm kiếm theo số điện thoại
 
     long countByRole(User.Role role);
 

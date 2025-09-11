@@ -1,0 +1,17 @@
+package vn.aptech.java.services;
+
+import vn.aptech.java.dtos.admin.CreateStaffDTO;
+import vn.aptech.java.dtos.admin.UpdateStaffDTO;
+import vn.aptech.java.models.User;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface StaffService {
+    List<User> getAllStaff();
+    Optional<User> getStaffById(Long id);
+    void createStaff(CreateStaffDTO dto);
+    void updateStaff(UpdateStaffDTO dto);
+    void banStaff(Long id);
+    List<User> searchByPhone(String phone);
+}

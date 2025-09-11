@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface CustomerLaptopService {
         List<CustomerLaptop> getLaptopsBySerial(String serialNumber);
-
         boolean isLaptopExists(String serialNumber);
 
 
