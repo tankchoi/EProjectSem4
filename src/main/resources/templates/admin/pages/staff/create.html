@@ -18,9 +18,34 @@
     <div class="main-container">
         <div th:replace="admin/fragments/nav-side :: nav-side"></div>
         <div th:replace="admin/fragments/nav-top :: nav-top"></div>
+
         <div class="page-container">
-            <a th:href="@{/admin/staff}" class="back-link">Quay lại</a>
-            <h2 class="heading-page">Tạo tài khoản nhân viên mới</h2>
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a th:href="@{/admin/staff}" class="breadcrumb-link">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    Quay lại danh sách nhân viên
+                </a>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="header-icon">
+                        <span class="material-symbols-outlined">person_add</span>
+                    </div>
+                    <div class="header-text">
+                        <h1 class="page-title">Tạo tài khoản nhân viên mới</h1>
+                        <p class="page-subtitle">Điền thông tin để tạo tài khoản nhân viên mới trong hệ thống</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Messages -->
+            <div th:if="${success}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span th:text="${success}"></span>
+            </div>
 
             <!-- Error Messages -->
             <div th:if="${error}" class="alert alert-error">
@@ -28,81 +53,159 @@
                 <span th:text="${error}"></span>
             </div>
 
-            <div class="form-container">
-                <form th:action="@{/admin/staff/create}" method="POST" th:object="${createStaffDTO}">
-                    <div class="form-grid">
-                        <div class="input-contain">
-                            <label for="username" class="input-label">
-                                Tên đăng nhập <span class="required">*</span>
-                            </label>
-                            <input type="text" id="username" name="username" th:field="*{username}"
-                                th:class="${#fields.hasErrors('username')} ? 'form-input input-error' : 'form-input'"
-                                placeholder="Nhập tên đăng nhập" />
-                            <div th:if="${#fields.hasErrors('username')}"
-                                th:each="error : ${#fields.errors('username')}" class="error-text" th:text="${error}">
+            <!-- Main Form Card -->
+            <div class="form-card">
+                <div class="card-header">
+                    <h2 class="card-title">Thông tin tài khoản</h2>
+                    <p class="card-subtitle">Các trường có dấu <span class="required">*</span> là bắt buộc</p>
+                </div>
+
+                <form th:action="@{/admin/staff/create}" method="POST" th:object="${createStaffDTO}" novalidate
+                    class="staff-form">
+                    <!-- Account Information Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="material-symbols-outlined">account_circle</span>
+                            Thông tin đăng nhập
+                        </h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="username" class="form-label">
+                                    Tên đăng nhập <span class="required">*</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon material-symbols-outlined">person</span>
+                                    <input type="text" id="username" th:field="*{username}"
+                                        th:class="${#fields.hasErrors('username')} ? 'form-input error' : 'form-input'"
+                                        placeholder="Nhập tên đăng nhập" required />
+                                </div>
+                                <div th:if="${#fields.hasErrors('username')}" class="error-messages">
+                                    <div th:each="error : ${#fields.errors('username')}" class="error-message"
+                                        th:text="${error}"></div>
+                                </div>
+                                <small class="help-text">Tên đăng nhập từ 3-50 ký tự, không có khoảng trắng và chưa được
+                                    sử dụng</small>
                             </div>
-                        </div>
 
-                        <div class="input-contain">
-                            <label for="password" class="input-label">
-                                Mật khẩu <span class="required">*</span>
-                            </label>
-                            <input type="password" id="password" name="password" th:field="*{password}"
-                                th:class="${#fields.hasErrors('password')} ? 'form-input input-error' : 'form-input'"
-                                placeholder="Nhập mật khẩu" />
-                            <div th:if="${#fields.hasErrors('password')}"
-                                th:each="error : ${#fields.errors('password')}" class="error-text" th:text="${error}">
+                            <div class="form-group">
+                                <label for="password" class="form-label">
+                                    Mật khẩu <span class="required">*</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon material-symbols-outlined">lock</span>
+                                    <input type="password" id="password" th:field="*{password}"
+                                        th:class="${#fields.hasErrors('password')} ? 'form-input error' : 'form-input'"
+                                        placeholder="Nhập mật khẩu" required />
+                                    <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                    </button>
+                                </div>
+                                <div th:if="${#fields.hasErrors('password')}" class="error-messages">
+                                    <div th:each="error : ${#fields.errors('password')}" class="error-message"
+                                        th:text="${error}"></div>
+                                </div>
+                                <small class="help-text">Mật khẩu tối thiểu 6 ký tự</small>
                             </div>
-                        </div>
-
-                        <div class="input-contain">
-                            <label for="fullname" class="input-label">
-                                Họ và tên <span class="required">*</span>
-                            </label>
-                            <input type="text" id="fullname" name="fullname" th:field="*{fullname}"
-                                th:class="${#fields.hasErrors('fullname')} ? 'form-input input-error' : 'form-input'"
-                                placeholder="Nhập họ và tên" />
-                            <div th:if="${#fields.hasErrors('fullname')}"
-                                th:each="error : ${#fields.errors('fullname')}" class="error-text" th:text="${error}">
-                            </div>
-                        </div>
-
-                        <div class="input-contain">
-                            <label for="email" class="input-label">
-                                Email <span class="required">*</span>
-                            </label>
-                            <input type="email" id="email" name="email" th:field="*{email}"
-                                th:class="${#fields.hasErrors('email')} ? 'form-input input-error' : 'form-input'"
-                                placeholder="Nhập email" />
-                            <div th:if="${#fields.hasErrors('email')}" th:each="error : ${#fields.errors('email')}"
-                                class="error-text" th:text="${error}"></div>
-                        </div>
-
-                        <div class="input-contain">
-                            <label for="phone" class="input-label">
-                                Số điện thoại <span class="required">*</span>
-                            </label>
-                            <input type="text" id="phone" name="phone" th:field="*{phone}"
-                                th:class="${#fields.hasErrors('phone')} ? 'form-input input-error' : 'form-input'"
-                                placeholder="Nhập số điện thoại (VD: 0123456789)" />
-                            <div th:if="${#fields.hasErrors('phone')}" th:each="error : ${#fields.errors('phone')}"
-                                class="error-text" th:text="${error}"></div>
-                        </div>
-
-                        <div class="input-contain">
-                            <label for="status" class="input-label">Trạng thái</label>
-                            <select name="status" id="status" th:field="*{status}" class="form-select">
-                                <option th:value="${T(vn.aptech.java.models.User.Status).ACTIVE}" th:text="'Hoạt động'">
-                                    Hoạt động</option>
-                                <option th:value="${T(vn.aptech.java.models.User.Status).BANNED}" th:text="'Đã khóa'">Đã
-                                    khóa</option>
-                            </select>
                         </div>
                     </div>
 
-                    <div class="btn-container">
-                        <button type="submit" class="confirm-btn">Tạo nhân viên</button>
-                        <a th:href="@{/admin/staff}" class="cancel-btn">Hủy</a>
+                    <!-- Personal Information Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="material-symbols-outlined">badge</span>
+                            Thông tin cá nhân
+                        </h3>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="fullname" class="form-label">
+                                    Họ và tên <span class="required">*</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon material-symbols-outlined">badge</span>
+                                    <input type="text" id="fullname" th:field="*{fullname}"
+                                        th:class="${#fields.hasErrors('fullname')} ? 'form-input error' : 'form-input'"
+                                        placeholder="Nhập họ và tên đầy đủ" required minlength="2" maxlength="100" />
+                                </div>
+                                <div th:if="${#fields.hasErrors('fullname')}" class="error-messages">
+                                    <div th:each="error : ${#fields.errors('fullname')}" class="error-message"
+                                        th:text="${error}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email" class="form-label">
+                                    Email <span class="required">*</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon material-symbols-outlined">mail</span>
+                                    <input type="email" id="email" th:field="*{email}"
+                                        th:class="${#fields.hasErrors('email')} ? 'form-input error' : 'form-input'"
+                                        placeholder="example@company.com" required maxlength="255" />
+                                </div>
+                                <div th:if="${#fields.hasErrors('email')}" class="error-messages">
+                                    <div th:each="error : ${#fields.errors('email')}" class="error-message"
+                                        th:text="${error}"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone" class="form-label">
+                                    Số điện thoại <span class="required">*</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon material-symbols-outlined">phone</span>
+                                    <input type="tel" id="phone" th:field="*{phone}"
+                                        th:class="${#fields.hasErrors('phone')} ? 'form-input error' : 'form-input'"
+                                        placeholder="0123456789" required pattern="[0-9]{10,11}" maxlength="11" />
+                                </div>
+                                <div th:if="${#fields.hasErrors('phone')}" class="error-messages">
+                                    <div th:each="error : ${#fields.errors('phone')}" class="error-message"
+                                        th:text="${error}"></div>
+                                </div>
+                                <small class="help-text">Số điện thoại 10-11 chữ số</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Settings Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="material-symbols-outlined">settings</span>
+                            Cài đặt tài khoản
+                        </h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="status" class="form-label">Trạng thái tài khoản</label>
+                                <div class="select-wrapper">
+                                    <span class="input-icon material-symbols-outlined">toggle_on</span>
+                                    <select id="status" name="status" class="form-select">
+                                        <option value="ACTIVE" selected>🟢 Hoạt động</option>
+                                        <option value="BANNED">🔴 Đã khóa</option>
+                                    </select>
+                                </div>
+                                <small class="help-text">Tài khoản được tạo với trạng thái "Hoạt động" theo mặc
+                                    định</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <div class="action-buttons">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="material-symbols-outlined">person_add</span>
+                                Tạo nhân viên
+                            </button>
+                            <a th:href="@{/admin/staff}" class="btn btn-secondary">
+                                <span class="material-symbols-outlined">close</span>
+                                Hủy bỏ
+                            </a>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -111,68 +214,62 @@
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
     <script>
+        // Password visibility toggle
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.parentElement.querySelector('.password-toggle');
+            const icon = button.querySelector('.material-symbols-outlined');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
-            // Form enhancement
-            const form = document.querySelector('form');
-            const submitBtn = document.querySelector('.confirm-btn');
-            const inputs = document.querySelectorAll('.form-input, .form-select');
+            const form = document.querySelector('.staff-form');
+            const submitBtn = document.querySelector('.btn-primary');
+            const usernameInput = document.getElementById('username');
 
-            // Add loading state to submit button
-            form.addEventListener('submit', function () {
+            // Clean username input (remove spaces and special characters)
+            if (usernameInput) {
+                usernameInput.addEventListener('input', function () {
+                    const value = this.value.replace(/[^a-zA-Z0-9_]/g, '');
+                    this.value = value;
+                });
+            }
+
+            // Simple submit handler - just add loading state
+            form.addEventListener('submit', function (e) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span>⏳</span> Đang tạo...';
+                submitBtn.innerHTML = '<span class="material-symbols-outlined">hourglass_top</span> Đang tạo...';
             });
 
-            // Real-time validation feedback
-            inputs.forEach(input => {
-                input.addEventListener('blur', function () {
-                    if (this.value.trim() && this.classList.contains('input-error')) {
-                        this.classList.remove('input-error');
-                        const errorDiv = this.parentElement.querySelector('.error-text');
-                        if (errorDiv) {
-                            errorDiv.style.opacity = '0.5';
-                        }
-                    }
-                });
-
-                // Focus enhancement
-                input.addEventListener('focus', function () {
-                    this.parentElement.style.transform = 'scale(1.01)';
-                    this.parentElement.style.zIndex = '10';
-                });
-
-                input.addEventListener('blur', function () {
-                    this.parentElement.style.transform = 'scale(1)';
-                    this.parentElement.style.zIndex = 'auto';
-                });
-            });
-
-            // Phone number formatting
+            // Phone number formatting (chỉ format, không validate)
             const phoneInput = document.getElementById('phone');
             if (phoneInput) {
                 phoneInput.addEventListener('input', function () {
                     let value = this.value.replace(/\D/g, '');
-                    if (value.length > 10) {
-                        value = value.slice(0, 10);
+                    if (value.length > 11) {
+                        value = value.slice(0, 11);
                     }
                     this.value = value;
                 });
             }
 
             // Auto-hide alerts
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    alert.style.transition = 'all 0.5s ease';
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.style.transition = 'all 0.3s ease';
                     alert.style.opacity = '0';
-                    alert.style.transform = 'translateY(-20px)';
-                    setTimeout(() => {
-                        if (alert.parentNode) {
-                            alert.parentNode.removeChild(alert);
-                        }
-                    }, 500);
-                }, 5000);
-            });
+                    alert.style.transform = 'translateY(-10px)';
+                    setTimeout(() => alert.remove(), 300);
+                });
+            }, 5000);
         });
     </script>
 
