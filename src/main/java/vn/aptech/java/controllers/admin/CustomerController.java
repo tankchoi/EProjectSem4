@@ -25,6 +25,7 @@ public class CustomerController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             Model model) {
+        System.out.println("Page: " + page + ", Size: " + size); // Thêm log kiểm tra
         try {
             Pageable pageable = PageRequest.of(page, size);
             Page<User> customerPage;
