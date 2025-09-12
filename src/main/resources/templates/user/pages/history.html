@@ -24,7 +24,6 @@
                     <th>Tên Laptop</th>
                     <th>Số Serial</th>
                     <th>Vấn đề</th>
-                    <th>Trạng thái</th>
                     <th>Xem chi tiết</th>
                 </tr>
             </thead>
@@ -39,25 +38,10 @@
                     <td th:text="${req.customerLaptop.laptop.name}"></td>
                     <td th:text="${req.customerLaptop.serialNumber}"></td>
                     <td th:text="${req.description}"></td>
-                    <td th:switch="${req.status.name()}">
-                        <span th:case="'PENDING'">Chờ xử lý</span>
-                        <span th:case="'APPROVED'">Đang xử lý</span>
-                        <span th:case="'COMPLETED'">Hoàn thành</span>
-                        <span th:case="'REJECTED'">Bị từ chối</span>
-                        <span th:case="*">Không xác định</span>
-                    </td>
                     <td>
-                        <span th:if="${req.status.name() == 'COMPLETED'}">
-                            <a th:href="@{/requests/{id}/details(id=${req.id})}" class="btn-detail">
-                                Xem chi tiết
-                            </a>
-                        </span>
-                        <span th:if="${req.status.name() != 'COMPLETED'}">
-                            <a href="javascript:void(0)" class="btn-detail"
-                                onclick="alert('Chỉ có thể xem chi tiết khi trạng thái là Hoàn thành!')">
-                                Xem chi tiết
-                            </a>
-                        </span>
+                        <a th:href="@{/requests/{id}/details(id=${req.id})}" class="btn-detail">
+                            Xem chi tiết
+                        </a>
                     </td>
 
                 </tr>
