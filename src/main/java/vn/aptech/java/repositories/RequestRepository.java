@@ -15,6 +15,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "JOIN FETCH cl.laptop l " +
             "LEFT JOIN FETCH r.technician t " +
             "WHERE cl.customer.id = :customerId " +
+            "AND r.status = 'COMPLETED' " +
             "ORDER BY r.bookingDate DESC")
     List<Request> getHistoryByCustomerId(@Param("customerId") Long customerId);
 
