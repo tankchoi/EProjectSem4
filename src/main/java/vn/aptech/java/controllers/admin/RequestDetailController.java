@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.java.dtos.admin.CreateRequestDetailDTO;
 import vn.aptech.java.dtos.admin.UpdateRequestDetailDTO;
+import vn.aptech.java.models.Request;
 import vn.aptech.java.models.RequestDetail;
 import vn.aptech.java.services.PartService;
 import vn.aptech.java.services.PartTypeService;
@@ -18,6 +19,9 @@ import vn.aptech.java.services.RequestService;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin/request-detail")
@@ -33,7 +37,8 @@ public class RequestDetailController {
 
     private void prepareForm(Model model) {
         model.addAttribute("activePage", "requestDetail");
-        model.addAttribute("requests", requestService.getRequests());
+        model.addAttribute("requests",
+                requestService.getRequests(null, null, null, null, null, Request.Status.APPROVED));
         model.addAttribute("parts", partService.getParts(null, null, null));
         model.addAttribute("partTypes", partTypeService.getPartTypes(null));
     }
@@ -145,5 +150,26 @@ public class RequestDetailController {
             redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi xóa chi tiết yêu cầu: " + e.getMessage());
         }
         return "redirect:/admin/request-detail";
+    }
+
+    @GetMapping("/count-by-request/{requestId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getCountByRequest(@PathVariable Long requestId) {
+        try {
+            Map<String, Object> response = new HashMap<>();
+
+            // Get count and total value from service
+            long count = requestDetailService.countByRequestId(requestId);
+            double totalValue = requestDetailService.getTotalValueByRequestId(requestId);
+
+            response.put("count", count);
+            response.put("totalValue", totalValue);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Có lỗi xảy ra: " + e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
 }

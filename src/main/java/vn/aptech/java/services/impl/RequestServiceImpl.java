@@ -1,7 +1,6 @@
 package vn.aptech.java.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -192,8 +191,10 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> getRequests() {
-        return requestRepository.findAll(Sort.by(Sort.Direction.DESC, "bookingDate"));
+    public List<Request> getRequests(String fullname, String phone, String email, String serialNumber,
+            Long technicianId, Request.Status status) {
+        String statusStr = status != null ? status.name() : null;
+        return requestRepository.filterRequests(fullname, phone, email, serialNumber, technicianId, statusStr);
     }
 
     @Override

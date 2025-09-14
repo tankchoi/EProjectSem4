@@ -19,8 +19,7 @@ public interface PartRepository extends JpaRepository<Part, Long> {
     List<Part> filterParts(@Param("name") String name,
                            @Param("partTypeId") Long partTypeId,
                            @Param("laptopId") Long laptopId);
-    @Query("SELECT p FROM Part p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    List<Part> findByNameParts(@Param("keyword") String keyword);
+
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT p FROM Part p WHERE p.id = :id")

@@ -13,14 +13,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface RequestService {
     void createScheduleRequest(WarrantyRequestDTO dto, MultipartFile[] images) throws IOException;
+
     List<Request> getHistoryByCustomerId(Long customerId);
 
     void createRequest(CreateRequestDTO dto);
+
     Optional<Request> getRequestById(Long id);
+
     void updateRequest(UpdateRequestDTO dto);
-    List<Request> getRequests();
+
+    List<Request> getRequests(String fullname, String phone, String email, String serialNumber, Long technicianId,
+            Request.Status status);
+
     void deleteRequest(Long id);
 
     long count();
+
     long countByStatus(Request.Status status);
 }

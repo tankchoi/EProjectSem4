@@ -51,7 +51,7 @@
                         <span class="material-symbols-outlined">arrow_back</span>
                         Quay lại
                     </a>
-                    <a th:href="@{/admin/request//edit/{id}(id=${request.id})}" class="btn-warning">
+                    <a th:href="@{/admin/request/edit/{id}(id=${request.id})}" class="btn-warning">
                         <span class="material-symbols-outlined">edit</span>
                         Chỉnh sửa
                     </a>
@@ -197,11 +197,11 @@
                             </div>
                             <div class="action-buttons">
                                 <a th:href="@{/admin/request-detail/create(requestId=${request.id})}"
-                                    class="btn-primary">
+                                    class="btn-primary" style="display: none;" id="createPartBtn">
                                     <span class="material-symbols-outlined">add</span>
                                     Thêm linh kiện
                                 </a>
-                                <a th:href="@{/admin/receipt/create(requestId=${request.id})}" class="btn-success"
+                                <a th:href="@{/admin/invoice/create(requestId=${request.id})}" class="btn-success"
                                     id="createInvoiceBtn" style="display: none;">
                                     <span class="material-symbols-outlined">receipt</span>
                                     Tạo hóa đơn
@@ -362,13 +362,13 @@
         </div>
     </div>
 
-    <script>
+    <script th:inline="javascript">
         // Load parts and cost information
         function loadPartsInfo() {
             const requestId = /*[[${request.id}]]*/ 0;
-
+            const requestStatus = /*[[${request.status.name()}]]*/ 'PENDING';
             // Fetch request details count and total value
-            fetch(`/admin/request-detail/api/by-request/${requestId}`)
+            fetch(`/admin/request-detail/count-by-request/${requestId}`)
                 .then(response => response.json())
                 .then(data => {
                     // Update parts count
@@ -378,9 +378,8 @@
                     const totalValue = new Intl.NumberFormat('vi-VN').format(data.totalValue) + ' VNĐ';
                     document.getElementById('totalValue').textContent = totalValue;
 
-                    // Show create invoice button if there are parts and status is approved
-                    if (data.count > 0 && /*[[${request.status}]]*/ 'PENDING' === 'APPROVED') {
-                        document.getElementById('createInvoiceBtn').style.display = 'inline-flex';
+                    if (data.count > 0 && requestStatus === 'APPROVED') {
+                        document.getElementById('createPartBtn').style.display = 'inline-flex';
                     }
                 })
                 .catch(error => {
@@ -390,14 +389,15 @@
                 });
 
             // Check if invoice exists for this request
-            fetch(`/admin/invoice/api/check-by-request/${requestId}`)
+            fetch(`/admin/invoice/check-by-request/${requestId}`)
                 .then(response => response.json())
                 .then(data => {
                     const invoiceStatusElement = document.getElementById('invoiceStatus');
+
                     if (data.exists) {
                         invoiceStatusElement.innerHTML = `
                             <span class="status-badge status-success">Đã có hóa đơn</span>
-                            <a href="/admin/receipt/view/${data.invoiceId}" class="btn-view-invoice" title="Xem hóa đơn">
+                            <a href="/admin/invoice/${data.invoiceId}" class="btn-view-invoice" title="Xem hóa đơn">
                                 <span class="material-symbols-outlined">receipt</span>
                                 Xem hóa đơn
                             </a>
@@ -406,6 +406,13 @@
                         document.getElementById('createInvoiceBtn').style.display = 'none';
                     } else {
                         invoiceStatusElement.innerHTML = '<span class="status-badge status-pending">Chưa có hóa đơn</span>';
+
+                        // Only show create invoice button if request is COMPLETED and no invoice exists
+                        if (requestStatus === 'COMPLETED') {
+                            document.getElementById('createInvoiceBtn').style.display = 'inline-flex';
+                        } else {
+                            document.getElementById('createInvoiceBtn').style.display = 'none';
+                        }
                     }
                 })
                 .catch(error => {

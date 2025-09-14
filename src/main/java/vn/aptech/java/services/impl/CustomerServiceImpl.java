@@ -11,7 +11,6 @@ import vn.aptech.java.repositories.LaptopRepository;
 import vn.aptech.java.repositories.UserRepository;
 import vn.aptech.java.services.CustomerService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

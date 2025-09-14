@@ -16,6 +16,8 @@ public interface InvoiceService {
 
     Optional<Invoice> getInvoiceById(Long id);
 
+    Optional<Invoice> getInvoiceByRequestId(Long requestId);
+
     List<Invoice> getInvoices();
 
     void deleteInvoice(Long id);

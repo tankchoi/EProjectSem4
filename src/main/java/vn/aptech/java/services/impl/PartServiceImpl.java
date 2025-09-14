@@ -102,14 +102,6 @@ public class PartServiceImpl implements PartService {
         partRepository.deleteById(id);
     }
 
-    @Override
-    public List<Part> searchByName(String keyword) {
-        if (keyword == null || keyword.isEmpty()) {
-            return partRepository.findAll();
-        } else {
-            return partRepository.findByNameParts(keyword);
-        }
-    }
 
     @Override
     @Transactional

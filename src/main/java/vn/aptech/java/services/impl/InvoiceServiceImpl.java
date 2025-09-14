@@ -72,6 +72,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public Optional<Invoice> getInvoiceByRequestId(Long requestId) {
+        return invoiceRepository.findByRequestId(requestId);
+    }
+
+    @Override
     public List<Invoice> getInvoices() {
         return invoiceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
     }

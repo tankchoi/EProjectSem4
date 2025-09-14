@@ -14,7 +14,6 @@ public interface PartService {
     void updatePart(UpdatePartDTO updatePartDTO);
     void deletePart(Long id);
 
-    List<Part> searchByName(String keyword);
     Optional<Part> lockPartById(Long id);
 
     long count();

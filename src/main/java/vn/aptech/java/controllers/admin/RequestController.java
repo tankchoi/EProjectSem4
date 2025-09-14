@@ -26,13 +26,26 @@ public class RequestController {
     private RequestImgService requestImgService;
     @Autowired
     private UserService userService;
+
     @GetMapping
-    public String index(Model model) {
+    public String index(Model model,
+            @RequestParam(required = false) String fullname,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String serialNumber,
+            @RequestParam(required = false) Request.Status status) {
         model.addAttribute("activePage", "request");
-        model.addAttribute("requests", requestService.getRequests());
-        model.addAttribute("totalElements", requestService.getRequests().size());
+        var requests = requestService.getRequests(fullname, phone, email, serialNumber, null, status);
+        model.addAttribute("requests", requests);
+        model.addAttribute("totalElements", requests.size());
+        model.addAttribute("fullname", fullname);
+        model.addAttribute("phone", phone);
+        model.addAttribute("email", email);
+        model.addAttribute("serialNumber", serialNumber);
+        model.addAttribute("status", status);
         return "admin/pages/request/index";
     }
+
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("activePage", "request");
@@ -52,6 +65,7 @@ public class RequestController {
             return "redirect:/admin/request";
         }
     }
+
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("activePage", "request");
@@ -59,11 +73,12 @@ public class RequestController {
         model.addAttribute("technicians", userService.getTechnicians());
         return "admin/pages/request/create";
     }
+
     @PostMapping("/create")
     public String store(@Valid @ModelAttribute("request") CreateRequestDTO createRequestDTO,
-                        BindingResult bindingResult,
-                        RedirectAttributes redirectAttributes,
-                        Model model) {
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
         try {
             if (bindingResult.hasErrors()) {
                 model.addAttribute("activePage", "request");
@@ -82,10 +97,11 @@ public class RequestController {
             return "admin/pages/request/create";
         }
     }
+
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("activePage", "request");
-        try{
+        try {
             Optional<Request> RequestOpt = requestService.getRequestById(id);
             if (RequestOpt.isPresent()) {
                 Request request = RequestOpt.get();
@@ -99,12 +115,12 @@ public class RequestController {
                 updateRequestDTO.setDescription(request.getDescription());
                 updateRequestDTO.setBookingDate(request.getBookingDate());
                 updateRequestDTO.setStatus(request.getStatus());
-                updateRequestDTO.setTechnicianId(request.getTechnician() != null ? request.getTechnician().getId() : null);
+                updateRequestDTO
+                        .setTechnicianId(request.getTechnician() != null ? request.getTechnician().getId() : null);
                 updateRequestDTO.setExistingImageUrls(
                         requestImgService.getRequestImgByRequestId(id).stream()
                                 .map(RequestImg::getImgUrl)
-                                .toList()
-                );
+                                .toList());
                 model.addAttribute("request", updateRequestDTO);
                 model.addAttribute("technicians", userService.getTechnicians());
                 return "admin/pages/request/edit";
@@ -112,7 +128,7 @@ public class RequestController {
                 redirectAttributes.addFlashAttribute("error", "Yêu cầu không tồn tại: " + id);
                 return "redirect:/admin/request";
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi truy xuất yêu cầu: " + id);
             return "redirect:/admin/request";
         }
@@ -120,9 +136,9 @@ public class RequestController {
 
     @PostMapping("/update")
     public String update(@Valid @ModelAttribute("request") UpdateRequestDTO updateRequestDTO,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes,
-                         Model model) {
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("activePage", "request");
             model.addAttribute("technicians", userService.getTechnicians());

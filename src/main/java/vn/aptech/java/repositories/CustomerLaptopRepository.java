@@ -8,7 +8,6 @@ import vn.aptech.java.models.CustomerLaptop;
 import vn.aptech.java.models.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CustomerLaptopRepository extends JpaRepository<CustomerLaptop, Long> {
        List<CustomerLaptop> findByCustomer(User customer);
@@ -30,6 +29,5 @@ public interface CustomerLaptopRepository extends JpaRepository<CustomerLaptop, 
        CustomerLaptop findBySerial(@Param("serial") String serial);
 
        boolean existsBySerialNumber(String serialNumber);
-
 
 }

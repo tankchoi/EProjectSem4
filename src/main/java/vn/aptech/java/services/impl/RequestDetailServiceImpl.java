@@ -119,4 +119,15 @@ public class RequestDetailServiceImpl implements RequestDetailService {
         return requestDetailRepository.findByRequestId(requestId);
     }
 
+    @Override
+    public long countByRequestId(Long requestId) {
+        return requestDetailRepository.countByRequestId(requestId);
+    }
+
+    @Override
+    public double getTotalValueByRequestId(Long requestId) {
+        Double total = requestDetailRepository.getTotalValueByRequestId(requestId);
+        return total != null ? total : 0.0;
+    }
+
 }

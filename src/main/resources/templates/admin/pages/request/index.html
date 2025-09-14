@@ -69,51 +69,73 @@
                     <form method="get" action="/admin/request" class="filter-form">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="search" class="form-label">
-                                    <span class="material-symbols-outlined">search</span>
-                                    Tìm kiếm
+                                <label for="fullname" class="form-label">
+                                    <span class="material-symbols-outlined">person</span>
+                                    Tên khách hàng
                                 </label>
-                                <input type="text" class="form-input" id="search" name="search" th:value="${search}"
-                                    placeholder="Tên, email, số điện thoại...">
+                                <input type="text" class="form-input" id="fullname" name="fullname"
+                                    th:value="${fullname}" placeholder="Nhập tên khách hàng...">
                             </div>
+                            <div class="form-group">
+                                <label for="phone" class="form-label">
+                                    <span class="material-symbols-outlined">phone</span>
+                                    Số điện thoại
+                                </label>
+                                <input type="text" class="form-input" id="phone" name="phone" th:value="${phone}"
+                                    placeholder="Nhập số điện thoại...">
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="form-label">
+                                    <span class="material-symbols-outlined">email</span>
+                                    Email
+                                </label>
+                                <input type="email" class="form-input" id="email" name="email" th:value="${email}"
+                                    placeholder="Nhập địa chỉ email...">
+                            </div>
+                            <div class="form-group">
+                                <label for="serialNumber" class="form-label">
+                                    <span class="material-symbols-outlined">qr_code</span>
+                                    Số Serial
+                                </label>
+                                <input type="text" class="form-input" id="serialNumber" name="serialNumber"
+                                    th:value="${serialNumber}" placeholder="Nhập số serial laptop...">
+                            </div>
+                        </div>
+                        <div class="form-row">
                             <div class="form-group">
                                 <label for="status" class="form-label">
                                     <span class="material-symbols-outlined">radio_button_checked</span>
                                     Trạng thái
                                 </label>
                                 <select class="form-input" id="status" name="status">
-                                    <!--                                    <option value="">Tất cả</option>-->
-                                    <!--                                    <option value="PENDING" th:selected="${status == 'PENDING'}">Chờ xử lý</option>-->
-                                    <!--                                    <option value="APPROVED" th:selected="${status == 'APPROVED'}">Đã duyệt</option>-->
-                                    <!--                                    <option value="REJECTED" th:selected="${status == 'REJECTED'}">Từ chối</option>-->
-                                    <!--                                    <option value="IN_PROGRESS" th:selected="${status == 'IN_PROGRESS'}">Đang thực hiện-->
-                                    <!--                                    </option>-->
-                                    <!--                                    <option value="COMPLETED" th:selected="${status == 'COMPLETED'}">Hoàn thành</option>-->
+                                    <option value="" th:selected="${status == null}">Tất cả trạng thái</option>
+                                    <option value="PENDING"
+                                        th:selected="${status != null and status.name() == 'PENDING'}">Chờ xử lý
+                                    </option>
+                                    <option value="APPROVED"
+                                        th:selected="${status != null and status.name() == 'APPROVED'}">Đang thực
+                                        hiện
+                                    </option>
+                                    <option value="COMPLETED"
+                                        th:selected="${status != null and status.name() == 'COMPLETED'}">Hoàn thành
+                                    </option>
+                                    <option value="REJECTED"
+                                        th:selected="${status != null and status.name() == 'REJECTED'}">Từ chối</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="size" class="form-label">
-                                    <span class="material-symbols-outlined">view_list</span>
-                                    Hiển thị
-                                </label>
-                                <select class="form-input" id="size" name="size">
-                                    <!--                                    <option value="5" th:selected="${size == 5}">5</option>-->
-                                    <!--                                    <option value="10" th:selected="${size == 10}">10</option>-->
-                                    <!--                                    <option value="25" th:selected="${size == 25}">25</option>-->
-                                    <!--                                    <option value="50" th:selected="${size == 50}">50</option>-->
-                                </select>
-                            </div>
-                            <div class="form-group form-actions-group">
-                                <div class="form-actions">
-                                    <button type="submit" class="btn-primary">
-                                        <span class="material-symbols-outlined">search</span>
-                                        Tìm kiếm
-                                    </button>
-                                    <a href="/admin/request" class="btn-secondary">
-                                        <span class="material-symbols-outlined">refresh</span>
-                                        Xóa lọc
-                                    </a>
-                                </div>
+                        </div>
+
+                        <!-- Form Actions - Moved outside form-row for right alignment -->
+                        <div class="form-actions-group">
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    <span class="material-symbols-outlined">search</span>
+                                    Tìm kiếm
+                                </button>
+                                <a href="/admin/request" class="btn-secondary">
+                                    <span class="material-symbols-outlined">refresh</span>
+                                    Đặt lại
+                                </a>
                             </div>
                         </div>
                     </form>
