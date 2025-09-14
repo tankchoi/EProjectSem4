@@ -14,6 +14,7 @@ public interface CustomerService {
     Optional<User> getCustomerById(Long id);
 
     Page<User> getAllCustomersPaginated(Pageable pageable);
+    // đang lỗi chưa fix, dùng tạm datatable
 
     Page<User> searchCustomersPaginated(String search, Pageable pageable);
 
