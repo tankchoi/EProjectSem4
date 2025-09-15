@@ -46,11 +46,11 @@
                             th:text="${request.customerLaptop.laptop.name}"></span></p>
                 </div>
                 <div class="action-buttons">
-                    <a th:href="@{/admin/request/{id}(id=${request.id})}" class="btn-secondary">
+                    <a th:href="@{/admin/request/{id}(id=${request.id})}" class="btn btn-secondary">
                         <span class="material-symbols-outlined">arrow_back</span>
-                        Quay lại yêu cầu
+                        Quay lại
                     </a>
-                    <a th:href="@{/admin/request-detail/create(requestId=${request.id})}" class="btn-primary">
+                    <a th:href="@{/admin/request-detail/create(requestId=${request.id})}" class="btn btn-primary">
                         <span class="material-symbols-outlined">add</span>
                         Thêm linh kiện
                     </a>
@@ -108,7 +108,7 @@
                                     <td>
                                         <div class="part-image">
                                             <img th:if="${detail.part.imgUrl != null and detail.part.imgUrl != ''}"
-                                                th:src="@{/images/{img}(img=${detail.part.imgUrl})}"
+                                                th:src="${detail.part.imgUrl}"
                                                 th:alt="${detail.part.name}" />
                                             <div th:unless="${detail.part.imgUrl != null and detail.part.imgUrl != ''}"
                                                 class="no-image">
@@ -119,8 +119,8 @@
                                     <td>
                                         <div class="part-info">
                                             <strong th:text="${detail.part.name}">Tên linh kiện</strong>
-                                            <small th:text="${detail.part.description}"
-                                                th:if="${detail.part.description}">Mô tả</small>
+                                            <!-- <small th:text="${detail.part.description}"
+                                                th:if="${detail.part.description}">Mô tả</small> -->
                                         </div>
                                     </td>
                                     <td th:text="${detail.part.partType.name}">Loại linh kiện</td>
@@ -135,16 +135,16 @@
                                         10:30</td>
                                     <td>
                                         <div class="action-buttons">
-                                            <a th:href="@{/admin/request-detail/{id}(id=${detail.id})}" class="btn-view"
+                                            <a th:href="@{/admin/request-detail/{id}(id=${detail.id})}" class="btn-icon btn-view"
                                                 title="Xem chi tiết">
                                                 <span class="material-symbols-outlined">visibility</span>
                                             </a>
                                             <a th:href="@{/admin/request-detail/{id}/edit(id=${detail.id})}"
-                                                class="btn-edit" title="Chỉnh sửa">
+                                                class="btn-icon btn-edit" title="Chỉnh sửa">
                                                 <span class="material-symbols-outlined">edit</span>
                                             </a>
                                             <button th:data-id="${detail.id}" onclick="confirmDelete(this.dataset.id)"
-                                                class="btn-delete" title="Xóa">
+                                                class="btn-icon btn-delete" title="Xóa">
                                                 <span class="material-symbols-outlined">delete</span>
                                             </button>
                                         </div>
@@ -192,22 +192,6 @@
                 form.submit();
             }
         }
-
-        // Add some interactive effects
-        document.addEventListener('DOMContentLoaded', function () {
-            const rows = document.querySelectorAll('.table-content tbody tr');
-            rows.forEach(row => {
-                row.addEventListener('mouseenter', function () {
-                    this.style.transform = 'scale(1.01)';
-                    this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-                });
-
-                row.addEventListener('mouseleave', function () {
-                    this.style.transform = 'scale(1)';
-                    this.style.boxShadow = 'none';
-                });
-            });
-        });
     </script>
 </body>
 

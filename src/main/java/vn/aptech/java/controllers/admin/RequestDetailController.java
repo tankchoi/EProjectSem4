@@ -17,10 +17,12 @@ import vn.aptech.java.services.RequestDetailService;
 import vn.aptech.java.services.RequestService;
 
 import java.util.Optional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -172,4 +174,37 @@ public class RequestDetailController {
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }
+
+    @GetMapping("/by-request/{requestId}")
+    public String getByRequest(@PathVariable Long requestId,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Optional<Request> requestOpt = requestService.getRequestById(requestId);
+            if (requestOpt.isEmpty()) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Yêu cầu không tồn tại!");
+                return "redirect:/admin/request";
+            }
+
+            Request request = requestOpt.get();
+            model.addAttribute("request", request);
+
+            List<RequestDetail> requestDetails = requestDetailService.getRequestDetailsByRequestId(requestId);
+            if (requestDetails == null) {
+                requestDetails = new ArrayList<>();
+            }
+            model.addAttribute("requestDetails", requestDetails);
+
+            double totalValue = requestDetails.stream()
+                    .mapToDouble(d -> d.getQuantity() * d.getPart().getPrice())
+                    .sum();
+            model.addAttribute("totalValue", totalValue);
+
+            return "admin/pages/request_detail/by_request";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra: " + e.getMessage());
+            return "redirect:/admin/request";
+        }
+    }
+
 }

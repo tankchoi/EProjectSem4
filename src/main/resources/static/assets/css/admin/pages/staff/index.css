@@ -190,6 +190,10 @@ body {
     padding: 0;
 }
 
+.dataTables_wrapper{
+    padding: 1.5rem;
+}
+
 .data-table {
     width: 100%;
     border-collapse: collapse;

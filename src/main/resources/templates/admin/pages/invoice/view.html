@@ -19,8 +19,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.5rem 2rem;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            padding: 1.3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .dashboard-title {
@@ -33,20 +34,9 @@
             margin: 0;
         }
 
-        .add-btn {
+        .action-btn {
             display: flex;
             gap: 0.75rem;
-        }
-
-        .add-btn .btn {
-            background: white;
-            color: #667eea;
-            border: 2px solid white;
-        }
-
-        .add-btn .btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-1px);
         }
 
         .detail-card {
@@ -153,6 +143,7 @@
             transition: all 0.2s ease;
             border: none;
             cursor: pointer;
+            width: 150px;
         }
 
         .btn-primary {
@@ -173,6 +164,7 @@
         .btn-secondary:hover {
             background: #4b5563;
             transform: translateY(-1px);
+            color: white;
         }
 
         .btn-success {
@@ -223,7 +215,7 @@
                 <div class="dashboard-title">
                     <h1>Chi tiết Hóa đơn #<span th:text="${invoice.id}"></span></h1>
                 </div>
-                <div class="add-btn">
+                <div class="action-btn">
                     <a th:href="@{/admin/invoice/edit/{id}(id=${invoice.id})}" class="btn btn-primary">
                         <span class="material-symbols-outlined">edit</span>
                         Chỉnh sửa

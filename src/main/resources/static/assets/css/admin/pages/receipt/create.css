@@ -154,6 +154,37 @@ body {
     animation: slideUp 0.3s ease-out;
 }
 
+.page-content {
+    background-color: #ffffff;
+    margin: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    padding: 2rem;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+    text-align: center;
+}
+
+.form-header span{
+    font-size: 1.5rem;
+    color: #3b82f6;
+}
+
 @keyframes slideUp {
     from {
         opacity: 0;

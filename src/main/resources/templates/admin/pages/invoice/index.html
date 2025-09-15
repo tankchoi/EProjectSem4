@@ -27,7 +27,8 @@
             <div class="page-header">
                 <div class="header-content">
                     <span class="material-symbols-outlined">receipt_long</span>
-                    <h1>Admin / Quản lý Hóa đơn</h1>
+                    <h1>Admin /</h1>
+                    <h1>Quản lý Hóa đơn</h1>
                 </div>
             </div>
 
@@ -90,22 +91,19 @@
                             </td>
                             <td th:text="${#dates.format(invoice.createdAt, 'dd/MM/yyyy HH:mm')}">12/01/2025</td>
                             <td>
-                                <div style="display: flex; gap: 8px;">
-                                    <a th:href="@{/admin/invoice/edit/{id}(id=${invoice.id})}" class="btn-edit"
-                                        title="Chỉnh sửa hóa đơn">
-                                        <span class="material-symbols-outlined">edit</span>
-                                        Sửa
-                                    </a>
-                                    <a th:href="@{/admin/invoice/{id}(id=${invoice.id})}" class="btn-view"
+                                <div class="action-buttons">
+                                    <a th:href="@{/admin/invoice/{id}(id=${invoice.id})}" class="btn-icon btn-view"
                                         title="Xem chi tiết">
                                         <span class="material-symbols-outlined">visibility</span>
-                                        Xem
+                                    </a>
+                                    <a th:href="@{/admin/invoice/edit/{id}(id=${invoice.id})}" class="btn-icon btn-edit"
+                                        title="Chỉnh sửa hóa đơn">
+                                        <span class="material-symbols-outlined">edit</span>
                                     </a>
                                     <button type="button" th:data-invoice-id="${invoice.id}"
-                                        onclick="confirmDelete(this.dataset.invoiceId)" class="btn-delete"
+                                        onclick="confirmDelete(this.dataset.invoiceId)" class="btn-icon btn-delete"
                                         title="Xóa hóa đơn">
                                         <span class="material-symbols-outlined">delete</span>
-                                        Xóa
                                     </button>
                                 </div>
                             </td>
@@ -157,6 +155,7 @@
                         paging: true,
                         searching: true,
                         ordering: true,
+                        lengthChange: false,
                         info: true,
                         lengthMenu: [10, 25, 50, 100],
                         pageLength: 10,

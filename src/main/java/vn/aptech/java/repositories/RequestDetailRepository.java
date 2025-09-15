@@ -8,6 +8,10 @@ import vn.aptech.java.models.RequestDetail;
 public interface RequestDetailRepository extends JpaRepository<RequestDetail, Long> {
     boolean existsByRequestIdAndPartId(Long requestId, Long partId);
 
+    @Query("SELECT rd FROM RequestDetail rd " +
+           "JOIN FETCH rd.part p " +
+           "JOIN FETCH p.partType " +
+           "WHERE rd.request.id = :requestId")
     java.util.List<RequestDetail> findByRequestId(Long requestId);
 
     @Query("SELECT COALESCE(SUM(rd.quantity), 0) FROM RequestDetail rd WHERE rd.request.id = :requestId")
