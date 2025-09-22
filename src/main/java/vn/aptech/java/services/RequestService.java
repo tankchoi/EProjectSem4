@@ -12,11 +12,11 @@ import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface RequestService {
-    void createScheduleRequest(WarrantyRequestDTO dto, MultipartFile[] images) throws IOException;
+    Request createScheduleRequest(WarrantyRequestDTO dto, MultipartFile[] images) throws IOException;
 
     List<Request> getHistoryByCustomerId(Long customerId);
 
-    void createRequest(CreateRequestDTO dto);
+    Request createRequest(CreateRequestDTO dto);
 
     Optional<Request> getRequestById(Long id);
 

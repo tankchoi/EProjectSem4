@@ -46,7 +46,7 @@ public class PartServiceImpl implements PartService {
     }
 
     @Override
-    public void createPart(CreatePartDTO createPartDTO) {
+    public Part createPart(CreatePartDTO createPartDTO) {
         Part part = new Part();
         Optional<PartType> partTypeOpt = partTypeService.getPartTypeById(createPartDTO.getPartTypeId());
         if (partTypeOpt.isEmpty()) {
@@ -65,7 +65,7 @@ public class PartServiceImpl implements PartService {
         part.setQuantity(createPartDTO.getQuantity());
         part.setWarrantyPeriod(createPartDTO.getWarrantyPeriod());
         part.setImgUrl(createPartDTO.getImgUrl());
-        partRepository.save(part);
+        return partRepository.save(part);
     }
 
     @Override

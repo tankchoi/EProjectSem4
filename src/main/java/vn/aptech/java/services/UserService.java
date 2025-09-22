@@ -19,7 +19,7 @@ public interface UserService {
 
     List<User> getTechnicians();
 
-    void createAccount(RegisterDTO registerDTO);
+    User createAccount(RegisterDTO registerDTO);
 
     void updateInformation(Long userId, UpdateInfoDTO dto);
 

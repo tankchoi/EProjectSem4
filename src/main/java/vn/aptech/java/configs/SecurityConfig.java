@@ -23,8 +23,11 @@ public class SecurityConfig {
                 http.csrf(csrf -> csrf.disable())
                                 .securityMatcher("/admin/**")
                                 .authorizeHttpRequests((auth) -> auth
-                                                .requestMatchers("/admin/**").permitAll()
-                                                .anyRequest().hasAnyAuthority("ADMIN", "STAFF"))
+                                                .requestMatchers("/admin/login").permitAll()
+                                                .requestMatchers("/admin/staff/**", "/admin/customer/**")
+                                                .hasAuthority("ADMIN")
+                                                .requestMatchers("/admin/**").hasAnyAuthority("ADMIN", "STAFF")
+                                                .anyRequest().authenticated())
 
                                 .formLogin(login -> login
                                                 .loginPage("/admin/login")

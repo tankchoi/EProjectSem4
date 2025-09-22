@@ -9,8 +9,12 @@ import java.util.Optional;
 
 public interface ModelService {
     List<Model> getModels(String keyword);
+
     Optional<Model> getModelById(Long id);
-    void createModel(CreateModelDTO createModelDTO);
+
+    Model createModel(CreateModelDTO createModelDTO);
+
     void updateModel(UpdateModelDTO updateModelDTO);
+
     void deleteModel(Long id);
 }

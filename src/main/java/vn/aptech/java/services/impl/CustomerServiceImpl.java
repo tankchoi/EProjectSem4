@@ -7,7 +7,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import vn.aptech.java.models.Laptop;
 import vn.aptech.java.models.User;
-import vn.aptech.java.repositories.LaptopRepository;
 import vn.aptech.java.repositories.UserRepository;
 import vn.aptech.java.services.CustomerService;
 
@@ -20,9 +19,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private LaptopRepository laptopRepository;
 
     @Override
     public List<User> getAllCustomers() {

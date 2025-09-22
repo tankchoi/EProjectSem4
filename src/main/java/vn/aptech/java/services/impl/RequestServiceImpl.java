@@ -38,7 +38,7 @@ public class RequestServiceImpl implements RequestService {
     private UserService userService;
 
     @Override
-    public void createScheduleRequest(WarrantyRequestDTO dto, MultipartFile[] images) throws IOException {
+    public Request createScheduleRequest(WarrantyRequestDTO dto, MultipartFile[] images) throws IOException {
         Request request = new Request();
         request.setFullname(dto.getFullname());
         request.setPhone(dto.getPhone());
@@ -78,6 +78,7 @@ public class RequestServiceImpl implements RequestService {
                 }
             }
         }
+        return request;
     }
 
     @Override
@@ -87,7 +88,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public void createRequest(CreateRequestDTO dto) {
+    public Request createRequest(CreateRequestDTO dto) {
         try {
             Request request = new Request();
             request.setFullname(dto.getFullname());
@@ -119,6 +120,7 @@ public class RequestServiceImpl implements RequestService {
                     requestImgService.createRequestImg(requestImg);
                 }
             }
+            return request;
         } catch (Exception e) {
             throw new RuntimeException("Lỗi khi tạo yêu cầu bảo hành: " + e.getMessage(), e);
         }

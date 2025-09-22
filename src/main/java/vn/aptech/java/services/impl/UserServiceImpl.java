@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createAccount(RegisterDTO registerDTO) {
+    public User createAccount(RegisterDTO registerDTO) {
         if (userRepository.existsByUsername(registerDTO.getUsername())) {
             throw new IllegalArgumentException("Tên đăng nhập đã tồn tại");
         }
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(User.Role.CUSTOMER);
         user.setStatus(User.Status.ACTIVE);
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override

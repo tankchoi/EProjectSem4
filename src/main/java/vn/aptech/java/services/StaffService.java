@@ -14,7 +14,7 @@ public interface StaffService {
 
     Optional<User> getStaffById(Long id);
 
-    void createStaff(CreateStaffDTO dto);
+    User createStaff(CreateStaffDTO dto);
 
     void updateStaff(UpdateStaffDTO dto);
 
