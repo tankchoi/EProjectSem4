@@ -34,7 +34,7 @@ public class SecurityConfig {
                                                 .loginProcessingUrl("/admin/login")
                                                 .usernameParameter("username")
                                                 .passwordParameter("password")
-                                                .defaultSuccessUrl("/admin/laptop", true))
+                                                .defaultSuccessUrl("/admin/homepage", true))
                                 .logout(logout -> logout
                                                 .logoutUrl("/admin/logout")
                                                 .logoutSuccessUrl("/admin/login?logout"));
