@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RequestDetailService {
-    void createRequestDetail(CreateRequestDetailDTO dto);
+    RequestDetail createRequestDetail(CreateRequestDetailDTO dto);
 
     void updateRequestDetail(UpdateRequestDetailDTO dto);
 

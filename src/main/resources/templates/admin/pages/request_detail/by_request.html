@@ -50,10 +50,6 @@
                         <span class="material-symbols-outlined">arrow_back</span>
                         Quay lại
                     </a>
-                    <a th:href="@{/admin/request-detail/create(requestId=${request.id})}" class="btn btn-primary">
-                        <span class="material-symbols-outlined">add</span>
-                        Thêm linh kiện
-                    </a>
                 </div>
             </div>
 
@@ -76,10 +72,10 @@
                 <div class="summary-item">
                     <span class="material-symbols-outlined">info</span>
                     <div class="summary-content">
-                        <h3 th:text="${request.status == 'PENDING' ? 'Chờ xử lý' : 
-                              request.status == 'IN_PROGRESS' ? 'Đang xử lý' : 
-                              request.status == 'COMPLETED' ? 'Hoàn thành' : 
-                              request.status == 'CANCELLED' ? 'Đã hủy' : request.status}">Trạng thái</h3>
+                        <h3 th:text="${request.status.name() == 'PENDING' ? 'Chờ xử lý' : 
+                              request.status.name() == 'APPROVED' ? 'Đang thực hiện' : 
+                              request.status.name() == 'COMPLETED' ? 'Hoàn thành' : 
+                              request.status.name() == 'CANCELLED' ? 'Đã hủy' : request.status.name()}">Trạng thái</h3>
                         <p>Trạng thái yêu cầu</p>
                     </div>
                 </div>
@@ -99,7 +95,6 @@
                                     <th>Số lượng</th>
                                     <th>Thành tiền</th>
                                     <th>Ngày tạo</th>
-                                    <th>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -108,8 +103,7 @@
                                     <td>
                                         <div class="part-image">
                                             <img th:if="${detail.part.imgUrl != null and detail.part.imgUrl != ''}"
-                                                th:src="${detail.part.imgUrl}"
-                                                th:alt="${detail.part.name}" />
+                                                th:src="${detail.part.imgUrl}" th:alt="${detail.part.name}" />
                                             <div th:unless="${detail.part.imgUrl != null and detail.part.imgUrl != ''}"
                                                 class="no-image">
                                                 <span class="material-symbols-outlined">image</span>
@@ -133,22 +127,7 @@
                                         1,000,000 VNĐ</td>
                                     <td th:text="${#dates.format(detail.createdAt, 'dd/MM/yyyy HH:mm')}">12/01/2025
                                         10:30</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a th:href="@{/admin/request-detail/{id}(id=${detail.id})}" class="btn-icon btn-view"
-                                                title="Xem chi tiết">
-                                                <span class="material-symbols-outlined">visibility</span>
-                                            </a>
-                                            <a th:href="@{/admin/request-detail/{id}/edit(id=${detail.id})}"
-                                                class="btn-icon btn-edit" title="Chỉnh sửa">
-                                                <span class="material-symbols-outlined">edit</span>
-                                            </a>
-                                            <button th:data-id="${detail.id}" onclick="confirmDelete(this.dataset.id)"
-                                                class="btn-icon btn-delete" title="Xóa">
-                                                <span class="material-symbols-outlined">delete</span>
-                                            </button>
-                                        </div>
-                                    </td>
+
                                 </tr>
                             </tbody>
                         </table>
@@ -170,29 +149,6 @@
     </div>
 
     <script th:src="@{/assets/js/admin/script.js}"></script>
-    <script>
-        function confirmDelete(id) {
-            if (confirm('Bạn có chắc chắn muốn xóa linh kiện này khỏi yêu cầu? Hành động này không thể hoàn tác.')) {
-                // Tạo form để submit POST request
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/admin/request-detail/' + id + '/delete';
-
-                // Thêm CSRF token nếu cần
-                const csrfToken = document.querySelector('meta[name="_csrf"]');
-                if (csrfToken) {
-                    const csrfInput = document.createElement('input');
-                    csrfInput.type = 'hidden';
-                    csrfInput.name = '_csrf';
-                    csrfInput.value = csrfToken.getAttribute('content');
-                    form.appendChild(csrfInput);
-                }
-
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-    </script>
 </body>
 
 </html>

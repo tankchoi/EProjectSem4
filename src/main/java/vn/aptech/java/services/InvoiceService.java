@@ -8,7 +8,7 @@ import vn.aptech.java.dtos.admin.UpdateInvoiceDTO;
 import vn.aptech.java.models.Invoice;
 
 public interface InvoiceService {
-    void createInvoice(CreateInvoiceDTO dto);
+    Invoice createInvoice(CreateInvoiceDTO dto);
 
     void updateInvoice(UpdateInvoiceDTO dto);
 

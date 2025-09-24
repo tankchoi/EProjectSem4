@@ -27,7 +27,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private RequestDetailService requestDetailService;
 
     @Override
-    public void createInvoice(CreateInvoiceDTO dto) {
+    public Invoice createInvoice(CreateInvoiceDTO dto) {
         Invoice invoice = new Invoice();
         invoice.setRequest(requestService.getRequestById(dto.getRequestId())
                 .orElseThrow(() -> new IllegalArgumentException("Yêu cầu không tồn tại.")));
@@ -36,7 +36,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         });
         invoice.setTotalPrice(calculateTotalPrice(dto.getRequestId()));
         invoice.setStatus(dto.getStatus());
-        invoiceRepository.save(invoice);
+        return invoiceRepository.save(invoice);
     }
 
     @Override

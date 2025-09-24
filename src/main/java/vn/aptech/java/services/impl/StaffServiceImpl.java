@@ -47,7 +47,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public void createStaff(CreateStaffDTO dto) {
+    public User createStaff(CreateStaffDTO dto) {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword()); // TODO: encode password
@@ -56,7 +56,7 @@ public class StaffServiceImpl implements StaffService {
         user.setPhone(dto.getPhone());
         user.setRole(User.Role.STAFF);
         user.setStatus(User.Status.ACTIVE);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override

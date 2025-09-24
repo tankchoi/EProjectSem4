@@ -37,7 +37,7 @@ public class RequestDetailServiceImpl implements RequestDetailService {
 
     @Override
     @Transactional
-    public void createRequestDetail(CreateRequestDetailDTO dto) {
+    public RequestDetail createRequestDetail(CreateRequestDetailDTO dto) {
         RequestDetail requestDetail = new RequestDetail();
         requestDetail.setRequest(
                 requestService.getRequestById(dto.getRequestId())
@@ -54,7 +54,7 @@ public class RequestDetailServiceImpl implements RequestDetailService {
         requestDetail.setPart(part);
         requestDetail.setQuantity(dto.getQuantity());
         requestDetail.setPrice(part.getPrice());
-        requestDetailRepository.save(requestDetail);
+        return requestDetailRepository.save(requestDetail);
     }
 
     @Override

@@ -9,9 +9,13 @@ import java.util.Optional;
 
 public interface PartTypeService {
     List<PartType> getPartTypes(String keyword);
+
     Optional<PartType> getPartTypeById(Long id);
-    void createPartType(CreatePartTypeDTO createPartTypeDTO);
+
+    PartType createPartType(CreatePartTypeDTO createPartTypeDTO);
+
     void updatePartType(UpdatePartTypeDTO updatePartTypeDTO);
+
     void deletePartType(Long id);
 
     long count();

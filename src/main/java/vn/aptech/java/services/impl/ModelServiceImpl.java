@@ -32,10 +32,10 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public void createModel(CreateModelDTO createModelDTO) {
+    public Model createModel(CreateModelDTO createModelDTO) {
         Model model = new Model();
         model.setName(createModelDTO.getName());
-        modelRepository.save(model);
+        return modelRepository.save(model);
     }
 
     @Override

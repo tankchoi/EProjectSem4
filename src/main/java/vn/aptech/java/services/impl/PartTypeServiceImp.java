@@ -29,10 +29,10 @@ public class PartTypeServiceImp implements PartTypeService {
     }
 
     @Override
-    public void createPartType(CreatePartTypeDTO createPartTypeDTO) {
+    public PartType createPartType(CreatePartTypeDTO createPartTypeDTO) {
         PartType partType = new PartType();
         partType.setName(createPartTypeDTO.getName());
-        partTypeRepository.save(partType);
+        return partTypeRepository.save(partType);
     }
 
     @Override

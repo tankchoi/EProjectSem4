@@ -38,7 +38,7 @@ public class LaptopServiceImpl implements LaptopService {
     }
 
     @Override
-    public void createLaptop(CreateLaptopDTO createLaptopDTO) {
+    public Laptop createLaptop(CreateLaptopDTO createLaptopDTO) {
         Laptop laptop = new Laptop();
         Optional<Model> model = modelService.getModelById(createLaptopDTO.getModelId());
         if (model.isEmpty()) {
@@ -48,7 +48,7 @@ public class LaptopServiceImpl implements LaptopService {
         laptop.setModel(model.get());
         laptop.setWarrantyPeriod(createLaptopDTO.getWarrantyPeriod());
         laptop.setImgUrl(createLaptopDTO.getImgUrl());
-        laptopRepository.save(laptop);
+        return laptopRepository.save(laptop);
     }
 
     @Override

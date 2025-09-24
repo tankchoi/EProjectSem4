@@ -14,8 +14,8 @@ public class RequestImgServiceImpl implements RequestImgService {
     @Autowired
     private RequestImgRepository requestImgRepository;
     @Override
-    public void createRequestImg(RequestImg requestImg) {
-        requestImgRepository.save(requestImg);
+    public RequestImg createRequestImg(RequestImg requestImg) {
+        return requestImgRepository.save(requestImg);
     }
 
     @Override

@@ -7,12 +7,15 @@ import vn.aptech.java.models.Laptop;
 import java.util.List;
 import java.util.Optional;
 
-public interface
-LaptopService {
-    List<Laptop> getLaptops(String name,Long modelId);
+public interface LaptopService {
+    List<Laptop> getLaptops(String name, Long modelId);
+
     Optional<Laptop> getLaptopById(Long id);
-    void createLaptop(CreateLaptopDTO createLaptopDTO);
+
+    Laptop createLaptop(CreateLaptopDTO createLaptopDTO);
+
     void updateLaptop(UpdateLaptopDTO updateLaptopDTO);
+
     void deleteLaptop(Long id);
 
     long count();

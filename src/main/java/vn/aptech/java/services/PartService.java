@@ -9,9 +9,13 @@ import java.util.Optional;
 
 public interface PartService {
     List<Part> getParts(String name, Long partTypeId, Long laptopId);
+
     Optional<Part> getPartById(Long id);
-    void createPart(CreatePartDTO createPartDTO);
+
+    Part createPart(CreatePartDTO createPartDTO);
+
     void updatePart(UpdatePartDTO updatePartDTO);
+
     void deletePart(Long id);
 
     Optional<Part> lockPartById(Long id);
