@@ -154,7 +154,7 @@ public class StaffController {
                     updateStaffDTO.setEmail(staff.getEmail());
                     updateStaffDTO.setPhone(staff.getPhone());
                     updateStaffDTO.setStatus(staff.getStatus()); // Pass enum directly, not string
-                    // Don't set password for security
+
                 }
 
                 System.out.println("UpdateStaffDTO prepared successfully");
@@ -244,4 +244,18 @@ public class StaffController {
         }
         return "redirect:/admin/staff";
     }
+
+    @PostMapping("/{id}/reset-password")
+    public String resetPassword(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            User staff = staffService.resetPassword(id); // lấy staff sau khi reset
+            redirectAttributes.addFlashAttribute("success",
+                    "Mật khẩu mới đã được gửi đến email: " + staff.getEmail());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi reset mật khẩu: " + e.getMessage());
+        }
+        return "redirect:/admin/staff/" + id + "/edit";
+    }
+
+
 }

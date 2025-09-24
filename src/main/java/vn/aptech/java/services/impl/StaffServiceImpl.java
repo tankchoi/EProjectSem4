@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.aptech.java.dtos.admin.CreateStaffDTO;
 import vn.aptech.java.dtos.admin.UpdateStaffDTO;
@@ -11,6 +14,7 @@ import vn.aptech.java.models.User;
 import vn.aptech.java.repositories.UserRepository;
 import vn.aptech.java.services.StaffService;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +24,13 @@ public class StaffServiceImpl implements StaffService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
 
     @Override
     public List<User> getAllStaff() {
@@ -150,5 +161,47 @@ public class StaffServiceImpl implements StaffService {
             return updateStaffDTO;
         }
         throw new RuntimeException("Không tìm thấy nhân viên với ID: " + id);
+    }
+
+    @Override
+    public User resetPassword(Long staffId){
+        User staff = userRepository.findById(staffId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy nhân viên"));
+
+        String rawPassword = generateRandomPassword(10);
+
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        staff.setPassword(encodedPassword);
+        userRepository.save(staff);
+
+        sendPasswordResetEmail(staff.getEmail(), rawPassword);
+        System.out.println("Reset mật khẩu cho nhân viên: " + staff.getEmail());
+        System.out.println("Mật khẩu mới (raw): " + rawPassword);
+
+
+        return staff; // trả về để controller lấy email
+    }
+
+    private String generateRandomPassword(int length) {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(chars.length());
+            sb.append(chars.charAt(index));
+        }
+        return sb.toString();
+    }
+
+    private void sendPasswordResetEmail(String to, String newPassword){
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(to);
+            message.setSubject("Mật khẩu mới của bạn");
+            message.setText("Xin chào,\\n\\nHệ thống đã reset mật khẩu của bạn. Mật khẩu mới là: " + newPassword + "\n\nVui lòng đăng nhập và đổi mật khẩu ngay sau khi sử dụng.") ;
+            mailSender.send(message);
+        }catch (Exception e){
+            throw new RuntimeException("Lỗi khi gửi email: " + e.getMessage());
+        }
     }
 }

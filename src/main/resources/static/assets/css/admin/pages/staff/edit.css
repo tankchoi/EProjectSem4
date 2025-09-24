@@ -242,12 +242,12 @@ body {
     color: #1a202c;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 2px solid #f1f5f9;
 }
 
 .section-title .material-symbols-outlined {
     color: #667eea;
 }
+
 
 /* Form Layout */
 .form-row {
