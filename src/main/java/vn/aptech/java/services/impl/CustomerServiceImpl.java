@@ -26,37 +26,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<User> getCustomerById(Long id) {
+    public User getCustomerById(Long id) {
         return userRepository.findById(id)
-                .filter(u -> u.getRole() == User.Role.CUSTOMER);
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng với ID = " + id));
     }
 
-    @Override
-    public Page<User> getAllCustomersPaginated(Pageable pageable) {
-        // Truy vấn tất cả khách hàng và phân trang thủ công (tạm thời để kiểm tra)
-        List<User> allCustomers = userRepository.findAll()
-                .stream()
-                .filter(u -> u.getRole() == User.Role.CUSTOMER)
-                .collect(Collectors.toList());
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), allCustomers.size());
-        return new PageImpl<>(allCustomers.subList(start, end), pageable, allCustomers.size());
-    }
-
-    @Override
-    public Page<User> searchCustomersPaginated(String search, Pageable pageable) {
-        return userRepository.findByRoleAndSearch(User.Role.CUSTOMER, search.toLowerCase(), pageable);
-    }
-
-    @Override
-    public List<User> searchByNameEmailPhone(String search) {
-        String searchLower = search.toLowerCase();
-        return getAllCustomers().stream()
-                .filter(user -> user.getFullname().toLowerCase().contains(searchLower) ||
-                        user.getEmail().toLowerCase().contains(searchLower) ||
-                        (user.getPhone() != null && user.getPhone().contains(search)))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public List<Laptop> getCustomerLaptops(Long customerId) {

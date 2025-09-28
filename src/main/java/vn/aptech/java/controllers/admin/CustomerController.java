@@ -42,28 +42,12 @@ public class CustomerController {
 
 
     @GetMapping("/{id}")
-    public String customerDetail(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        try {
-            Optional<User> customerOpt = customerService.getCustomerById(id);
-            if (customerOpt.isPresent()) {
-                User customer = customerOpt.get();
-
-                model.addAttribute("activePage", "customer");
-                model.addAttribute("customer", customer);
-                model.addAttribute("customerLaptops", customerService.getCustomerLaptops(id));
-                // model.addAttribute("warrantyHistory",
-                // customerService.getWarrantyHistory(id)); // TODO: Thêm khi có Warranty model
-
-                return "admin/pages/customer/view";
-            } else {
-                redirectAttributes.addFlashAttribute("error", "Không tìm thấy khách hàng!");
-                return "redirect:/admin/customer";
-            }
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Có lỗi xảy ra khi truy xuất thông tin khách hàng: " + e.getMessage());
-            return "redirect:/admin/customer";
-        }
+    public String customerDetail(@PathVariable("id") Long id, Model model) {
+        User customer = customerService.getCustomerById(id);
+        model.addAttribute("activePage", "customer");
+        model.addAttribute("customer", customer);
+        model.addAttribute("customerLaptops", customerService.getCustomerLaptops(id));
+        return "admin/pages/customer/view";
     }
 
     @PostMapping("/{id}/ban")

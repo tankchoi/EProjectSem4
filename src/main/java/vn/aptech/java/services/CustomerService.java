@@ -12,14 +12,8 @@ public interface CustomerService {
 
     List<User> getAllCustomers();
 
-    Optional<User> getCustomerById(Long id);
+    User getCustomerById(Long id);
 
-    Page<User> getAllCustomersPaginated(Pageable pageable);
-    // đang lỗi chưa fix, dùng tạm datatable
-
-    Page<User> searchCustomersPaginated(String search, Pageable pageable);
-
-    List<User> searchByNameEmailPhone(String search);
 
     List<Laptop> getCustomerLaptops(Long customerId);
 

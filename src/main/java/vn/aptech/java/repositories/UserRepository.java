@@ -41,6 +41,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByPhone(String phone);
 
-    List<User> findByPhoneContaining(String phone); // tìm kiếm theo số điện thoại
+    List<User> findByPhoneContaining(String phone);
 
 }

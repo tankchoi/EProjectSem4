@@ -106,25 +106,6 @@
                                             <span class="material-symbols-outlined">visibility</span>
                                             Chi tiết
                                         </a>
-                                        <form th:if="${customer.status == T(vn.aptech.java.models.User.Status).ACTIVE}"
-                                            th:action="@{/admin/customer/{id}/ban(id=${customer.id})}" method="post"
-                                            style="display: inline;"
-                                            onsubmit="return confirm('Bạn có chắc chắn muốn khóa tài khoản khách hàng này?')">
-                                            <button type="submit" class="action-btn btn-ban" title="Khóa tài khoản">
-                                                <span class="material-symbols-outlined">block</span>
-                                                Khóa
-                                            </button>
-                                        </form>
-                                        <form th:if="${customer.status == T(vn.aptech.java.models.User.Status).BANNED}"
-                                            th:action="@{/admin/customer/{id}/restore(id=${customer.id})}" method="post"
-                                            style="display: inline;"
-                                            onsubmit="return confirm('Bạn có chắc chắn muốn khôi phục tài khoản khách hàng này?')">
-                                            <button type="submit" class="action-btn btn-restore"
-                                                title="Khôi phục tài khoản">
-                                                <span class="material-symbols-outlined">refresh</span>
-                                                Khôi phục
-                                            </button>
-                                        </form>
                                     </div>
                                 </td>
                             </tr>
