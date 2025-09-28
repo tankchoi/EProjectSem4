@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomerService {
+
     List<User> getAllCustomers();
 
     Optional<User> getCustomerById(Long id);
@@ -28,4 +29,8 @@ public interface CustomerService {
     void banCustomer(Long id);
 
     void restoreCustomer(Long id);
+
+    User getCustomerByPhone(String phone);
+
+    List<User> searchCustomersByPhone(String phone);
 }

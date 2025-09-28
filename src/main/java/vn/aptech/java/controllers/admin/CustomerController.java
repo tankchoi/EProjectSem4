@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.java.models.User;
 import vn.aptech.java.services.CustomerService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -21,36 +22,24 @@ public class CustomerController {
     private CustomerService customerService;
 
     @GetMapping
-    public String listCustomers(@RequestParam(required = false) String search,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+    public String listCustomers(
             Model model) {
-        System.out.println("Page: " + page + ", Size: " + size); // Thêm log kiểm tra
-        try {
-            Pageable pageable = PageRequest.of(page, size);
-            Page<User> customerPage;
+        List<User> customers = customerService.getAllCustomers();
+        model.addAttribute("activePage", "customer");
+        model.addAttribute("customerList", customers);
+        return "admin/pages/customer/index";
 
-            if (search != null && !search.trim().isEmpty()) {
-                customerPage = customerService.searchCustomersPaginated(search.trim(), pageable);
-            } else {
-                customerPage = customerService.getAllCustomersPaginated(pageable);
-            }
-
-            model.addAttribute("activePage", "customer");
-            model.addAttribute("customerList", customerPage.getContent());
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", customerPage.getTotalPages());
-            model.addAttribute("totalElements", customerPage.getTotalElements());
-            model.addAttribute("size", size);
-            model.addAttribute("search", search);
-
-            return "admin/pages/customer/index";
-        } catch (Exception e) {
-            model.addAttribute("error", "Có lỗi xảy ra khi tải danh sách khách hàng: " + e.getMessage());
-            model.addAttribute("activePage", "customer");
-            return "admin/pages/customer/index";
-        }
     }
+
+    @GetMapping("/search")
+    public String searchCustomers(@RequestParam("phone") String phone, Model model) {
+        List<User> customers = customerService.searchCustomersByPhone(phone);
+        model.addAttribute("activePage", "customer");
+        model.addAttribute("customerList", customers);
+        model.addAttribute("search", phone);
+        return "admin/pages/customer/index";
+    }
+
 
     @GetMapping("/{id}")
     public String customerDetail(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {

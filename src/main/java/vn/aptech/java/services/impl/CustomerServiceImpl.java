@@ -22,10 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<User> getAllCustomers() {
-        return userRepository.findAll()
-                .stream()
-                .filter(u -> u.getRole() == User.Role.CUSTOMER)
-                .collect(Collectors.toList());
+        return userRepository.findByRole(User.Role.CUSTOMER);
     }
 
     @Override
@@ -82,6 +79,16 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng với ID: " + id));
         user.setStatus(User.Status.ACTIVE);
         userRepository.save(user);
+    }
+
+    @Override
+    public User getCustomerByPhone(String phone) {
+        return userRepository.findByPhone(phone);
+    }
+
+    @Override
+    public List<User> searchCustomersByPhone(String phone) {
+        return userRepository.findByPhoneContaining(phone);
     }
 
 }

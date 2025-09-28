@@ -1,6 +1,8 @@
 package vn.aptech.java.controllers.admin;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,8 @@ public class StaffController {
 
     @Autowired
     private StaffService staffService;
+
+    private static final Logger logger = LoggerFactory.getLogger(StaffController.class);
 
     @GetMapping
     public String listStaffs(@RequestParam(required = false) String search,
@@ -95,18 +99,19 @@ public class StaffController {
 
     @PostMapping("/create")
     public String createStaff(@Valid @ModelAttribute("createStaffDTO") CreateStaffDTO createStaffDTO,
-            BindingResult bindingResult,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+                              BindingResult bindingResult,
+                              RedirectAttributes redirectAttributes,
+                              Model model) {
 
-        // Debug logging
-        System.out.println("Create staff POST request received");
-        System.out.println("DTO: " + createStaffDTO.toString());
-        System.out.println("Has errors: " + bindingResult.hasErrors());
+        logger.info("Create staff POST request received");
+        logger.debug("DTO: {}", createStaffDTO);
+        logger.debug("Has errors: {}", bindingResult.hasErrors());
 
         if (bindingResult.hasErrors()) {
-            System.out.println("Validation errors found:");
-            bindingResult.getAllErrors().forEach(error -> System.out.println("- " + error.getDefaultMessage()));
+            logger.warn("Validation errors found:");
+            bindingResult.getAllErrors().forEach(error ->
+                    logger.warn("- {}", error.getDefaultMessage())
+            );
 
             model.addAttribute("activePage", "staff");
             model.addAttribute("error", "Vui lòng kiểm tra lại thông tin nhập vào");
@@ -115,14 +120,14 @@ public class StaffController {
 
         try {
             staffService.createStaff(createStaffDTO);
-            System.out.println("Staff created successfully");
+            logger.info("Staff created successfully, username={}", createStaffDTO.getUsername());
 
             redirectAttributes.addFlashAttribute("success",
                     "Tạo nhân viên thành công! Tên đăng nhập: " + createStaffDTO.getUsername());
             return "redirect:/admin/staff";
+
         } catch (Exception e) {
-            System.err.println("Error creating staff: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error creating staff", e);
 
             model.addAttribute("activePage", "staff");
             model.addAttribute("error", "Có lỗi xảy ra khi tạo nhân viên: " + e.getMessage());
@@ -170,8 +175,8 @@ public class StaffController {
                 return "redirect:/admin/staff";
             }
         } catch (Exception e) {
-            System.err.println("Error in editStaffForm: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error edit staff", e);
+
             redirectAttributes.addFlashAttribute("error",
                     "Có lỗi xảy ra khi truy xuất thông tin nhân viên: " + e.getMessage());
             return "redirect:/admin/staff";
@@ -180,18 +185,20 @@ public class StaffController {
 
     @PostMapping("/{id}/edit")
     public String updateStaff(@PathVariable Long id,
-            @Valid @ModelAttribute("updateStaffDTO") UpdateStaffDTO updateStaffDTO,
-            BindingResult bindingResult,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+                              @Valid @ModelAttribute("updateStaffDTO") UpdateStaffDTO updateStaffDTO,
+                              BindingResult bindingResult,
+                              RedirectAttributes redirectAttributes,
+                              Model model) {
 
-        System.out.println("Update staff POST request for ID: " + id);
-        System.out.println("UpdateStaffDTO: " + updateStaffDTO.toString());
-        System.out.println("Has errors: " + bindingResult.hasErrors());
+        logger.info("Update staff POST request for ID: {}", id);
+        logger.debug("UpdateStaffDTO: {}", updateStaffDTO);
+        logger.debug("Has errors: {}", bindingResult.hasErrors());
 
         if (bindingResult.hasErrors()) {
-            System.out.println("Validation errors found:");
-            bindingResult.getAllErrors().forEach(error -> System.out.println("- " + error.getDefaultMessage()));
+            logger.warn("Validation errors found for staff ID {}:", id);
+            bindingResult.getAllErrors().forEach(error ->
+                    logger.warn("- {}", error.getDefaultMessage())
+            );
 
             try {
                 Optional<User> staffOpt = staffService.getStaffById(id);
@@ -202,8 +209,9 @@ public class StaffController {
                     return "admin/pages/staff/edit";
                 }
             } catch (Exception e) {
-                System.err.println("Error loading staff for validation error display: " + e.getMessage());
+                logger.error("Error loading staff for validation error display (ID={}): {}", id, e.getMessage(), e);
             }
+
             redirectAttributes.addFlashAttribute("error", "Có lỗi trong dữ liệu nhập!");
             return "redirect:/admin/staff/" + id + "/edit";
         }
@@ -211,17 +219,18 @@ public class StaffController {
         try {
             updateStaffDTO.setId(id);
             staffService.updateStaff(updateStaffDTO);
-            System.out.println("Staff updated successfully");
+            logger.info("Staff updated successfully, ID={}", id);
+
             redirectAttributes.addFlashAttribute("success", "Cập nhật thông tin nhân viên thành công!");
             return "redirect:/admin/staff/" + id;
         } catch (Exception e) {
-            System.err.println("Error updating staff: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error updating staff, ID={}", id, e);
             redirectAttributes.addFlashAttribute("error",
                     "Có lỗi xảy ra khi cập nhật thông tin nhân viên: " + e.getMessage());
             return "redirect:/admin/staff/" + id + "/edit";
         }
     }
+
 
     @PostMapping("/{id}/delete")
     public String deleteStaff(@PathVariable Long id, RedirectAttributes redirectAttributes) {
