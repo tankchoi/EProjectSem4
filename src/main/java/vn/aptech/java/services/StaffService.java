@@ -32,4 +32,6 @@ public interface StaffService {
     void restoreStaff(Long id);
 
     UpdateStaffDTO getUpdateStaffDTO(Long id);
+
+    User resetPassword(Long staffId);
 }

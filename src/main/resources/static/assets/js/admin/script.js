@@ -1,4 +1,4 @@
-console.log("script.js loaded");
+// console.log("script.js loaded");
 
 const toggleButton = document.querySelector('.dropdown-toggle');
 const menu = document.querySelector('.dropdown-menu');

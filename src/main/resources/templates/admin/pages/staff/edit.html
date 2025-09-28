@@ -20,6 +20,20 @@
         <div th:replace="admin/fragments/nav-top :: nav-top"></div>
 
         <div class="page-container">
+
+            <!-- Success Message -->
+            <div th:if="${success}" class="alert alert-success">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span th:text="${success}"></span>
+            </div>
+
+            <!-- Error Message -->
+            <div th:if="${error}" class="alert alert-error">
+                <span class="material-symbols-outlined">error</span>
+                <span th:text="${error}"></span>
+            </div>
+
+
             <!-- Breadcrumb -->
             <div class="breadcrumb">
                 <a th:href="@{/admin/staff}" class="breadcrumb-link">
@@ -64,16 +78,6 @@
                         <small class="status-note">(Không thể thay đổi)</small>
                     </div>
                     <div class="status-item">
-                        <label>Tên đăng nhập:</label>
-                        <span class="status-value" th:text="${staff.username}">username</span>
-                        <small class="status-note">(Không thể thay đổi)</small>
-                    </div>
-                    <div class="status-item">
-                        <label>Tên đăng nhập:</label>
-                        <span class="status-value" th:text="${staff.username}">username</span>
-                        <small class="status-note">(Không thể thay đổi)</small>
-                    </div>
-                    <div class="status-item">
                         <label>Trạng thái hiện tại:</label>
                         <span
                             th:class="${staff.status.name() == 'ACTIVE'} ? 'status-badge active' : 'status-badge banned'"
@@ -84,10 +88,36 @@
                 </div>
             </div>
 
-            <!-- Error Messages -->
-            <div th:if="${error}" class="alert alert-error">
-                <span class="material-symbols-outlined">error</span>
-                <span th:text="${error}"></span>
+            <!-- Password reset Form Card -->
+            <div class="form-card" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <h2 class="card-title">Cập nhật Mật khẩu</h2>
+                </div>
+
+                <form th:action="@{/admin/staff/{id}/reset-password(id=${staff.id})}" method="post"
+                      novalidate class="reset-password-staff-form">
+
+                    <!-- Security Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="material-symbols-outlined">security</span>
+                            Bảo mật tài khoản
+                        </h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+
+                                <button class="btn btn-primary" style="background: #3c763d; color: #ffffff" type="submit" onclick="return confirm('Bạn có chắc chắn muốn reset mật khẩu cho nhân viên này không?')">
+                                    Cấp lại mật khẩu mới
+                                </button>
+                                <small class="help-text">Bấm nút để cấp lại mật khẩu mới. Mật khẩu mới sẽ được gửi về email.</small>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </form>
             </div>
 
             <!-- Main Form Card -->
@@ -99,33 +129,13 @@
 
                 <form th:action="@{/admin/staff/{id}/edit(id=${staff.id})}" method="POST" th:object="${updateStaffDTO}"
                     novalidate class="staff-form">
-
                     <!-- Security Section -->
                     <div class="form-section">
                         <h3 class="section-title">
                             <span class="material-symbols-outlined">security</span>
                             Bảo mật tài khoản
                         </h3>
-
                         <div class="form-row">
-                            <div class="form-group">
-                                <label for="password" class="form-label">Mật khẩu mới</label>
-                                <div class="input-wrapper">
-                                    <span class="input-icon material-symbols-outlined">lock</span>
-                                    <input type="password" id="password" th:field="*{password}"
-                                        th:class="${#fields.hasErrors('password')} ? 'form-input error' : 'form-input'"
-                                        placeholder="Để trống nếu không muốn thay đổi" minlength="6" />
-                                    <button type="button" class="password-toggle" onclick="togglePassword('password')">
-                                        <span class="material-symbols-outlined">visibility</span>
-                                    </button>
-                                </div>
-                                <div th:if="${#fields.hasErrors('password')}" class="error-messages">
-                                    <div th:each="error : ${#fields.errors('password')}" class="error-message"
-                                        th:text="${error}"></div>
-                                </div>
-                                <small class="help-text">Để trống nếu không muốn thay đổi (tối thiểu 6 ký tự)</small>
-                            </div>
-
                             <div class="form-group">
                                 <label for="status" class="form-label">Trạng thái tài khoản</label>
                                 <div class="select-wrapper">
@@ -215,6 +225,8 @@
                     </div>
                 </form>
             </div>
+
+
         </div>
     </div>
 

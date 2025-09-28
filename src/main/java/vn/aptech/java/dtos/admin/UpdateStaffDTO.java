@@ -11,7 +11,6 @@ public class UpdateStaffDTO {
     @NotNull(message = "ID không được để trống")
     private Long id;
 
-    private String password; // Optional - only update if provided
 
     @NotBlank(message = "Họ và tên không được để trống")
     @Size(min = 2, max = 100, message = "Họ và tên phải từ 2-100 ký tự")
@@ -36,15 +35,6 @@ public class UpdateStaffDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @Size(min = 6, message = "Mật khẩu phải có ít nhất 6 ký tự")
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFullname() {
