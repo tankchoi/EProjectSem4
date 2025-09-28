@@ -107,7 +107,9 @@ public class RequestController {
                 Request request = RequestOpt.get();
                 UpdateRequestDTO updateRequestDTO = new UpdateRequestDTO();
                 updateRequestDTO.setId(request.getId());
-                updateRequestDTO.setSerialNumber(request.getCustomerLaptop().getSerialNumber());
+                if (request.getCustomerLaptop() != null) {
+                    updateRequestDTO.setSerialNumber(request.getCustomerLaptop().getSerialNumber());
+                }
                 updateRequestDTO.setFullname(request.getFullname());
                 updateRequestDTO.setEmail(request.getEmail());
                 updateRequestDTO.setPhone(request.getPhone());

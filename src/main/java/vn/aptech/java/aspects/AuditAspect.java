@@ -32,7 +32,6 @@ public class AuditAspect {
     public void afterCreate(JoinPoint joinPoint, Object result) throws Exception {
         Object entity = result;
         Long id = getEntityId(entity);
-
         String newJson = objectMapper.writeValueAsString(entity);
 
         auditLogService.log(
