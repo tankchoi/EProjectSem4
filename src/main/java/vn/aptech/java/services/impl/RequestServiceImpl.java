@@ -97,8 +97,10 @@ public class RequestServiceImpl implements RequestService {
             request.setAddress(dto.getAddress());
             request.setDescription(dto.getDescription());
             request.setBookingDate(dto.getBookingDate());
-            request.setTechnician(userService.findById(dto.getTechnicianId())
-                    .orElseThrow(() -> new IllegalArgumentException("Kỹ thuật viên không tồn tại.")));
+            if (dto.getTechnicianId() != null) {
+                request.setTechnician(userService.findById(dto.getTechnicianId())
+                        .orElseThrow(() -> new IllegalArgumentException("Kỹ thuật viên không tồn tại.")));
+            }
             request.setStatus(dto.getStatus());
             if (dto.getSerialNumber() != null && !dto.getSerialNumber().isBlank()) {
                 CustomerLaptop cl = customerLaptopRepository.findBySerial(dto.getSerialNumber().trim());
