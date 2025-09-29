@@ -5,12 +5,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import vn.aptech.java.models.CustomerLaptop;
+import vn.aptech.java.models.Laptop;
 import vn.aptech.java.models.User;
 
 import java.util.List;
 
 public interface CustomerLaptopRepository extends JpaRepository<CustomerLaptop, Long> {
-       List<CustomerLaptop> findByCustomer(User customer);
+
+       List<CustomerLaptop> findByCustomerId(Long customerId);
 
        @Query("SELECT cl FROM CustomerLaptop cl " +
                      "JOIN FETCH cl.laptop l " +

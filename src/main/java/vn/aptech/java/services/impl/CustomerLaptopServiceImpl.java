@@ -28,4 +28,9 @@ public class CustomerLaptopServiceImpl implements CustomerLaptopService {
     public boolean isLaptopExists(String serialNumber) {
         return customerLaptopRepository.existsBySerialNumber(serialNumber.trim());
     }
+
+    @Override
+    public List<CustomerLaptop> getLaptopsByCustomer(Long customerId) {
+        return customerLaptopRepository.findByCustomerId(customerId);
+    }
 }

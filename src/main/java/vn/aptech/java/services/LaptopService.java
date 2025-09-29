@@ -2,6 +2,7 @@ package vn.aptech.java.services;
 
 import vn.aptech.java.dtos.admin.CreateLaptopDTO;
 import vn.aptech.java.dtos.admin.UpdateLaptopDTO;
+import vn.aptech.java.models.CustomerLaptop;
 import vn.aptech.java.models.Laptop;
 
 import java.util.List;
@@ -12,11 +13,13 @@ public interface LaptopService {
 
     Optional<Laptop> getLaptopById(Long id);
 
-    Laptop createLaptop(CreateLaptopDTO createLaptopDTO);
+    void createLaptop(CreateLaptopDTO createLaptopDTO);
 
     void updateLaptop(UpdateLaptopDTO updateLaptopDTO);
 
     void deleteLaptop(Long id);
 
     long count();
+
+    List<CustomerLaptop> getLaptopsByCustomer(Long customerId);
 }

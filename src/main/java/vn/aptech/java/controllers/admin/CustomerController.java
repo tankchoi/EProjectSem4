@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import vn.aptech.java.models.CustomerLaptop;
 import vn.aptech.java.models.User;
+import vn.aptech.java.services.CustomerLaptopService;
 import vn.aptech.java.services.CustomerService;
 
 import java.util.List;
@@ -20,6 +22,9 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private CustomerLaptopService customerLaptopService;
 
     @GetMapping
     public String listCustomers(
@@ -44,31 +49,13 @@ public class CustomerController {
     @GetMapping("/{id}")
     public String customerDetail(@PathVariable("id") Long id, Model model) {
         User customer = customerService.getCustomerById(id);
+        List<CustomerLaptop> laptops = customerLaptopService.getLaptopsByCustomer(id);
+
         model.addAttribute("activePage", "customer");
         model.addAttribute("customer", customer);
-        model.addAttribute("customerLaptops", customerService.getCustomerLaptops(id));
+        model.addAttribute("customerLaptops", laptops);
+
         return "admin/pages/customer/view";
     }
 
-    @PostMapping("/{id}/ban")
-    public String banCustomer(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            customerService.banCustomer(id);
-            redirectAttributes.addFlashAttribute("success", "Khóa tài khoản khách hàng thành công!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi khóa tài khoản: " + e.getMessage());
-        }
-        return "redirect:/admin/customer";
-    }
-
-    @PostMapping("/{id}/restore")
-    public String restoreCustomer(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            customerService.restoreCustomer(id);
-            redirectAttributes.addFlashAttribute("success", "Khôi phục tài khoản khách hàng thành công!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi khôi phục tài khoản: " + e.getMessage());
-        }
-        return "redirect:/admin/customer";
-    }
 }

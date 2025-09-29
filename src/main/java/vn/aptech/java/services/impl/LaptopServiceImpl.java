@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.aptech.java.dtos.admin.CreateLaptopDTO;
 import vn.aptech.java.dtos.admin.UpdateLaptopDTO;
+import vn.aptech.java.models.CustomerLaptop;
 import vn.aptech.java.models.Laptop;
 import vn.aptech.java.models.Model;
+import vn.aptech.java.repositories.CustomerLaptopRepository;
 import vn.aptech.java.repositories.LaptopRepository;
 import vn.aptech.java.services.LaptopService;
 import vn.aptech.java.services.ModelService;
@@ -20,6 +22,9 @@ public class LaptopServiceImpl implements LaptopService {
     private LaptopRepository laptopRepository;
     @Autowired
     private ModelService modelService;
+
+    @Autowired
+    private CustomerLaptopRepository customerLaptopRepository;
 
     @Override
     public List<Laptop> getLaptops(String name, Long modelId) {
@@ -38,7 +43,7 @@ public class LaptopServiceImpl implements LaptopService {
     }
 
     @Override
-    public Laptop createLaptop(CreateLaptopDTO createLaptopDTO) {
+    public void createLaptop(CreateLaptopDTO createLaptopDTO) {
         Laptop laptop = new Laptop();
         Optional<Model> model = modelService.getModelById(createLaptopDTO.getModelId());
         if (model.isEmpty()) {
@@ -48,7 +53,7 @@ public class LaptopServiceImpl implements LaptopService {
         laptop.setModel(model.get());
         laptop.setWarrantyPeriod(createLaptopDTO.getWarrantyPeriod());
         laptop.setImgUrl(createLaptopDTO.getImgUrl());
-        return laptopRepository.save(laptop);
+        laptopRepository.save(laptop);
     }
 
     @Override
@@ -77,5 +82,11 @@ public class LaptopServiceImpl implements LaptopService {
     public long count() {
         return laptopRepository.count();
     }
+
+    @Override
+    public List<CustomerLaptop> getLaptopsByCustomer(Long customerId) {
+        return customerLaptopRepository.findByCustomerId(customerId);
+    }
+
 
 }

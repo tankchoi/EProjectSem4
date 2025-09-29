@@ -15,4 +15,6 @@ public interface LaptopRepository extends JpaRepository<Laptop, Long> {
       """, nativeQuery = true)
   List<Laptop> filterLaptops(@Param("name") String name, @Param("modelId") Long modelId);
 
+    Laptop findLaptopById(Long laptopId);
+
 }

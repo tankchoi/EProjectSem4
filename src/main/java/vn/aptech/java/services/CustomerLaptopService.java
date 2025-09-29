@@ -8,5 +8,6 @@ public interface CustomerLaptopService {
         List<CustomerLaptop> getLaptopsBySerial(String serialNumber);
         boolean isLaptopExists(String serialNumber);
 
+        List<CustomerLaptop> getLaptopsByCustomer(Long customerId);
 
 }
