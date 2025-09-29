@@ -182,7 +182,6 @@
                     </div>
 
 
-                    <!-- Warranty History Card -->
                     <div class="info-card">
                         <div class="card-header">
                             <h3>
@@ -191,13 +190,39 @@
                             </h3>
                         </div>
                         <div class="card-body">
-                            <div class="empty-state-small">
+
+                            <!-- Nếu không có lịch sử -->
+                            <div th:if="${#lists.isEmpty(warrantyHistory)}" class="empty-state-small">
                                 <span class="material-symbols-outlined">construction</span>
                                 <p>Chưa có lịch sử bảo hành</p>
-                                <small>Tính năng đang được phát triển</small>
                             </div>
+
+                            <!-- Nếu có lịch sử -->
+                            <table th:if="${!#lists.isEmpty(warrantyHistory)}" class="table">
+                                <thead>
+                                <tr>
+                                    <th>Ngày yêu cầu</th>
+                                    <th>Laptop</th>
+                                    <th>Serial</th>
+                                    <th>Mô tả</th>
+                                    <th>Kỹ thuật viên</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="req : ${warrantyHistory}">
+                                    <td th:text="${#dates.format(req.bookingDate, 'dd/MM/yyyy')}"></td>
+                                    <td th:text="${req.customerLaptop.laptop.name}"></td>
+                                    <td th:text="${req.customerLaptop.serialNumber}"></td>
+                                    <td th:text="${req.description}"></td>
+                                    <td th:text="${req.technician != null ? req.technician.fullname : 'Chưa phân công'}"></td>
+                                    <td th:text="${req.status}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+
                 </div>
 
                 <!-- Sidebar Content -->
@@ -218,7 +243,7 @@
                             </div>
                             <div class="stat-item">
                                 <div class="stat-label">Lần bảo hành</div>
-                                <div class="stat-value">0</div>
+                                <div class="stat-value" th:text="${#lists.size(warrantyHistory)}">0</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-label">Thành viên từ</div>

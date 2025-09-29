@@ -8,7 +8,13 @@ import java.util.List;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
 
-        List<Request> findByCustomerLaptop(CustomerLaptop customerLaptop);
+        @Query("SELECT r FROM Request r " +
+                "JOIN FETCH r.customerLaptop cl " +
+                "JOIN FETCH cl.laptop l " +
+                "LEFT JOIN FETCH r.technician t " +
+                "WHERE cl.customer.id = :customerId " +
+                "ORDER BY r.bookingDate DESC")
+        List<Request> getHistoryByCustomerIdWithoutStatus(@Param("customerId") Long customerId);
 
         @Query("SELECT r FROM Request r " +
                         "JOIN FETCH r.customerLaptop cl " +

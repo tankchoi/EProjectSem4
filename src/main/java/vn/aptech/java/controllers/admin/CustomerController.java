@@ -9,9 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.java.models.CustomerLaptop;
+import vn.aptech.java.models.Request;
 import vn.aptech.java.models.User;
 import vn.aptech.java.services.CustomerLaptopService;
 import vn.aptech.java.services.CustomerService;
+import vn.aptech.java.services.RequestService;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,10 +52,12 @@ public class CustomerController {
     public String customerDetail(@PathVariable("id") Long id, Model model) {
         User customer = customerService.getCustomerById(id);
         List<CustomerLaptop> laptops = customerLaptopService.getLaptopsByCustomer(id);
+        List<Request> warrantyHistory = customerService.getWarrantyHistoryByCustomer(id);
 
         model.addAttribute("activePage", "customer");
         model.addAttribute("customer", customer);
         model.addAttribute("customerLaptops", laptops);
+        model.addAttribute("warrantyHistory", warrantyHistory);
 
         return "admin/pages/customer/view";
     }

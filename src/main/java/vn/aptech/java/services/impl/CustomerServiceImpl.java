@@ -6,7 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import vn.aptech.java.models.Laptop;
+import vn.aptech.java.models.Request;
 import vn.aptech.java.models.User;
+import vn.aptech.java.repositories.RequestRepository;
 import vn.aptech.java.repositories.UserRepository;
 import vn.aptech.java.services.CustomerService;
 
@@ -20,6 +22,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RequestRepository requestRepository;
+
     @Override
     public List<User> getAllCustomers() {
         return userRepository.findByRole(User.Role.CUSTOMER);
@@ -31,13 +36,6 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng với ID = " + id));
     }
 
-
-    @Override
-    public List<Laptop> getCustomerLaptops(Long customerId) {
-        // TODO: Cần thêm field customer/owner trong Laptop model để track ownership
-        // Hiện tại return empty list
-        return List.of();
-    }
 
     @Override
     public void banCustomer(Long id) {
@@ -64,5 +62,11 @@ public class CustomerServiceImpl implements CustomerService {
     public List<User> searchCustomersByPhone(String phone) {
         return userRepository.findByPhoneContaining(phone);
     }
+
+    @Override
+    public List<Request> getWarrantyHistoryByCustomer(Long customerId) {
+        return requestRepository.getHistoryByCustomerIdWithoutStatus(customerId);
+    }
+
 
 }
