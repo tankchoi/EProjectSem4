@@ -17,6 +17,7 @@ import vn.aptech.java.dtos.admin.UpdateStaffDTO;
 import vn.aptech.java.models.User;
 import vn.aptech.java.services.StaffService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -29,34 +30,22 @@ public class StaffController {
     private static final Logger logger = LoggerFactory.getLogger(StaffController.class);
 
     @GetMapping
-    public String listStaffs(@RequestParam(required = false) String search,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+    public String listStaffs(
             Model model) {
-        try {
-            Pageable pageable = PageRequest.of(page, size);
-            Page<User> staffPage;
+        List<User> staffs = staffService.getAllStaff();
+        model.addAttribute("activePage", "staff");
+        model.addAttribute("staffList", staffs);
+        return "admin/pages/staff/index";
+    }
 
-            if (search != null && !search.trim().isEmpty()) {
-                staffPage = staffService.searchStaffPaginated(search.trim(), pageable);
-            } else {
-                staffPage = staffService.getAllStaffPaginated(pageable);
-            }
+    @GetMapping("/search")
+    public String searchStaffs(@RequestParam("search") String search, Model model) {
+        List<User> staffs = staffService.searchByNameEmailPhone(search);
+        model.addAttribute("activePage", "staff");
+        model.addAttribute("staffList", staffs);
+        model.addAttribute("search", search);
+        return "admin/pages/staff/index";
 
-            model.addAttribute("activePage", "staff");
-            model.addAttribute("staffList", staffPage.getContent());
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", staffPage.getTotalPages());
-            model.addAttribute("totalElements", staffPage.getTotalElements());
-            model.addAttribute("size", size);
-            model.addAttribute("search", search);
-
-            return "admin/pages/staff/index";
-        } catch (Exception e) {
-            model.addAttribute("error", "Có lỗi xảy ra khi tải danh sách nhân viên: " + e.getMessage());
-            model.addAttribute("activePage", "staff");
-            return "admin/pages/staff/index";
-        }
     }
 
     @GetMapping("/{id}")
@@ -145,21 +134,18 @@ public class StaffController {
                 User staff = staffOpt.get();
                 System.out.println("Staff found: " + staff.getUsername());
 
-                // Create UpdateStaffDTO manually if service method fails
                 UpdateStaffDTO updateStaffDTO;
                 try {
                     updateStaffDTO = staffService.getUpdateStaffDTO(id);
                     System.out.println("UpdateStaffDTO created via service");
                 } catch (Exception e) {
                     System.err.println("Service method failed, creating DTO manually: " + e.getMessage());
-                    // Create DTO manually from User entity
                     updateStaffDTO = new UpdateStaffDTO();
                     updateStaffDTO.setId(staff.getId());
                     updateStaffDTO.setFullname(staff.getFullname());
                     updateStaffDTO.setEmail(staff.getEmail());
                     updateStaffDTO.setPhone(staff.getPhone());
-                    updateStaffDTO.setStatus(staff.getStatus()); // Pass enum directly, not string
-
+                    updateStaffDTO.setStatus(staff.getStatus());
                 }
 
                 System.out.println("UpdateStaffDTO prepared successfully");

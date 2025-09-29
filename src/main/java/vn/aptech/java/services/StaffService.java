@@ -20,13 +20,6 @@ public interface StaffService {
 
     void banStaff(Long id);
 
-    List<User> searchByPhone(String phone);
-
-    Page<User> getAllStaffPaginated(Pageable pageable);
-    // lỗi chưa fix tạm thời dùng datatable
-
-    Page<User> searchStaffPaginated(String search, Pageable pageable);
-
     List<User> searchByNameEmailPhone(String search);
 
     void restoreStaff(Long id);

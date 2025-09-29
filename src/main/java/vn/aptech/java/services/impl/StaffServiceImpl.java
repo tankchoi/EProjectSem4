@@ -34,10 +34,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public List<User> getAllStaff() {
-        return userRepository.findAll()
-                .stream()
-                .filter(u -> u.getRole() == User.Role.STAFF)
-                .toList();
+        return userRepository.findByRole(User.Role.STAFF);
     }
 
     @Override
@@ -50,12 +47,16 @@ public class StaffServiceImpl implements StaffService {
     public User createStaff(CreateStaffDTO dto) {
         User user = new User();
         user.setUsername(dto.getUsername());
-        user.setPassword(dto.getPassword()); // TODO: encode password
+
+        String encodedPassword = passwordEncoder.encode(dto.getPassword());
+        user.setPassword(encodedPassword);
+
         user.setFullname(dto.getFullname());
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
         user.setRole(User.Role.STAFF);
         user.setStatus(User.Status.ACTIVE);
+
         return userRepository.save(user);
     }
 
@@ -82,42 +83,6 @@ public class StaffServiceImpl implements StaffService {
                 .orElseThrow(() -> new IllegalArgumentException("Staff not found"));
         user.setStatus(User.Status.BANNED);
         userRepository.save(user);
-    }
-
-    @Override
-    public List<User> searchByPhone(String phone) {
-        return userRepository.findByPhoneContaining(phone)
-                .stream()
-                .filter(u -> u.getRole() == User.Role.STAFF)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Page<User> getAllStaffPaginated(Pageable pageable) {
-        List<User> allStaffs = getAllStaff();
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), allStaffs.size());
-
-        if (start > allStaffs.size()) {
-            return new PageImpl<>(List.of(), pageable, allStaffs.size());
-        }
-
-        List<User> staffsPage = allStaffs.subList(start, end);
-        return new PageImpl<>(staffsPage, pageable, allStaffs.size());
-    }
-
-    @Override
-    public Page<User> searchStaffPaginated(String search, Pageable pageable) {
-        List<User> foundStaffs = searchByNameEmailPhone(search);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), foundStaffs.size());
-
-        if (start > foundStaffs.size()) {
-            return new PageImpl<>(List.of(), pageable, foundStaffs.size());
-        }
-
-        List<User> staffsPage = foundStaffs.subList(start, end);
-        return new PageImpl<>(staffsPage, pageable, foundStaffs.size());
     }
 
     @Override

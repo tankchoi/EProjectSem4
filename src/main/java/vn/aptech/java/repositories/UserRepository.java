@@ -27,15 +27,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Dùng tạm sau lấy hàm phần get nhân viên của Trứng sau
     List<User> findAllByRoleAndStatus(User.Role role, User.Status status);
 
-
-
     long countByRole(User.Role role);
 
     long count();
 
     @Query("SELECT u FROM User u WHERE u.role = :role AND " +
             "(LOWER(u.fullname) LIKE %:search% OR LOWER(u.email) LIKE %:search% OR u.phone LIKE %:search%)")
-    Page<User> findByRoleAndSearch(User.Role role, String search, Pageable pageable);
+    List<User> findByRoleAndSearch(String search);
 
     List<User> findByRole(User.Role role);
 

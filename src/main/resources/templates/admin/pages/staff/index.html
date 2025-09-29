@@ -58,7 +58,7 @@
 
             <!-- Search Form -->
             <div class="search-container">
-                <form method="get" th:action="@{/admin/staff}" class="search-form">
+                <form method="get" th:action="@{/admin/staff/search}" class="search-form">
                     <input type="text" name="search" th:value="${search}"
                         placeholder="Tìm kiếm theo tên, email, số điện thoại..." class="search-input">
                     <button type="submit" class="search-btn">
@@ -156,30 +156,6 @@
                 </div>
             </div>
 
-            <!-- Pagination -->
-            <div th:if="${totalPages > 1}" class="pagination">
-                <a th:if="${currentPage > 0}"
-                    th:href="@{/admin/staff(page=${currentPage - 1}, size=${size}, search=${search})}">
-                    <span class="material-symbols-outlined">chevron_left</span>
-                    Trước
-                </a>
-
-                <span th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-                    th:if="${pageNum >= currentPage - 2 && pageNum <= currentPage + 2}">
-                    <a th:if="${pageNum != currentPage}"
-                        th:href="@{/admin/staff(page=${pageNum}, size=${size}, search=${search})}"
-                        th:text="${pageNum + 1}">
-                    </a>
-                    <span th:if="${pageNum == currentPage}" th:text="${pageNum + 1}" class="current">
-                    </span>
-                </span>
-
-                <a th:if="${currentPage < totalPages - 1}"
-                    th:href="@{/admin/staff(page=${currentPage + 1}, size=${size}, search=${search})}">
-                    Sau
-                    <span class="material-symbols-outlined">chevron_right</span>
-                </a>
-            </div>
         </div>
     </div>
 
