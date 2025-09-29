@@ -453,6 +453,145 @@ body {
     align-items: center;
 }
 
+/* Info card layout */
+.info-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.info-card .card-header {
+    background: #f5f6fa;
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+.info-card .card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+/* Table styling */
+.info-card .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.info-card .table th,
+.info-card .table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+}
+
+.info-card .table th {
+    background: #f0f2f5;
+    font-weight: 600;
+}
+
+.info-card .table tbody tr:hover {
+    background: #fafafa;
+    transition: background 0.2s ease-in-out;
+}
+
+/* Empty state */
+.empty-state-small {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+}
+
+.empty-state-small .material-symbols-outlined {
+    font-size: 40px;
+    color: #999;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Card container chung */
+.info-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.info-card .card-header {
+    background: #f5f6fa;
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+.info-card .card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+/* Card body */
+.info-card .card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Statistic item */
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: #fafafa;
+    border-radius: 8px;
+    transition: background 0.2s ease-in-out;
+}
+
+.stat-item:hover {
+    background: #f0f2f5;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #555;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2d3436;
+}
+
+/* Optional: highlight numbers */
+.stat-value::after {
+    content: "";
+    display: block;
+    height: 2px;
+    background: #3498db;
+    margin-top: 3px;
+    border-radius: 2px;
+    width: 100%;
+    transform: scaleX(0);
+    transition: transform 0.3s;
+}
+
+.stat-item:hover .stat-value::after {
+    transform: scaleX(1);
+}
+
+
 /* Print Styles */
 @media print {
 
