@@ -45,6 +45,13 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public User createStaff(CreateStaffDTO dto) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("Email đã được sử dụng");
+        }
+
+        if (userRepository.existsByUsername(dto.getUsername())) {
+            throw new IllegalArgumentException("Tên đăng nhập đã tồn tại");
+        }
         User user = new User();
         user.setUsername(dto.getUsername());
 
@@ -63,12 +70,17 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public void updateStaff(UpdateStaffDTO dto) {
         User user = userRepository.findById(dto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Staff not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy nhân viên"));
+
+        if (dto.getEmail() != null && !dto.getEmail().equals(user.getEmail())) {
+            if (userRepository.existsByEmail(dto.getEmail())) {
+                throw new IllegalArgumentException("Email đã tồn tại");
+            }
+            user.setEmail(dto.getEmail());
+        }
 
         if (dto.getFullname() != null)
             user.setFullname(dto.getFullname());
-        if (dto.getEmail() != null)
-            user.setEmail(dto.getEmail());
         if (dto.getPhone() != null)
             user.setPhone(dto.getPhone());
         if (dto.getStatus() != null)
@@ -76,6 +88,7 @@ public class StaffServiceImpl implements StaffService {
 
         userRepository.save(user);
     }
+
 
     @Override
     public void banStaff(Long id) {
