@@ -15,12 +15,6 @@ public interface CustomerService {
 
     User getCustomerById(Long id);
 
-    void banCustomer(Long id);
-
-    void restoreCustomer(Long id);
-
-    User getCustomerByPhone(String phone);
-
     List<User> searchCustomersByPhone(String phone);
 
     List<Request> getWarrantyHistoryByCustomer(Long customerId);
