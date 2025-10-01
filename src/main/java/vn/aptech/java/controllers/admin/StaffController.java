@@ -243,7 +243,7 @@ public class StaffController {
     @PostMapping("/{id}/reset-password")
     public String resetPassword(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            User staff = staffService.resetPassword(id); // lấy staff sau khi reset
+            User staff = staffService.resetPassword(id);
             redirectAttributes.addFlashAttribute("success",
                     "Mật khẩu mới đã được gửi đến email: " + staff.getEmail());
         } catch (Exception e) {
@@ -251,6 +251,4 @@ public class StaffController {
         }
         return "redirect:/admin/staff/" + id + "/edit";
     }
-
-
 }
