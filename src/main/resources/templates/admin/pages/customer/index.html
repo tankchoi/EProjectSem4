@@ -55,8 +55,9 @@
             <!-- Search Form -->
             <div class="search-container">
                 <form method="get" th:action="@{/admin/customer/search}" class="search-form">
-                    <input type="text" name="phone" th:value="${search}"
-                        placeholder="Tìm kiếm theo số điện thoại khách hàng" class="search-input">
+
+                    <input type="text" name="phone" th:value="${search}" placeholder="Tìm kiếm theo số điện thoại khách hàng" class="search-input">
+
                     <button type="submit" class="search-btn">
                         <span class="material-symbols-outlined">search</span>
                         Tìm kiếm

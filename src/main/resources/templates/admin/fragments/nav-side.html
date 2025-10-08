@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -139,14 +139,14 @@
                         <span class="menu-badge" th:if="${activePage == 'profile'}"></span>
                     </a>
                 </div>
-                <div class="menu-item" th:classappend="${activePage == 'notification'} ? 'active'">
-                    <a th:href="@{/admin/notification}" class="menu-link">
-                        <span class="menu-icon material-symbols-outlined">notifications</span>
-                        <span class="menu-text">Thông báo</span>
-                        <span class="notification-count">3</span>
-                        <span class="menu-badge" th:if="${activePage == 'notification'}"></span>
-                    </a>
-                </div>
+<!--                <div class="menu-item" th:classappend="${activePage == 'notification'} ? 'active'">-->
+<!--                    <a th:href="@{/admin/notification}" class="menu-link">-->
+<!--                        <span class="menu-icon material-symbols-outlined">notifications</span>-->
+<!--                        <span class="menu-text">Thông báo</span>-->
+<!--                        <span class="notification-count">3</span>-->
+<!--                        <span class="menu-badge" th:if="${activePage == 'notification'}"></span>-->
+<!--                    </a>-->
+<!--                </div>-->
             </div>
         </div>
 
@@ -190,7 +190,7 @@
                 });
             }
 
-            // Close sidebar when clicking outside on mobile
+            // Close the sidebar when clicking outside on mobile
             document.addEventListener('click', function (e) {
                 if (window.innerWidth <= 1024 && navAside && navAside.classList.contains('mobile-open')) {
                     if (!navAside.contains(e.target) && !menuToggle.contains(e.target)) {

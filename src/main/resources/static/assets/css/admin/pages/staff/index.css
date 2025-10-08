@@ -98,7 +98,7 @@ body {
     background: white;
     border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     border: 1px solid #e2e8f0;
 }
 
@@ -106,16 +106,18 @@ body {
     display: flex;
     gap: 0.75rem;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .search-input {
     flex: 1;
+    min-width: 250px;
     padding: 0.75rem 1rem;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
     font-size: 0.875rem;
     transition: all 0.3s ease;
-    background: #f8fafc;
+    background: white;
 }
 
 .search-input:focus {

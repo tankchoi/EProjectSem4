@@ -15,7 +15,7 @@
             <div class="search-contain">
                 <div class="search-wrapper">
                     <span class="material-symbols-outlined search-icon">search</span>
-                    <input type="text" name="" id="global-search" placeholder="Tìm kiếm...">
+                    <label for="global-search"></label><input type="text" name="" id="global-search" placeholder="Tìm kiếm...">
                     <button type="button" class="search-clear" style="display: none;">
                         <span class="material-symbols-outlined">close</span>
                     </button>
@@ -24,37 +24,37 @@
         </div>
         <div class="top-right">
             <!-- Notifications -->
-            <div class="notification-wrapper">
-                <button class="notification-btn" title="Thông báo">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <span class="notification-badge">3</span>
-                </button>
-                <div class="notification-dropdown">
-                    <div class="notification-header">
-                        <h4>Thông báo</h4>
-                        <a href="#" class="mark-all-read">Đánh dấu đã đọc</a>
-                    </div>
-                    <div class="notification-list">
-                        <div class="notification-item unread">
-                            <div class="notification-content">
-                                <p class="notification-title">Yêu cầu bảo hành mới</p>
-                                <p class="notification-text">Khách hàng Nguyễn Văn A vừa gửi yêu cầu bảo hành</p>
-                                <span class="notification-time">5 phút trước</span>
-                            </div>
-                        </div>
-                        <div class="notification-item">
-                            <div class="notification-content">
-                                <p class="notification-title">Hóa đơn đã thanh toán</p>
-                                <p class="notification-text">Hóa đơn #12345 đã được thanh toán thành công</p>
-                                <span class="notification-time">1 giờ trước</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="notification-footer">
-                        <a th:href="@{/admin/notification}" class="view-all">Xem tất cả</a>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="notification-wrapper">-->
+<!--                <button class="notification-btn" title="Thông báo">-->
+<!--                    <span class="material-symbols-outlined">notifications</span>-->
+<!--                    <span class="notification-badge">3</span>-->
+<!--                </button>-->
+<!--                <div class="notification-dropdown">-->
+<!--                    <div class="notification-header">-->
+<!--                        <h4>Thông báo</h4>-->
+<!--                        <a href="#" class="mark-all-read">Đánh dấu đã đọc</a>-->
+<!--                    </div>-->
+<!--                    <div class="notification-list">-->
+<!--                        <div class="notification-item unread">-->
+<!--                            <div class="notification-content">-->
+<!--                                <p class="notification-title">Yêu cầu bảo hành mới</p>-->
+<!--                                <p class="notification-text">Khách hàng Nguyễn Văn A vừa gửi yêu cầu bảo hành</p>-->
+<!--                                <span class="notification-time">5 phút trước</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="notification-item">-->
+<!--                            <div class="notification-content">-->
+<!--                                <p class="notification-title">Hóa đơn đã thanh toán</p>-->
+<!--                                <p class="notification-text">Hóa đơn #12345 đã được thanh toán thành công</p>-->
+<!--                                <span class="notification-time">1 giờ trước</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="notification-footer">-->
+<!--                        <a th:href="@{/admin/notification}" class="view-all">Xem tất cả</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <!-- User Dropdown -->
             <div class="dropdown user-dropdown">
@@ -62,17 +62,31 @@
                     <div class="user-avatar">
                         <span class="material-symbols-outlined">account_circle</span>
                     </div>
+<!--                    <div class="user-info">-->
+<!--                        <span class="user-name"-->
+<!--                            th:text="${#authentication != null ? #authentication.name : 'Admin'}">Admin</span>-->
+<!--                        <span class="user-role"-->
+<!--                              th:text="${#authentication != null ?-->
+<!--                                        (#authorization.expression('hasAuthority(''ADMIN'')') ? 'Quản lý' :-->
+<!--                                         #authorization.expression('hasAuthority(''STAFF'')') ? 'Nhân viên' : 'Quản trị viên')-->
+<!--                                        : 'Quản trị viên'}">-->
+<!--                            Quản trị viên-->
+<!--                        </span>-->
+<!--                    </div>-->
                     <div class="user-info">
                         <span class="user-name"
-                            th:text="${#authentication != null ? #authentication.name : 'Admin'}">Admin</span>
+                              th:text="${#authentication != null ? #authentication.name : 'Admin'}">
+                            Admin
+                        </span>
+
                         <span class="user-role"
-                              th:text="${#authentication != null ?
-                                        (#authorization.expression('hasAuthority(''ADMIN'')') ? 'Quản lý' :
-                                         #authorization.expression('hasAuthority(''STAFF'')') ? 'Nhân viên' : 'Quản trị viên')
-                                        : 'Quản trị viên'}">
-                            Quản trị viên
+                              th:switch="${#authentication != null ? #authentication.principal.authorities[0].authority : 'NONE'}">
+                                <span th:case="'ADMIN'">Quản lý</span>
+                                <span th:case="'STAFF'">Nhân viên</span>
+                                <span th:case="*">Quản trị viên</span>
                         </span>
                     </div>
+
                     <span class="material-symbols-outlined dropdown-arrow">keyboard_arrow_down</span>
                 </div>
                 <ul class="dropdown-menu">
@@ -82,13 +96,13 @@
                             <span>Tài khoản</span>
                         </a>
                     </li>
-                    <li>
-                        <a th:href="@{/admin/notification}" class="dropdown-item">
-                            <span class="material-symbols-outlined">settings</span>
-                            <span>Cài đặt</span>
-                        </a>
-                    </li>
-                    <li class="dropdown-divider"></li>
+<!--                    <li>-->
+<!--                        <a th:href="@{/admin/notification}" class="dropdown-item">-->
+<!--                            <span class="material-symbols-outlined">settings</span>-->
+<!--                            <span>Cài đặt</span>-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="dropdown-divider"></li>-->
                     <li>
                         <a th:href="@{/admin/logout}" class="dropdown-item logout-item">
                             <span class="material-symbols-outlined">logout</span>
@@ -149,7 +163,7 @@
                 });
             }
 
-            // Dropdown click outside to close
+            // Dropdown clicks outside to close
             document.addEventListener('click', function (e) {
                 const dropdowns = document.querySelectorAll('.notification-dropdown, .dropdown-menu');
                 dropdowns.forEach(dropdown => {
@@ -168,7 +182,7 @@
                 });
             });
 
-            // Add single logout confirmation
+            // Add a single logout confirmation
             const logoutLink = document.querySelector('.logout-item');
             if (logoutLink) {
                 logoutLink.addEventListener('click', function(e) {

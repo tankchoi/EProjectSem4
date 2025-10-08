@@ -237,8 +237,7 @@
             // Clean username input (remove spaces and special characters)
             if (usernameInput) {
                 usernameInput.addEventListener('input', function () {
-                    const value = this.value.replace(/[^a-zA-Z0-9_]/g, '');
-                    this.value = value;
+                    this.value = this.value.replace(/[^a-zA-Z0-9_]/g, '');
                 });
             }
 
